@@ -28,6 +28,7 @@
 
 #include "dgd_compile_cache.h" /* need here because YYSTYPE will be there */
 
+#define PARS_T_ERROR 0
 #define PARS_T_PAIR 1
 #define PARS_T_NEXT_ARG 2
 #define PARS_T_SET_ARG 3
@@ -51,7 +52,8 @@
 /* content of y.tab.h goes here */
 @Y_TAB_H@
 
-cache_item_t *dgd_format_parser_result();
+cache_item_t *dgd_format_parser();
+cache_t      *dgd_format_parser_cache();
 
 #endif /* _dgd_format_parser_h_ */
 

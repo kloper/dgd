@@ -54,6 +54,17 @@ void format_lexer( lexer_state_t *lex_state,
 
    while( 1 ) {
       switch( lex_state->state ) {
+	 case LEX_STATE_ERROR_RECOVER: {
+	    /* This is special state. It is triggered by the parser in
+	       error recovering process */
+	    token->token = LEX_WORD;		  
+	    token->value.lexeme.begin = lex_state->lexeme.begin;
+	    token->value.lexeme.end = lex_state->lexeme.end;
+	       
+	    lex_state->state = LEX_STATE_NORMAL;
+	    lex_state->lexeme.end++;
+	    lex_state->lexeme.begin = lex_state->lexeme.end;	    
+	 } break;
 	 case LEX_STATE_NORMAL: {
 	    switch( *lex_state->lexeme.end ) {
 	       case '\\': {

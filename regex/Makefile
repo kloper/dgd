@@ -33,19 +33,19 @@ VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = cl
-LD  = link
+CC = gcc
+LD  = ld
 AR  = ar
 RANLIB = ranlib
-CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1 
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-LDOUTOPT = /out:
-COUTOPT  = -Fo
+CFLAGS =  -Wall -g -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1 
+LDFLAGS  =   -g
+LDOUTOPT = -o
+COUTOPT  = -o
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
-LIBPREFIX = 
-LIBEXT = lib
-OBJEXT = obj
+LIBPREFIX = lib
+LIBEXT = a
+OBJEXT = o
 
 SUBDIRS =
 TARGETS = $(LIBPREFIX)regex.$(LIBEXT)

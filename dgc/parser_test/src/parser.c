@@ -32,15 +32,25 @@ extern void yyparse();
 int main( int argc, char** argv ) {
    int i;
    cache_item_t *result;
+   cache_t *cache;
+
+   cache = dgd_format_parser_cache();
 
    for( i = 1; i < argc; i++ ) {
+      printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
       printf( "> %s\n", argv[i] );
-      dgd_format_string = argv[1];
-      yyparse();
-      result = dgd_format_parser_result();
-      if( result != NULL )
-	 dgd_dump_parser_bytecode( stdout, result, 0 );
+      result = dgd_format_parser( argv[i] );
+      
+      if( result != NULL ) {
+	 dgd_dump_parser_bytecode( stdout, result->value.hash.ring, 0 );
+         printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
+      }
    }
+
+   for( i = 1; i < argc; i++ ) {
+      dgd_cache_delete( cache, argv[i] );
+   }
+   printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
 
    return 0;
 }

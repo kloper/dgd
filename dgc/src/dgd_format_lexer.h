@@ -46,6 +46,7 @@
 #define LEX_STATE_CMD_LONG      0x13
 #define LEX_STATE_CMDEXT        0x20
 #define LEX_STATE_CMDEXT_WORD   0x21
+#define LEX_STATE_ERROR_RECOVER 0x23
 
 typedef str_range_t lexeme_t;
 

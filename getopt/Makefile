@@ -33,19 +33,19 @@ VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = cl
-LD  = link
+CC = gcc
+LD  = ld
 AR  = ar
 RANLIB = ranlib
-CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-LDOUTOPT = /out:
-COUTOPT  = -Fo
+CFLAGS =  -Wall -g
+LDFLAGS  =   -g
+LDOUTOPT = -o
+COUTOPT  = -o
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
-LIBPREFIX = 
-LIBEXT = lib
-OBJEXT = obj
+LIBPREFIX = lib
+LIBEXT = a
+OBJEXT = o
 
 SUBDIRS =
 TARGETS = $(LIBPREFIX)getopt.$(LIBEXT)

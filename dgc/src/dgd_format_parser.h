@@ -28,6 +28,7 @@
 
 #include "dgd_compile_cache.h" /* need here because YYSTYPE will be there */
 
+#define PARS_T_ERROR 0
 #define PARS_T_PAIR 1
 #define PARS_T_NEXT_ARG 2
 #define PARS_T_SET_ARG 3
@@ -49,10 +50,6 @@
 #define PARS_T_CHAR     19
 
 /* content of y.tab.h goes here */
-#ifndef YYERRCODE
-#define YYERRCODE 256
-#endif
-
 #define LEX_EOF 257
 #define LEX_ZERO 258
 #define LEX_MINUS 259
@@ -99,7 +96,8 @@
 #define LEX_T_PTR 300
 #define LEX_T_REPORT 301
 
-cache_item_t *dgd_format_parser_result();
+cache_item_t *dgd_format_parser();
+cache_t      *dgd_format_parser_cache();
 
 #endif /* _dgd_format_parser_h_ */
 

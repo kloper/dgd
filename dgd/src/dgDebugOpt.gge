@@ -1,5 +1,5 @@
 package "dgd"
-version "dgd-0.25 Thu Aug  7 16:23:43 JST 2003"
+version "dgd-0.25 Fri Aug  8 11:37:01 IDT 2003"
 
 #opt   long name    short  help                                 type   required
 #---   ---------    -----  ------                               ----   --------

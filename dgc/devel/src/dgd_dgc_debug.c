@@ -67,22 +67,21 @@ void dgd_dump_parser_bytecode( FILE *stream,
 			       unsigned int nesting_level ) {
    cache_item_t *next;
 
-   
-   indent( stream, nesting_level ); fprintf( stream, "{\n" );
-
    if( ring == NULL ) 
       return;
 
+   indent( stream, nesting_level ); fprintf( stream, "{\n" );
 
    next = ring;
    do {
       indent( stream, nesting_level+2 ); 
 
       switch( next->type ) {
+         case PARS_T_ERROR:
+            fprintf( stream, "error:\n" );
+            break;
 	 case PARS_T_PAIR:
 	    fprintf( stream, "pair:\n" );
-	    dgd_dump_parser_bytecode( stream, next->value.ring,
-				      nesting_level+2 ); 
 	    break;
 	 case PARS_T_NEXT_ARG:
 	    fprintf( stream, "next arg\n" );
@@ -99,8 +98,7 @@ void dgd_dump_parser_bytecode( FILE *stream,
 	    fprintf( stream, "call by name: %.*s\n", 
 		     next->value.call.name.end - next->value.call.name.begin,
 		     next->value.call.name.begin );
-	    dgd_dump_parser_bytecode( stream, next->value.call.args, 
-				      nesting_level+2 );
+	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_READ_DEC:
 	    fprintf( stream, "decimal:\n" );

@@ -33,14 +33,14 @@ VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = cl
-LD  = link
-CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-LDOUTOPT = /out:
+CC = gcc
+LD  = ld
+CFLAGS =  -Wall -g
+LDFLAGS  =   -g
+LDOUTOPT = -o
 INCLUDES = -I. -I.. -I$(top_srcdir)
-PERL = /d/perl/bin/perl.exe
-DOXYGEN = /c/Progra~1/doxygen/bin/doxygen.exe
+PERL = perl
+DOXYGEN = doxygen
 
 SUBDIRS =
 TARGETS = all

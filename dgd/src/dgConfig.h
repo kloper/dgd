@@ -32,7 +32,7 @@
  * dgConfig.h.in 
  */
 
-#define DG_VERSION_STRING "dgd-0.25 Thu Aug  7 16:23:43 JST 2003"
+#define DG_VERSION_STRING "dgd-0.25 Fri Aug  8 11:37:01 IDT 2003"
 
 #endif /* _dgConfig_h_ */
 

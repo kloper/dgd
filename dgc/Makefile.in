@@ -112,7 +112,7 @@ endif
 
 depend: .depend $(SUBDIRS)
 
-.depend:${patsubst %.c, src/%.c, $(CFILES)}
+.depend:${patsubst %.c, src/%.c, $(CFILES)} src/dgd_format_parser.y
 	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src/%%' > $@ 
 
 include .depend

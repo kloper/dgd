@@ -1,6 +1,6 @@
 // -*- c -*-
 //
-// $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.h,v 1.2 2003/08/06 19:10:41 dimka Exp $
+// $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.h,v 1.3 2003/08/09 23:05:11 dimka Exp $
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -46,8 +46,8 @@ typedef struct _cache_item_t {
 	    } arg;
 	    struct {
 		  str_range_t           name;
-		  struct _cache_item_t *args;
 		  call_attr_t           attr;
+		  unsigned int          num_param;
 	    } call;
 	    struct {
 		  char                 *key;

@@ -31,9 +31,6 @@
 #include "dgd_format_lexer.h"
 #include "dgd_compile_cache.h"
    
-char* dgd_format_string = NULL;
-cache_t *cache = NULL;
-
 #define YYDEBUG 1
 
 typedef union _yy_stype_t {
@@ -47,7 +44,16 @@ typedef union _yy_stype_t {
 static int yylex();
 static void yylexreset();
 static void yyerror( char* reason );
+
 extern cache_item_t *dgd_format_parser_result();
+
+static lexer_state_t   lexer_state;
+static int             parser_init = 0;
+static default_cache_t parser_cache;
+static char*           dgd_format_string = NULL;
+static cache_t        *cache = NULL;
+static cache_item_t   *start_ring;
+
 %}
 
 
@@ -104,6 +110,7 @@ extern cache_item_t *dgd_format_parser_result();
 
 %%
 
+
 cmdbegin: 
           LEX_PERCENT 
                      {
@@ -113,9 +120,9 @@ cmdbegin:
                      { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type            = PARS_T_SET_ARG;
                        ring->value.num       = $2.lex.value.num;
@@ -129,30 +136,30 @@ subcmd:
                      { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
 
-                       ring->type            = PARS_T_CALL_BY_NAME;
-                       ring->value.call.name = $1.lex.value.lexeme;
-                       ring->value.call.args = NULL;
+                       dgd_ring_push_back( &start_ring, ring );
+
+                       ring->type                 = PARS_T_CALL_BY_NAME;
+                       ring->value.call.name      = $1.lex.value.lexeme;
+                       ring->value.call.num_param = 0;
 
                        $$.ring = ring;                       
                      }
-        | LEX_WORD LEX_COLON subcmdparams 
+          | LEX_WORD LEX_COLON subcmdparams 
                      { 
                        cache_item_t *args_ring = $3.ring; 
                        cache_item_t *ring      = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
 
-                       ring->type            = PARS_T_CALL_BY_NAME;
-                       ring->value.call.name = $1.lex.value.lexeme;
-                       ring->value.call.args = args_ring;
+                       ring->type                 = PARS_T_CALL_BY_NAME;
+                       ring->value.call.name      = $1.lex.value.lexeme;
+                       ring->value.call.num_param = dgd_ring_size( args_ring );
 
-                       $$.ring = ring;                                  
+                       dgd_ring_push_front( &args_ring, ring );
+
+                       $$.ring = args_ring;                                  
                      }
 ;
 
@@ -161,17 +168,17 @@ subcmdparams:
                      { 
                        $$.ring = $1.ring;  
                      }
-          | pair     {
+          | pair     
+                     {
                        $$.ring = $1.ring;  
                      }
-          | identifier LEX_COMMA subcmdparams 
+          | subcmdparams LEX_COMMA identifier
                      {
-                       dgd_ring_push_back( &($1.ring), $3.ring );
+                       $$.ring = $1.ring;
                      }
-
-          | pair LEX_COMMA subcmdparams 
+          | subcmdparams LEX_COMMA pair
                      {
-                       dgd_ring_push_back( &($1.ring), $3.ring );
+                       $$.ring = $1.ring;
                      }
 ;
 
@@ -180,9 +187,9 @@ identifier:
                      { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_LEXEME;
                        ring->value.lexeme = $1.lex.value.lexeme;
@@ -192,29 +199,26 @@ identifier:
                      { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_NEXT_ARG;
                        $$.ring = ring;
-                     }
+                     }           
 ;
 
 pair:
 	  identifier LEX_EQUAL identifier
                      {
                        cache_item_t *key_ring   = $1.ring;
-                       cache_item_t *value_ring = $3.ring;
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
 
                        ring->type         = PARS_T_PAIR;
-                       dgd_ring_push_back( &key_ring, value_ring );
-                       ring->value.ring = key_ring;
+
+                       dgd_ring_push_front( &key_ring, ring );
 
                        $$.ring = ring;  
                      }
@@ -225,9 +229,9 @@ intformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type               = PARS_T_READ_DEC;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -238,9 +242,9 @@ intformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_OCT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -251,9 +255,9 @@ intformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_UNSIGNED;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -264,9 +268,9 @@ intformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_HEX;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -277,9 +281,9 @@ intformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_HEX;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -290,9 +294,9 @@ intformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_WRITE_REP;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -305,9 +309,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_SCI;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -318,9 +322,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_SCI;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -331,9 +335,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_FLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -344,9 +348,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_FLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -357,9 +361,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -370,9 +374,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -383,9 +387,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_SCIHEX;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -396,9 +400,9 @@ doubleformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_SCI;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -412,9 +416,9 @@ stringformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_CHAR;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -424,9 +428,9 @@ stringformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_STR;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -439,9 +443,9 @@ ptrformat:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_READ_PTR;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
@@ -627,19 +631,38 @@ modes:
                      {
                        $$.attr.valid_mask = 0;
                      }
-
 ;
 
 cmd:
 	  cmdbegin modes format 
                      {
+
                        dgd_call_attr_assign( &($3.ring->value.call.attr),
                                              &($2.attr) );
-                       dgd_ring_push_back( &($1.ring), $3.ring );
-                       $$.ring = $1.ring;
+                       if( $1.ring != NULL ) 
+                          $$.ring = $1.ring;
+                       else
+                          $$.ring = $3.ring;
 
+                       start_ring = NULL;
 	               yylexreset();
 	             }
+          | error 
+                     {
+                       cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
+
+                       dgd_cache_free( cache, &start_ring, -1 );
+
+                       if( ring != NULL ) {
+                         ring->type         = PARS_T_ERROR;
+                         ring->value.lexeme = lexer_state.lexeme;
+                       }
+
+                       $$.ring = ring;
+                      
+                       yylexreset();
+                     }
+                  
 ;
 
 fmt:
@@ -651,9 +674,7 @@ fmt:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
 
                        ring->type         = PARS_T_WORD;
                        ring->value.lexeme = $1.lex.value.lexeme;
@@ -663,9 +684,7 @@ fmt:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
+                       if( ring == NULL ) YYERROR;
 
                        ring->type         = PARS_T_CHAR;
                        ring->value.ch     = $1.lex.value.ch;
@@ -680,48 +699,34 @@ fmt:
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
-
-                       ring->type             = PARS_T_WORD;
-                       ring->value.lexeme     = $1.lex.value.lexeme;
+                       if( ring == NULL ) YYERROR;
 
                        dgd_ring_push_back( &($1.ring), ring );
+
+                       ring->type             = PARS_T_WORD;
+                       ring->value.lexeme     = $2.lex.value.lexeme;
+
                        $$.ring = $1.ring;
                      }
 	  | fmt LEX_BACKSLASH
                      {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
-
-                       ring->type         = PARS_T_CHAR;
-                       ring->value.ch     = $1.lex.value.ch;
+                       if( ring == NULL ) YYERROR;
 
                        dgd_ring_push_back( &($1.ring), ring );
+
+                       ring->type         = PARS_T_CHAR;
+                       ring->value.ch     = $2.lex.value.ch;
+
                        $$.ring = $1.ring;
                      }
 ;
 
 %%
 
-static lexer_state_t   lexer_state;
-static int             lexer_state_init = 0;
-static default_cache_t parser_cache;
-
 static 
 int yylex() {
-   if( !lexer_state_init ) {
-      init_lexer_state( &lexer_state );
-      lexer_state_init = 1;
-
-      dgd_lookup_format( &parser_cache );
-      cache = (cache_t*) &parser_cache;
-   }
-
    format_lexer( &lexer_state, dgd_format_string, &(yylval.lex) );
 
    if( yylval.lex.token == LEX_EOF ) {
@@ -736,9 +741,33 @@ void yylexreset() {
 
 static
 void yyerror( char* reason ) {
-   fprintf( stderr, "%s\n", reason );
 }
 
-cache_item_t *dgd_format_parser_result() {
-   return yyval.ring;
+cache_t *dgd_format_parser_cache() {
+   return (cache_t*)&parser_cache;
+}
+
+cache_item_t *dgd_format_parser( char* format_string ) {
+   cache_item_t *result;
+
+   if( !parser_init ) {
+      parser_init = 1;
+
+      dgd_lookup_format( &parser_cache );
+      cache = (cache_t*) &parser_cache;
+   }
+
+
+   dgd_format_string = format_string;
+   start_ring = NULL;
+
+   init_lexer_state( &lexer_state );	
+   yyparse();
+
+
+   result = dgd_cache_new( cache, format_string, yyval.ring );
+   if( result == NULL ) {
+      dgd_cache_free( cache, &(yyval.ring), -1 );
+   }
+   return result;
 }

@@ -1,5 +1,5 @@
 /* 
- * $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.c,v 1.2 2003/08/06 19:10:40 dimka Exp $
+ * $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.c,v 1.3 2003/08/09 23:05:11 dimka Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -286,7 +286,7 @@ cache_item_t *dgd_cache_find( cache_t *cache, char *str ) {
    if( chain_ring == NULL ) 
       return NULL;
    
-   lru_ring = dgd_ring_pop_front( &(chain_ring->value.hash.lru) );
+   lru_ring = dgd_ring_pop_front( &(cache->lru_ring) );
    dgd_ring_push_back( &(cache->lru_ring), lru_ring );
 
    return chain_ring;
@@ -303,6 +303,9 @@ cache_item_t *dgd_cache_new( cache_t *cache, char *str, cache_item_t *data ) {
 
    chain_ring = dgd_cache_alloc( cache, 1 );
    lru_ring   = dgd_cache_alloc( cache, 1 );
+
+   if( chain_ring == NULL || lru_ring == NULL ) 
+      return NULL;
 
    chain_ring->value.hash.key = str;
    chain_ring->value.hash.ring = data;
