@@ -1078,9 +1078,9 @@ esac
 # Check whether --enable-debug or --disable-debug was given.
 if test "${enable_debug+set}" = set; then
   enableval="$enable_debug"
-
+  enable_debug=$enableval
 else
-  enable_debug=yes
+  enable_debug=no
 fi;
 
 # Check whether --with-cvs or --without-cvs was given.
@@ -1217,7 +1217,7 @@ EOF
 EOF
 
         CXXFLAGS="$CXXFLAGS -O2"
-        LDFLAGS="$LDFLAGS /opt:ref"
+        LDFLAGS="$LDFLAGS "
         BUILDDIR=Release
      fi
 
@@ -3167,7 +3167,7 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-ac_config_files="$ac_config_files Makefile doc/Makefile doc/html/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk"
+ac_config_files="$ac_config_files Makefile doc/Makefile doc/html/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile samples/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3509,10 +3509,11 @@ do
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
   "dgd/src/dgDebugOpt.gge" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgDebugOpt.gge" ;;
   "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
+  "samples/Makefile" ) CONFIG_FILES="$CONFIG_FILES samples/Makefile" ;;
   "util/bin/mkdis" ) CONFIG_FILES="$CONFIG_FILES util/bin/mkdis" ;;
   "util/bin/copytree" ) CONFIG_FILES="$CONFIG_FILES util/bin/copytree" ;;
   "util/bin/html2wmk" ) CONFIG_FILES="$CONFIG_FILES util/bin/html2wmk" ;;
-  *) { { echo "$as_me:3515: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:3516: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -3756,7 +3757,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:3759: creating $ac_file" >&5
+    { echo "$as_me:3760: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -3774,7 +3775,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:3777: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:3778: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -3787,7 +3788,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:3790: error: cannot find input file: $f" >&5
+           { { echo "$as_me:3791: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;

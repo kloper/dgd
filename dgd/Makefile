@@ -29,7 +29,7 @@ srcdir     = .
 top_srcdir = ..
 STLDIR     = $(top_srcdir)/./../STLport-4.5
 BOOSTDIR   = $(top_srcdir)/./../boost
-BUILDDIR   = $(srcdir)/Debug
+BUILDDIR   = $(srcdir)/Release
 
 VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
@@ -45,8 +45,8 @@ RANLIB = ranlib
 MAKEDEPEND = makedepend
 GENGETOPT  = gengetopt
 
-CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP -MTd -O2 -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT 
 LDOUTOPT = /out:
 COUTOPT  = -Fo
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) $(BOOSTINCLUDES) \
@@ -56,7 +56,7 @@ STLINCLUDES   = -I $(STLDIR)/stlport
 BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I$(top_srcdir)/getopt/src
 REGEXINCLUDES = -I$(top_srcdir)/regex/src
-DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
+DEFINES = -DWIN32=1 -D_WINDOWS=1 -DNODEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
 BOOSTDEFINES =
 
 LIBEXT = lib

@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-BUILDDIR   = $(srcdir)/Debug
+BUILDDIR   = $(srcdir)/Release
 
 VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
 
@@ -36,7 +36,7 @@ MKDIR = mkdir -p
 CC = cl
 LD  = link
 CFLAGS =  -nologo -W3 -GR -GX -MTd -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT 
 LDOUTOPT = /out:
 INCLUDES = -I. -I.. -I$(top_srcdir)
 PERL = /d/perl/bin/perl.exe

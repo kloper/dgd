@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-BUILDDIR   = $(srcdir)/Debug
+BUILDDIR   = $(srcdir)/Release
 
 VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
@@ -38,7 +38,7 @@ LD  = link
 AR  = ar
 RANLIB = ranlib
 CFLAGS =  -nologo -W3 -GR -GX -MTd -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT 
 LDOUTOPT = /out:
 COUTOPT  = -Fo
 INCLUDES = -I. -I.. -I$(top_srcdir)

@@ -42,9 +42,9 @@ esac
 
 AC_ARG_ENABLE(debug,
               AC_HELP_STRING([--enable-debug],
-                             [compile debuggable version]),,
-	enable_debug=yes)
-
+                             [compile debuggable version]),
+        enable_debug=$enableval,
+	enable_debug=no)
 AC_ARG_WITH(cvs,
             AC_HELP_STRING([--with-cvs],
                            [use CVS to retrieve version info] ),
@@ -103,7 +103,7 @@ if test $win32 = 1; then
      else
         AC_DEFINE(NODEBUG)
         CXXFLAGS="$CXXFLAGS -O2"
-        LDFLAGS="$LDFLAGS /opt:ref"
+        LDFLAGS="$LDFLAGS "
         BUILDDIR=Release
      fi
 
@@ -205,7 +205,7 @@ AC_CHECK_PROG(PERL, perl, perl, perl,, )
 AC_CHECK_PROG(WEBMAKE, webmake, webmake, webmake,, )
 AC_CHECK_PROG(DOXYGEN, doxygen, doxygen, doxygen,, )
 
-AC_CONFIG_FILES(Makefile doc/Makefile doc/html/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk) 
+AC_CONFIG_FILES(Makefile doc/Makefile doc/html/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile samples/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk) 
 
 AC_OUTPUT
 
