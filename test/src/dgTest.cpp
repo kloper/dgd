@@ -150,8 +150,8 @@ int main( int argc, char** argv ) {
       of( argc, argv, 1, filter );
 
    Debug::debug_factory_ref dout = 
-      Debug::create_factory( option_sets->at(0).argc, 
-			     option_sets->at(0).argv );
+      Debug::create_factory( (*option_sets)[0].argc, 
+			     (*option_sets)[0].argv );
       
    if( dout.get() == NULL )
       return 1;

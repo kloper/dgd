@@ -38,10 +38,12 @@ option_filter::operator () ( int argc, char** argv, int filtc, char** filtv ) {
    typedef std::vector<bool> matched_bitset;
 
    matched_bitset matched_flags( argc-1 );
-   option_set_container* result = new option_set_container[ filtc + 1 ];
-   
+   option_set_container* res_ptr = new option_set_container[ filtc + 1 ];
+   // some version of STL don't provide vector::at()... ah?!
+   option_set_container& result = *res_ptr;
+
    matched_flags.assign( argc-1, false );
-   result->assign( filtc + 1, option_set_type() );
+   result.assign( filtc + 1, option_set_type() );
 
    for( j = 0; j < (unsigned)filtc; ++j ) {
       opt_list matched_options;
@@ -53,27 +55,27 @@ option_filter::operator () ( int argc, char** argv, int filtc, char** filtv ) {
 	 }
       }
 
-      result->at(j).allocate( matched_options.size() + 1 );
-      result->at(j).argv[0] = argv[0];
+      result[j].allocate( matched_options.size() + 1 );
+      result[j].argv[0] = argv[0];
 
       opt_list::iterator opti = matched_options.begin();
       for( k = 1; k < matched_options.size() + 1; ++k )
-	 result->at(j).argv[k] = *opti++;
+	 result[j].argv[k] = *opti++;
    }	 
 
    int unmatched_size = 
       std::count( matched_flags.begin(), matched_flags.end(), false );
 
-   result->at(filtc).allocate( unmatched_size + 1 );
-   result->at(filtc).argv[0] = argv[0];
+   result[filtc].allocate( unmatched_size + 1 );
+   result[filtc].argv[0] = argv[0];
    
 
    k = 1;
    for( i = 1; i < (unsigned)argc; ++i )
       if( !matched_flags[i-1] )
-	 result->at(filtc).argv[k++] = argv[i];
+	 result[filtc].argv[k++] = argv[i];
 
-   return result;
+   return res_ptr;
 }
 
 
