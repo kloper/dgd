@@ -20,10 +20,6 @@
 #ifndef __REGEXP_LIBRARY_H__
 #define __REGEXP_LIBRARY_H__
 
-#if defined(WIN32) && !defined(__STDC__)
-#define __STDC__ 1
-#endif
-
 /* POSIX says that <sys/types.h> must be included (by the caller) before
    <regex.h>.  */
 
@@ -33,6 +29,11 @@
 #include <stddef.h>
 #endif
 
+#if (defined(WIN32) || defined(_WIN32)) && !defined(__STDC__)
+#define REMOVE_STDC_DEFS 1
+#define __STDC__ 1
+#endif
+ 
 
 /* The following bits are used to determine the regexp syntax we
    recognize.  The set/not-set meanings are chosen so that Emacs syntax
@@ -482,6 +483,10 @@ extern size_t regerror
   _RE_ARGS ((int errcode, const regex_t *preg, char *errbuf,
              size_t errbuf_size));
 extern void regfree _RE_ARGS ((regex_t *preg));
+
+#if defined(REMOVE_STDC_DEFS)
+#undef __STDC__
+#endif
 
 #endif /* not __REGEXP_LIBRARY_H__ */
 

@@ -32,7 +32,7 @@
  * dgConfig.h.in 
  */
 
-#define DG_VERSION_STRING "@DGD_VERSION@"
+#define DG_VERSION_STRING "(* $version ? $version->string_full() : "Unknown" *)"
 
 #if defined(_STLPORT_VERSION) && _STLPORT_VERSION <= 450
 // This one seems to solve problem with vc7 and boost-1.30

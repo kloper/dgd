@@ -135,7 +135,8 @@ class Debug {
       File_list        m_files;
       stream           m_main_file;
 
-      dgd_gengetopt_args_info m_args_info;    
+      options          m_args_info;    
+      option_locations m_args_given;
 };
 
 }; // end of namespace DGD

@@ -1,0 +1,42 @@
+#!/d/perl/bin/perl.exe -w --
+
+use strict;
+use File::Basename;
+use File::Copy;
+
+my $exe_name = $0;
+my $localdir = dirname($exe_name);
+my $source = $ARGV[0];
+my $cvsroot = $ARGV[1];
+
+die "Usage: $exe_name dir cvs_root" if( scalar( @ARGV ) != 3 );
+die "Source directory $source does not exists..." if( !(-e $source) ||
+						   !(-d $source) );
+
+my @dir_stack = ( $source );
+while( scalar( @dir_stack ) > 0 ) {
+    my $dir = $dir_stack[0];
+    shift @dir_stack;
+    
+    local *dir_handle;	
+    opendir dir_handle, $dir or die "Cn't open directory $dir: $!";
+    close dir_handle;
+    local $_;
+    
+    my @files = readdir dir_handle;
+    for (@files) {
+	my $full_file_name = "$dir/$_";
+	if( -d $full_file_name ) {
+	    if( $_ ne "." && $_ ne ".." ) {
+		push @dir_stack, $full_file_name;
+		if( $_ eq "CVS" ) {
+		    print "Updating in $dir\n";
+		    open( CVSROOT, ">$dir/CVS/Root" ) or 
+			die "Can't open for writing $dir/CVS/Root";
+		    print CVSROOT $cvsroot . "\n";
+		    close( CVSROOT );
+		}
+	    }
+	} 	
+    }
+}						   

@@ -19,8 +19,8 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#ifdef WIN32
-#define __STDC__ 1
+#if defined(WIN32) || defined(_WIN32)
+#define REMOVE_STDC_DEFS 1
 #define HAVE_STRING_H 1
 #endif
 
@@ -4938,12 +4938,17 @@ regfree (preg)
   preg->fastmap_accurate = 0;
 
   if (preg->translate != NULL)
-    free (preg->translate);
+    free ( preg->translate);
   preg->translate = NULL;
 }
 
 #endif /* not emacs  */
 
+
+#if defined(REMOVE_STDC_DEFS)
+#undef HAVE_STRING_H
+#endif
+
 /*
 Local variables:
 make-backup-files: t

@@ -97,10 +97,6 @@ class exit_required: public std::exception {
  */
 Debug::Debug()
 {
-   std::fill( (char*)&m_args_info, 
-	      (char*)&m_args_info + sizeof(m_args_info), 
-	      0 );
-
    channel& main_channel = create_channel( "main" );
    main_channel.open();   
    m_current_channel = m_channels.begin();
@@ -162,25 +158,40 @@ Debug::Debug()
  * </dl>
  */
 void Debug::process_options( int argc, char** argv ) {
-   if (dgd_cmdline_parser (argc, argv, &m_args_info) != 0) {
-      throw bad_params();
+   parser optp;
+
+   try {
+      optp.parse(argc, argv, true);
+      
+      m_args_info = optp.get_options();
+      m_args_given = optp.get_locations();
+   } catch( option_error& ex ) {
+      std::cerr << argv[0] << " error: " << std::endl
+		<< ex.what() << std::endl;
+      throw exit_required();
    }
 
-   if( m_args_info.trace_version_flag ) {
-      dgd_cmdline_parser_print_version();
+   if( m_args_info.trace_version ) {
+      std::cerr << DG_VERSION_STRING << std::endl;
       throw exit_required();
    }
    
-   if( m_args_info.trace_help_flag ) {
-      dgd_cmdline_parser_print_help();
-      throw exit_required();
+   if( m_args_info.trace_help ) {
+      char *harg[] = { argv[0], "--help", NULL };
+      try {
+	 optp.parse(2, harg , true);
+      } catch( option_error& ex ) {
+	 std::cerr << argv[0] << " usage: " << std::endl
+		   << ex.what() << std::endl;
+	 throw exit_required();
+      }
    }      
 
-   if( !m_args_info.trace_enable_flag )
+   if( !m_args_info.trace_enable )
       throw debug_disabled();
 
-   if( m_args_info.trace_main_file_given ) {
-      m_main_file = create_file( m_args_info.trace_main_file_arg );
+   if( m_args_given.trace_main_file ) {
+      m_main_file = create_file( m_args_info.trace_main_file );
       assoc( m_main_file.get(), **m_current_channel, Assoc_Assign );
    } else {
       assoc( &std::cerr, **m_current_channel, Assoc_Assign );
@@ -205,27 +216,23 @@ void Debug::process_options( const option_filter::option_set_type& options ) {
  * @see Debug::process_options(int,char**)
  */
 void Debug::apply_options( channel_ptr& chnl ) {
-   if( m_args_info.trace_min_width_given ) 
-      chnl->min_width( m_args_info.trace_min_width_arg );
+   if( m_args_given.trace_min_width ) 
+      chnl->min_width( m_args_info.trace_min_width );
    
-   if( m_args_info.trace_max_width_given ) 
-      chnl->max_width( m_args_info.trace_max_width_arg );
+   if( m_args_given.trace_max_width ) 
+      chnl->max_width( m_args_info.trace_max_width );
    
-   if( m_args_info.trace_indent_step_given ) 
-      chnl->indent_step( m_args_info.trace_indent_step_arg );
+   if( m_args_given.trace_indent_step ) 
+      chnl->indent_step( m_args_info.trace_indent_step );
 
-   if( m_args_info.trace_allow_wrap_given )
-      chnl->wrap( ((m_args_info.trace_allow_wrap_flag == 0)? false: true) );
-   if( m_args_info.trace_allow_word_wrap_flag )
-      chnl->word_wrap( ((m_args_info.trace_allow_word_wrap_flag == 0)? 
-			false:true) );
+   if( m_args_info.trace_allow_wrap )
+      chnl->wrap( m_args_info.trace_allow_wrap );
+   if( m_args_info.trace_allow_word_wrap )
+      chnl->word_wrap( m_args_info.trace_allow_word_wrap );
    
-   if( m_args_info.trace_space_characters_given ) 
-      chnl->space_chars( m_args_info.trace_space_characters_arg );
-
-   if( m_args_info.trace_turn_on_given ) {
+   if( m_args_given.trace_turn_on ) {
       try {
-	 regex e( m_args_info.trace_turn_on_arg );
+	 regex e( m_args_info.trace_turn_on.c_str() );
 	 if( regex_match( e, chnl->name().c_str() ) ) {
 	    chnl->open();
 	 }
@@ -234,9 +241,9 @@ void Debug::apply_options( channel_ptr& chnl ) {
       }
    }
 
-   if( m_args_info.trace_turn_off_given ) {
+   if( m_args_given.trace_turn_off ) {
       try {
-	 regex e( m_args_info.trace_turn_off_arg );
+	 regex e( m_args_info.trace_turn_off.c_str() );
 	 if( regex_match( e, chnl->name().c_str() ) ) {
 	    chnl->close();
 	 }
@@ -245,8 +252,8 @@ void Debug::apply_options( channel_ptr& chnl ) {
       }
    }
 
-   if( m_args_info.trace_space_characters_given ) 
-      chnl->space_chars( m_args_info.trace_space_characters_arg );
+   if( m_args_given.trace_space_characters ) 
+      chnl->space_chars( m_args_info.trace_space_characters.c_str() );
 }
 
 /**

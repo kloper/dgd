@@ -1,0 +1,58 @@
+# -*- mode:cperl -*-
+#
+# $Id$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# This file is part of Depression Glass library.
+#
+# Copyright (c) 2003. Dimitry Kloper <kloper@users.sf.net>
+#
+# Conscript -- build file for dgd library
+#
+
+use Data::Dumper;
+Import qw(BLIB toolset version);
+    
+my $ruleset  = $toolset->env();
+
+die if( !defined( $ruleset ) );
+
+our $BUILD      = $toolset->option( 'build' );
+our $INCLUDE    = [ "%BOOST_INCLUDE", "$BLIB/include" ];
+our $LIBPATH    = [ "$BLIB/lib" ];
+our $LIBS       = "-ldgd -lregex";
+
+Link $BUILD => 'src';
+
+my $buildenv   = new cons( %{$ruleset},
+			   'CPPPATH'  => $INCLUDE,
+			   'LIBPATH'  => $LIBPATH,
+			   'LIBS'     => $LIBS );
+
+my $TARGET = "$BUILD/dgdtest%SUFEXE";
+
+KeepPrecious $buildenv, $TARGET;
+AfterBuild $buildenv $TARGET, q( 
+  if( $status eq 'built' ) {
+     $version->save();
+     print "AfterBuild: version incremented to " . $version->string() . "...\n"
+  }
+);
+
+Program $buildenv $TARGET,
+  map( "$BUILD/$_", qw( dgTest.cpp ) );
+
+Install $buildenv "$BLIB/bin", $TARGET;

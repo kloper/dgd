@@ -1,0 +1,48 @@
+# -*- mode:cperl -*-
+#
+# $Id$
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# This file is part of Depression Glass library.
+#
+# Copyright (c) 2003. Dimitry Kloper <kloper@users.sf.net>
+#
+# Conscript -- build file for regex library
+#
+
+Import qw(BLIB toolset);
+    
+my $ruleset  = $toolset->env();
+
+die if( !defined( $ruleset ) );
+
+our $BUILD      = $toolset->option( 'build' );
+
+Link $BUILD => 'src';
+
+my $buildenv   = new cons( %{$ruleset} );
+
+my $TARGET = "$BUILD/%{PREFLIB}regex%{SUFLIB}";
+
+KeepPrecious $buildenv, $TARGET;
+
+Library $buildenv $TARGET, 
+  map( "$BUILD/$_", qw(regex.c alloca.c) );
+
+Install $buildenv "$BLIB/include", 
+  map( "$BUILD/$_", qw(regex.h regular_expression.h) );
+
+Install $buildenv "$BLIB/lib", $TARGET;
