@@ -20,9 +20,8 @@
 #ifndef __REGEXP_LIBRARY_H__
 #define __REGEXP_LIBRARY_H__
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(__STDC__)
 #define __STDC__ 1
-#define HAVE_STRING_H 1
 #endif
 
 /* POSIX says that <sys/types.h> must be included (by the caller) before

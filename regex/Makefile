@@ -33,21 +33,27 @@ VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = cl
-LD  = link
-CFLAGS =  -nologo -W3 -GR -GX -MTd -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1 
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-LDOUTOPT = /out:
+CC = gcc
+LD  = ld
+AR  = ar
+RANLIB = ranlib
+CFLAGS =  -Wall -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1 
+LDFLAGS  =   -g
+LDOUTOPT = -o
+COUTOPT  = -o
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
+LIBEXT = a
+OBJEXT = o
+
 SUBDIRS =
-TARGETS = regex.lib
+TARGETS = regex.$(LIBEXT)
 PDBFILE = regex.pdb
 PCHFILE = regex.pch
 
 HEADERS = regex.h
 CFILES  = regex.c 
-OBJECTS = ${patsubst %.c, %.obj, $(CFILES)}
+OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs
 
@@ -74,10 +80,15 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 	cd $(top_srcdir) && $(MAKE) config.status
 
 $(TARGETS): $(OBJECTS)
-	$(LD) $(LDFLAGS) ${patsubst %.obj, $(BUILDDIR)/%.obj, $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+else
+	$(AR) cr $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}
+	$(RANLIB) $(BUILDDIR)/$@
+endif
 
-%.obj: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c -Fo$(BUILDDIR)/$@  -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) $<
+%.$(OBJEXT): %.c
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $(COUTOPT)$(BUILDDIR)/$@ $<
 
 
 

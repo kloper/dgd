@@ -35,19 +35,25 @@ RM  = @RM@
 MKDIR = @MKDIR@
 CC = @CC@
 LD  = @LD@
+AR  = @AR@
+RANLIB = @RANLIB@
 CFLAGS = @CFLAGS@ @DEFS@
 LDFLAGS  = @LD_STATIC_FLAGS@ @LDFLAGS@
 LDOUTOPT = @LDOUTOPT@
+COUTOPT  = @COUTOPT@
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
+LIBEXT = @LIBEXT@
+OBJEXT = @OBJEXT@
+
 SUBDIRS =
-TARGETS = regex.lib
+TARGETS = regex.$(LIBEXT)
 PDBFILE = regex.pdb
 PCHFILE = regex.pch
 
 HEADERS = regex.h
 CFILES  = regex.c 
-OBJECTS = ${patsubst %.c, %.obj, $(CFILES)}
+OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs
 
@@ -74,10 +80,15 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 	cd $(top_srcdir) && $(MAKE) config.status
 
 $(TARGETS): $(OBJECTS)
-	$(LD) $(LDFLAGS) ${patsubst %.obj, $(BUILDDIR)/%.obj, $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+else
+	$(AR) cr $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}
+	$(RANLIB) $(BUILDDIR)/$@
+endif
 
-%.obj: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c -Fo$(BUILDDIR)/$@  -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) $<
+%.$(OBJEXT): %.c
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $(COUTOPT)$(BUILDDIR)/$@ $<
 
 
 

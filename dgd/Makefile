@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/./../STLport-4.5
+STLDIR     = $(top_srcdir)/.
 BOOSTDIR   = $(top_srcdir)/./../boost
 BUILDDIR   = $(srcdir)/Debug
 
@@ -38,14 +38,17 @@ MV  = mv
 CAT = cat
 SED = sed
 MKDIR = mkdir -p
-CXX = cl
-LD  = link
+CXX = g++
+LD  = ld
+AR  = ar
+RANLIB = ranlib
 MAKEDEPEND = makedepend
 GENGETOPT  = gengetopt
 
-CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-LDOUTOPT = /out:
+CXXFLAGS =  -Wall -g
+LDFLAGS  =   -g
+LDOUTOPT = -o
+COUTOPT  = -o
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) $(BOOSTINCLUDES) \
 $(GETOPTINCLUDES) $(REGEXINCLUDES)
 LOCALINCLUDES = -I. -I.. -I$(top_srcdir) 
@@ -53,13 +56,16 @@ STLINCLUDES   = -I $(STLDIR)/stlport
 BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I$(top_srcdir)/getopt/src
 REGEXINCLUDES = -I$(top_srcdir)/regex/src
-DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D _DG_CPP_FILE_ $(BOOSTDEFINES)
+DEFINES = -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
 BOOSTDEFINES =
 
+LIBEXT = a
+OBJEXT = o
+
 SUBDIRS = 
-TARGET = $(BUILDDIR)/dgd.lib
-PDBFILE = $(BUILDDIR)/dgd.pdb
-PCHFILE = $(BUILDDIR)/dgd.pch
+TARGET = dgd.$(LIBEXT)
+PDBFILE = dgd.pdb
+PCHFILE = dgd.pch
 
 HEADERS = 
 
@@ -73,7 +79,7 @@ dgOptionFilter.cpp
 GGEFILES = \
 dgDebugOpt.gge
 
-OBJECTS = ${patsubst %.cpp, $(BUILDDIR)/%.obj, $(CPPFILES)}
+OBJECTS = ${patsubst %.cpp, %.$(OBJEXT), $(CPPFILES)}
 
 all:  builddir $(TARGET) subdirs
 
@@ -104,7 +110,7 @@ clean: $(SUBDIRS)
 depend: .depend $(SUBDIRS)
 
 .depend:${patsubst %.cpp, src/%.cpp, $(CPPFILES)}
-	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.obj -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src%$(BUILDDIR)%' > $@ 
+	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src%$(BUILDDIR)%' > $@ 
 
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status
@@ -114,9 +120,14 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 	cd $(top_srcdir) && $(MAKE) config.status
 
 $(TARGET): $(OBJECTS)
-	$(LD) $(LDFLAGS)  $(OBJECTS) $(LDOUTOPT)$@ 
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS)  ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+else
+	$(AR) cr $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}
+	$(RANLIB) $(BUILDDIR)/$@
+endif
 
-$(BUILDDIR)/%.obj: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c -Fo$@  -Fd$(PDBFILE) -Fp$(PCHFILE) $<
+%.$(OBJEXT): %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c $(COUTOPT)$(BUILDDIR)/$@ $<
 
 include .depend

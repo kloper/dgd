@@ -255,10 +255,10 @@ void channelbuf::propagate( const char_type ch, std::streamsize size ) {
  */
 channelbuf::channelbuf() :
    Parent(),
-   m_indent_step( DefaultIndentStep ),
-   m_indent(0),
    m_line(0),
    m_column(0),
+   m_indent(0),
+   m_indent_step( DefaultIndentStep ),
    m_min_width( DefaultMinWidth ),
    m_max_width( DefaultMaxWidth ),
    m_wrap( true ),

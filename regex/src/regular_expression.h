@@ -29,8 +29,18 @@
 #include <iostream>
 
 extern "C" {
+#if defined(__STDC__)
+#include <sys/types.h>
+#include <string.h>
+#endif 
+
 #include "regex.h"
 }
+
+#if defined(__STDC__) && !defined(_STLPORT)
+#include <exception>
+#include <algorithm>
+#endif
 
 namespace DGD {
 

@@ -75,6 +75,24 @@ class channelbuf: public std::streambuf {
    public:
       typedef std::streambuf Parent;
       typedef std::pair<unsigned,unsigned> position_type;
+#if defined(__STDC__) && !defined(_STLPORT)
+      typedef char char_type;
+      typedef int  int_type;
+      class traits_type {
+	 public:
+	    static int_type eof() { return -1; }
+	    static void move( char_type* dst, 
+			      const char_type* src, 
+			      const int_type len ) {
+	       memmove( dst, src, len );
+	    }
+	    static const char_type* find( const char_type* src, 
+				    const int_type len,
+				    const char_type ch ) {
+	       return (const char_type*)memchr( src, ch, len );
+	    }
+      };
+#endif
 
    protected:
       typedef std::list< stream > Assoc_list;
@@ -134,6 +152,12 @@ class channelbuf: public std::streambuf {
       std::string  space_chars() const;
 
       position_type position() const;
+
+#if defined(_CYGWIN) && !defined(_STLPORT)
+      Parent* pubsetbuf(char_type* b, std::streamsize s) {
+	 return setbuf(b, s);
+      }
+#endif
 
    protected:
       char_type* find_one_of( const char_type* s, const unsigned int n,

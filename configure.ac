@@ -28,12 +28,17 @@ AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR(dgd/src/dgConfig.h.in)
 
 win32=0
+cygwin=0
+unix=0
 case "$target" in
 *cygwin* | *CYGWIN* | *cygnus* | *CYGNUS*) 
-  win32=1 ;;
+  win32=1 
+  cygwin=1 ;; 
 *)
-  AC_ERROR([No support for UNIX yet.]) ;;
+  win32=1 # temporary workaround for linux port
+  unix=1 ;;
 esac
+
 
 AC_ARG_ENABLE(debug,
               AC_HELP_STRING([--enable-debug],
@@ -69,56 +74,86 @@ fi
 if test $win32 = 1; then 
   AC_ARG_WITH(msvc, 
               AC_HELP_STRING([--with-msvc],
-                             [use MS VC++ as compiler/linker]),,
-	with_msvc=yes)
-  if test "x$with_msvc" = "xno"; then 
-     AC_ERROR([Compilers other then MS VC++ are not supported yet.])
-  fi
+                             [use MS VC++ as compiler/linker]),,)
 
-  AC_ARG_WITH(pch, 
+  if test "x$with_msvc" = "xyes"; then 
+     AC_ARG_WITH(pch, 
               AC_HELP_STRING([--with-pch],
                              [use MS VC++ precompiled headers]),,
-	with_pch=no)
+	   with_pch=no)
+       
+     AC_DEFINE(WIN32)
+     AC_DEFINE(_WINDOWS)
 
-  AC_DEFINE(WIN32)
-  AC_DEFINE(_WINDOWS)
-    
-  CXXFLAGS="$CXXFLAGS -nologo -Zm300 -W3 -GR -GX -TP -MTd" 
-  CFLAGS="$CFLAGS -nologo -W3 -GR -GX -MTd" 
-  if test "x$with_pch" = "xyes"; then
-     CXXFLAGS="$CXXFLAGS -YX"
-     CFLAGS="$CFLAGS -YX"
-  fi
-  LDFLAGS="$LDFLAGS /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT"
-  if test "x$enable_debug" = "xyes"; then 
-     AC_DEFINE(_DEBUG)
-     CXXFLAGS="$CXXFLAGS -Gm  -Zi -Od"
-     LDFLAGS="$LDFLAGS /debugtype:cv"
-     BUILDDIR=Debug
+     CXXFLAGS="$CXXFLAGS -nologo -Zm300 -W3 -GR -GX -TP -MTd" 
+     CFLAGS="$CFLAGS -nologo -W3 -GR -GX -MTd" 
+     LIBEXT=lib
+     if test "x$with_pch" = "xyes"; then
+        CXXFLAGS="$CXXFLAGS -YX"
+        CFLAGS="$CFLAGS -YX"
+     fi
+
+     LDFLAGS="$LDFLAGS /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT"
+
+     if test "x$enable_debug" = "xyes"; then 
+        AC_DEFINE(_DEBUG)
+        CXXFLAGS="$CXXFLAGS -Gm  -Zi -Od"
+        LDFLAGS="$LDFLAGS /debugtype:cv"
+        BUILDDIR=Debug
+     else
+        AC_DEFINE(NODEBUG)
+        CXXFLAGS="$CXXFLAGS -O2"
+        LDFLAGS="$LDFLAGS /opt:ref"
+        BUILDDIR=Release
+     fi
+
+     LD_STATIC_FLAGS="/lib"
+
+     LDOUTOPT="/out:"
+     COUTOPT="-Fo"
   else
-     AC_DEFINE(NODEBUG)
-     CXXFLAGS="$CXXFLAGS -O2"
-     LDFLAGS="$LDFLAGS /opt:ref"
-     BUILDDIR=Release
+     AC_DEFINE(CYGWIN)
+     AC_DEFINE(_CYGWIN)
+     CXXFLAGS="$CXXFLAGS -Wall" 
+     CFLAGS="$CFLAGS -Wall" 
+     LIBEXT=a
+     if test "x$enable_debug" = "xyes"; then 
+        AC_DEFINE(_DEBUG)
+        CXXFLAGS="$CXXFLAGS -g"
+        LDFLAGS="$LDFLAGS -g"
+        BUILDDIR=Debug
+     else
+        AC_DEFINE(NODEBUG)
+        CXXFLAGS="$CXXFLAGS -O2"
+        BUILDDIR=Release
+     fi
+     LDOUTOPT="-o"
+     COUTOPT="-o"
   fi
 
-  LD_STATIC_FLAGS="/lib"
+  AC_LANG(C++)
 
-  LDOUTOPT="/out:"
+  if test "x$with_msvc" = "xyes"; then
+     cxx_list=cl
+     cc_list=cl
+     AC_CHECK_PROG(LD, link, link, $CXX) 
+  else # we are on unix
+     cxx_list=g++
+     cc_list=gcc
+     AC_CHECK_PROG(LD, ld, ld, $CXX) 
+  fi
+
+  AC_PROG_CXX($cxx_list)
+  AC_PROG_CC($cc_list)     
+  AC_PROG_CXXCPP
+  AC_PROG_CPP    
 
   AC_SUBST(BUILDDIR)
   AC_SUBST(TARGETS)
-  AC_SUBST(CXX_DYNAMIC_FLAGS)
-  AC_SUBST(LD_DYNAMIC_FLAGS)
   AC_SUBST(LD_STATIC_FLAGS)
   AC_SUBST(LDOUTOPT)
-
-  AC_LANG(C++)
-  AC_PROG_CXX(cl)
-  AC_PROG_CC(cl)
-  AC_PROG_CXXCPP
-  AC_PROG_CPP
-  AC_CHECK_PROG(LD, link, link, $CXX) 
+  AC_SUBST(COUTOPT)
+  AC_SUBST(LIBEXT)
 fi
 
 DG_GUESS_LOCAL_LIB(STLport, STLDIR)
@@ -133,18 +168,24 @@ if test "X$BOOSTDIR" = "X"; then
 fi
 AC_SUBST(BOOSTDIR)
 
-if test $win32 = 1; then 
+if test "x$with_msvc" = "xyes"; then 
+   CXXFLAGS="$CXXFLAGS -Fd\$(BUILDDIR)/\$(PDBFILE) -Fp\$(BUILDDIR)/\$(PCHFILE)"
+   CFLAGS="$CFLAGS -Fd\$(BUILDDIR)/\$(PDBFILE) -Fp\$(BUILDDIR)/\$(PCHFILE)"
    EXTRA_LDFLAGS="$EXTRA_LDFLAGS \
 -libpath:\$(top_srcdir)/$STLDIR/lib \
 -libpath:\$(top_srcdir)/dgd/$BUILDDIR \
 -libpath:\$(top_srcdir)/regex/$BUILDDIR \
 -libpath:\$(top_srcdir)/getopt/$BUILDDIR"
    LDLIBS="getopt.lib regex.lib dgd.lib"
-
-   AC_SUBST(EXTRA_LDFLAGS)
-   AC_SUBST(LDLIBS)
+else 
+   EXTRA_LDFLAGS="$EXTRA_LDFLAGS"
+   LDLIBS="../dgd/\$(BUILDDIR)/dgd.a \
+../getopt/\$(BUILDDIR)/getopt.a \
+../regex/\$(BUILDDIR)/regex.a"
 fi
 
+AC_SUBST(EXTRA_LDFLAGS)
+AC_SUBST(LDLIBS)
 
 AC_PROG_MAKE_SET
 AC_CHECK_PROG(RM, rm, [rm -f], del,,)
@@ -153,8 +194,10 @@ AC_CHECK_PROG(CP, cp, [cp -f], copy,, )
 AC_CHECK_PROG(CAT, cat, cat, type,, )
 AC_CHECK_PROG(SED, sed, sed, [cat --],, )
 AC_CHECK_PROG(MKDIR, mkdir, [mkdir -p], md,, )
+AC_CHECK_PROG(RANLIB, ranlib, ranlib, ranlib,, )
+AC_CHECK_PROG(AR, ar, ar, ar,, )
 AC_CHECK_PROG(MAKEDEPEND, makedepend, makedepend, echo,, )
-AC_CHECK_PROG(GENGETOPT, gengetopt, gengetopt, echo,, )
+AC_CHECK_PROG(GENGETOPT, gengetopt, gengetopt, gengetopt )
 AC_CHECK_PROG(RC, rc, rc, echo,, )
 AC_CHECK_PROG(ISCC, ISCC, ISCC, ISCC,, )
 AC_CHECK_PROG(ETAGS, etags, etags, echo,, )

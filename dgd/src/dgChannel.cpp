@@ -43,8 +43,8 @@ namespace DGD {
  */
 channel::channel( const std::string& name ) :
    Parent( NULL ),
-   m_name( name ),
-   m_is_open(false) {
+   m_is_open(false),
+   m_name( name ) {
    init( NULL );
    m_buffer.pubsetbuf( NULL, 100 );
 }
