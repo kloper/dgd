@@ -42,7 +42,8 @@ class Debug {
 
    public:
       Debug( int argc, char** argv );
-      
+      ~Debug();
+
       stream create_file( const std::string& name );
       channel& create_channel( const std::string& name );
       operator channel_ref () const;

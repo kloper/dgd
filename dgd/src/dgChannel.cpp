@@ -30,6 +30,8 @@ channel::channel( const std::string& name ) :
    Parent( NULL ),
    m_name( name ),
    m_is_open(false) {
+   init( NULL );
+   m_buffer.pubsetbuf( NULL, 100 );
 }
 
 void channel::open() {

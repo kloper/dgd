@@ -53,6 +53,13 @@ Debug::Debug( int argc, char** argv ) {
    m_current_channel = m_channels.begin();
 }
 
+Debug::~Debug() {
+   for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i ) 
+      (*i)->flush();
+   for( File_list::iterator f = m_files.begin(); f != m_files.end(); ++f )
+      (*f)->flush();
+}
+
 channel& Debug::create_channel( const std::string& name ) {
    Channel_ptr chnl;
 

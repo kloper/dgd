@@ -46,6 +46,15 @@ class channelbuf: public std::streambuf {
       /**
        * std::streambuf interface
        */
+
+      virtual Parent* setbuf(char_type*, std::streamsize);
+
+      /** 
+       * Synchronizes (i.e. flushes) the buffer.  All subclasses are
+       * expected to override this virtual member function.
+       */
+      virtual int sync();
+
       /**
        * Called when there is no write position.  All subclasses are
        * expected to override this virtual member function.
@@ -55,9 +64,12 @@ class channelbuf: public std::streambuf {
 
       virtual void propagate( const char_type* begin, 
 			      const char_type* end );
+      virtual void propagate( const char_type ch,
+			      std::streamsize size );
 
    public:
       enum DefaultValues { 
+	 DefaultBufferSize = 100,
 	 DefaultMaxWidth   = 79,
 	 DefaultMinWidth   = 20,
 	 DefaultIndentStep = 8 

@@ -26,15 +26,45 @@
 
 namespace DGD {
 
+channelbuf::Parent* 
+channelbuf::setbuf( char_type* ptr , std::streamsize size) {
+   if( pbase() != NULL ) {
+      delete pbase();
+   }
+   
+   char_type* buffer = NULL;
+   std::streamsize bsize = 0;
+
+   if( size == 0 ) {
+      bsize = DefaultBufferSize;
+   } else {
+      bsize = size;
+   }
+
+   if( ptr == NULL ) {
+      buffer = new char_type[ bsize ];
+   } else {
+      buffer = ptr;
+   }
+
+   setp( buffer, buffer + bsize );
+   return this;
+}
+
+int channelbuf::sync() {
+   overflow( traits_type::eof() );
+   return 0;
+}
+
 channelbuf::int_type channelbuf::overflow( int_type ch ) {   
    const char_type* pos = pbase();
 
    do {
       const char_type* nearest = NULL;
-      const char_type* space_pos = traits_type::find( pos, epptr()-pos, ' ' );
-      const char_type* tab_pos   = traits_type::find( pos, epptr()-pos, '\t' );
-      const char_type* nl_pos    = traits_type::find( pos, epptr()-pos, '\n' );
-      const char_type* rl_pos    = traits_type::find( pos, epptr()-pos, '\r' );
+      const char_type* space_pos = traits_type::find( pos, pptr()-pos, ' ' );
+      const char_type* tab_pos   = traits_type::find( pos, pptr()-pos, '\t' );
+      const char_type* nl_pos    = traits_type::find( pos, pptr()-pos, '\n' );
+      const char_type* rl_pos    = traits_type::find( pos, pptr()-pos, '\r' );
       
       bool space_nearest = ( 
 	 ( space_pos != NULL ) &&
@@ -66,77 +96,86 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
       
       if( nearest != NULL ) {
 	 if( m_column + (nearest-pos+1) < m_max_width ) {
+	    propagate( pos, nearest+1 );
 	    if( nl_nearest || rl_nearest ) {
 	       m_column = std::min( m_indent * m_indent_step,
 				    m_max_width - m_min_width );
+	       propagate( ' ', m_column );
 	       m_line++;
 	    } else {
-	       m_word_pos = nearest;
+	       m_word_pos = nearest+1;
 	       m_column += nearest-pos+1 + (tab_nearest?7:0);
 	    }
 	    pos = nearest + 1;
 	 } else if( m_column + (nearest-pos+1) == m_max_width ) {
+	    propagate( pos, nearest );
+	    propagate( '\n', 1 );
 	    if( m_wrap ) {
 	       if( space_nearest || tab_nearest ) {
-		  propagate( pos, nearest );
-		  while( *pos == ' ' || *pos == '\t' ) pos++;
+		  while( pos < epptr() && 
+			 ( *pos == ' ' || *pos == '\t' ) ) pos++;
 	       } else if( nl_nearest || rl_nearest ) {
-		  propagate( pos, nearest );
 		  pos++;
 	       } 
 	       m_column = std::min( m_indent * m_indent_step,
 				    m_max_width - m_min_width );
+	       propagate( ' ', m_column );
 	       m_line++;
 	    } else {
 	       if( nl_nearest || rl_nearest ) {
 		  m_column = std::min( m_indent * m_indent_step,
 				       m_max_width - m_min_width );
+		  propagate( ' ', m_column );
 		  m_line++;
 	       } else {
 		  m_column += nearest-pos+1 + (tab_nearest?7:0);
 	       }
 	       pos = nearest + 1;
 	    }
+	    m_word_pos = pos;
 	 } else { // m_column + (nearest-pos+1) > m_max_width
 	    if( m_wrap ) {
-	       if( space_nearest || tab_nearest ) {
-		  if( m_word_wrap ) {
-		     propagate( pos, m_word_pos );
-		     pos = m_word_pos+1;
-		     m_word_pos = nearest;
-		  } else {
-		     propagate( pos, pos + (m_max_width-m_column) + 1 );
-		     pos += (m_max_width-m_column) + 1;
-		  }
-		  m_column = std::min( m_indent * m_indent_step,
-				       m_max_width - m_min_width );
-		  m_line++;
-	       } else if( nl_nearest || rl_nearest ) {
+	       if( m_word_wrap ) {
+		  propagate( pos, m_word_pos );
+		  propagate( '\n', 1 );
+		  pos = m_word_pos;
+		  m_word_pos = nearest+1;
+	       } else {
 		  propagate( pos, pos + (m_max_width-m_column) + 1 );
+		  propagate( '\n', 1 );
 		  pos += (m_max_width-m_column) + 1;
 	       }
+	       m_column = std::min( m_indent * m_indent_step,
+				    m_max_width - m_min_width );
+	       propagate( ' ', m_column );
+	       m_line++;
 	    } else {
+	       propagate( pos, nearest+1 );
 	       if( nl_nearest || rl_nearest ) {
 		  m_column = std::min( m_indent * m_indent_step,
 				       m_max_width - m_min_width );
+		  propagate( ' ', m_column );
 		  m_line++;
 	       } else {
+		  m_word_pos = nearest+1;
 		  m_column += nearest-pos+1 + (tab_nearest?7:0);
 	       }
 	       pos = nearest + 1;
 	    }
 	 }
       } else {
-	 while( (unsigned)(epptr()-pos) >= m_max_width-m_column ) {
+	 while( (unsigned)(pptr()-pos) >= m_max_width-m_column ) {
 	    propagate( pos, pos + (m_max_width-m_column) + 1 );
 	    pos += (m_max_width-m_column) + 1;
 	    m_column = std::min( m_indent * m_indent_step,
 				 m_max_width - m_min_width );
+	    propagate( ' ', m_column );
 	    m_line++;  
 	 }
 	 
-	 unsigned int remaining_len = epptr()-pos;
+	 unsigned int remaining_len = pptr()-pos;
 	 if( remaining_len > 0 ) {
+	    m_word_pos = pbase() + (pos - m_word_pos);
 	    traits_type::move( pbase(), pos, remaining_len );
 	    setp( pbase(), epptr() );
 	    pbump( remaining_len );
@@ -151,13 +190,19 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
       }
    } while( 1 );
 
-   return traits_type::eof();
+   return 0;
 }
    
 void channelbuf::propagate( const char_type* begin, const char_type* end ) {
    for( Assoc_list::iterator i = m_assoc.begin(); i != m_assoc.end(); ++i ) {
       (*i)->write( begin, end-begin );
-      (*i)->write( "\n", 1 );
+   }
+}
+
+void channelbuf::propagate( const char_type ch, std::streamsize size ) {
+   for( Assoc_list::iterator i = m_assoc.begin(); i != m_assoc.end(); ++i ) {
+      for( int x = 0; x < size; ++x )
+	 (*i)->write( &ch, 1 );
    }
 }
 

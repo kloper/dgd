@@ -2512,7 +2512,7 @@ if test $win32 = 1; then
 -libpath:\$(top_srcdir)/$STLDIR/lib \
 -libpath:\$(top_srcdir)/dgd/$BUILDDIR \
 -libpath:\$(top_srcdir)/getopt/$BUILDDIR"
-   LDLIBS="getopt.lib"
+   LDLIBS="getopt.lib dgd.lib"
 
 fi
 
@@ -2908,7 +2908,7 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-ac_config_files="$ac_config_files Makefile getopt/Makefile dgd/Makefile dgd/src/dgConfig.h"
+ac_config_files="$ac_config_files Makefile getopt/Makefile dgd/Makefile dgd/src/dgConfig.h test/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3244,7 +3244,8 @@ do
   "getopt/Makefile" ) CONFIG_FILES="$CONFIG_FILES getopt/Makefile" ;;
   "dgd/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgd/Makefile" ;;
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
-  *) { { echo "$as_me:3247: error: invalid argument: $ac_config_target" >&5
+  "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
+  *) { { echo "$as_me:3248: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -3483,7 +3484,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:3486: creating $ac_file" >&5
+    { echo "$as_me:3487: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -3501,7 +3502,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:3504: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:3505: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -3514,7 +3515,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:3517: error: cannot find input file: $f" >&5
+           { { echo "$as_me:3518: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;

@@ -125,7 +125,7 @@ if test $win32 = 1; then
 -libpath:\$(top_srcdir)/$STLDIR/lib \
 -libpath:\$(top_srcdir)/dgd/$BUILDDIR \
 -libpath:\$(top_srcdir)/getopt/$BUILDDIR"
-   LDLIBS="getopt.lib"
+   LDLIBS="getopt.lib dgd.lib"
 
    AC_SUBST(EXTRA_LDFLAGS)
    AC_SUBST(LDLIBS)
@@ -145,7 +145,7 @@ AC_CHECK_PROG(RC, rc, rc, echo,, )
 AC_CHECK_PROG(ISCC, ISCC, ISCC, ISCC,, )
 AC_CHECK_PROG(ETAGS, etags, etags, echo,, )
 
-AC_CONFIG_FILES(Makefile getopt/Makefile dgd/Makefile dgd/src/dgConfig.h ) 
+AC_CONFIG_FILES(Makefile getopt/Makefile dgd/Makefile dgd/src/dgConfig.h test/Makefile ) 
 
 AC_OUTPUT
 
