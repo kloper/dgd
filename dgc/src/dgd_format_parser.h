@@ -1,4 +1,4 @@
-// -*- c -*-
+// -*- c++ -*-
 //
 // $Id$
 //
@@ -28,28 +28,32 @@
 
 #include "dgd_format_cache.h" /* need here because YYSTYPE will be there */
 
-#define PARS_T_ERROR 0
-#define PARS_T_PAIR 1
-#define PARS_T_NEXT_ARG 2
-#define PARS_T_SET_ARG 3
-#define PARS_T_LEXEME 4
+#define PARS_T_ERROR        0
+#define PARS_T_PAIR         1
+#define PARS_T_NEXT_ARG     2
+#define PARS_T_SET_ARG      3
+#define PARS_T_LEXEME       4
 #define PARS_T_CALL_BY_NAME 5
-#define PARS_T_READ_DEC 6
-#define PARS_T_READ_OCT 7
-#define PARS_T_READ_UNSIGNED 8
-#define PARS_T_READ_HEX 9
-#define PARS_T_WRITE_REP 10
-#define PARS_T_READ_SCI 11
-#define PARS_T_READ_FLOAT 12
-#define PARS_T_READ_SCIORFLOAT 13
-#define PARS_T_READ_SCIHEX 14
-#define PARS_T_READ_CHAR 15
-#define PARS_T_READ_STR 16
-#define PARS_T_READ_PTR 17
-#define PARS_T_WORD     18
-#define PARS_T_CHAR     19
+#define PARS_T_DEC          6
+#define PARS_T_OCT          7
+#define PARS_T_UNSIGNED     8
+#define PARS_T_HEX          9
+#define PARS_T_REP          10
+#define PARS_T_SCI          11
+#define PARS_T_FLOAT        12
+#define PARS_T_SCIORFLOAT   13
+#define PARS_T_SCIHEX       14
+#define PARS_T_CHAR         15
+#define PARS_T_STR          16
+#define PARS_T_PTR          17
+#define PARS_T_WORD         18
+#define PARS_T_BACKSLASH    19
 
 /* content of y.tab.h goes here */
+#ifndef YYERRCODE
+#define YYERRCODE 256
+#endif
+
 #define LEX_EOF 257
 #define LEX_ZERO 258
 #define LEX_MINUS 259

@@ -36,6 +36,7 @@ typedef struct _cache_item_t {
       unsigned int type;
       union {
 	    unsigned int          num;
+	    double                dnum;
 	    void                 *vptr;
 	    char                 *cptr;
 	    struct _cache_item_t *ring;
@@ -59,9 +60,9 @@ typedef struct _cache_item_t {
       } value;
 
       struct {
-	    unsigned int flags;
-	    unsigned int argn[CACHE_ITEM_CSIZE];
-	    va_list      argp[CACHE_ITEM_CSIZE];
+	    unsigned int             flags;
+	    unsigned int             argn[CACHE_ITEM_CSIZE];
+	    struct   _cache_item_t * argp[CACHE_ITEM_CSIZE];
       } cache;
 
       struct _cache_item_t *next;

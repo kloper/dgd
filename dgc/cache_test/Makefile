@@ -33,18 +33,18 @@ VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = gcc
-LD  = ld
+CC = cl
+LD  = link
 AR  = ar
 RANLIB = ranlib
-CFLAGS =  -Wall -g
-LDFLAGS  =  -g
-LDOUTOPT = -o
-COUTOPT  = -o
+CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  =  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
+COUTOPT  = -Fo
 INCLUDES = -I. -I.. -I$(top_srcdir) -I../src
 
-EXEEXT = 
-OBJEXT = o
+EXEEXT = .exe
+OBJEXT = obj
 
 SUBDIRS =
 TARGETS = cache$(EXEEXT)

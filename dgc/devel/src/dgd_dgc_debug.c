@@ -26,7 +26,7 @@
 #include <stdio.h>
 
 #include "dgd_config.h"
-#include "dgd_compile_cache.h"
+#include "dgd_format_cache.h"
 #include "dgd_format_parser.h"
 
 #include "dgd_dgc_debug.h"
@@ -100,51 +100,51 @@ void dgd_dump_parser_bytecode( FILE *stream,
 		     next->value.call.name.begin );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_DEC:
+	 case PARS_T_DEC:
 	    fprintf( stream, "decimal:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_OCT:
+	 case PARS_T_OCT:
 	    fprintf( stream, "octal:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_UNSIGNED:
+	 case PARS_T_UNSIGNED:
 	    fprintf( stream, "unsigned:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_HEX:
+	 case PARS_T_HEX:
 	    fprintf( stream, "hex:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_WRITE_REP:
+	 case PARS_T_REP:
 	    fprintf( stream, "write report:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_SCI:
+	 case PARS_T_SCI:
 	    fprintf( stream, "scientific:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_FLOAT:
+	 case PARS_T_FLOAT:
 	    fprintf( stream, "float:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_SCIORFLOAT:
+	 case PARS_T_SCIORFLOAT:
 	    fprintf( stream, "scientific or float:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_SCIHEX:
+	 case PARS_T_SCIHEX:
 	    fprintf( stream, "scientific hex:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_CHAR:
+	 case PARS_T_CHAR:
 	    fprintf( stream, "char:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_STR:
+	 case PARS_T_STR:
 	    fprintf( stream, "string:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
-	 case PARS_T_READ_PTR:
+	 case PARS_T_PTR:
 	    fprintf( stream, "pointer:\n" );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
@@ -153,7 +153,7 @@ void dgd_dump_parser_bytecode( FILE *stream,
 		     next->value.lexeme.end - next->value.lexeme.begin,
 		     next->value.lexeme.begin );
 	    break;
-	 case PARS_T_CHAR:
+	 case PARS_T_BACKSLASH:
 	    fprintf( stream, "backslash: %c\n", next->value.ch );
 	    break;
 	 default:

@@ -139,7 +139,7 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str ) {
 	    }
 
 	    break;
-	 case PARS_T_CHAR:
+	 case PARS_T_BACKSLASH:
 	    size = min( 1, str->high_bound - str->end );
 
 	    if(size > 0 ) {
@@ -166,7 +166,7 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str ) {
 
 static
 void
-dgd_format_setle_argn( dgd_eval_t *eval ) {
+dgd_format_settle_argn( dgd_eval_t *eval ) {
    cache_item_t *eval_item;
 
    unsigned argn = 0;
@@ -183,18 +183,18 @@ dgd_format_setle_argn( dgd_eval_t *eval ) {
 	    eval_item->cache.flags |= DGD_CACHE_ARG_FLAG;
 	    eval_item->cache.argn[0] = argn++;
 	    break;
-	 case PARS_T_READ_DEC:
-	 case PARS_T_READ_OCT:
-	 case PARS_T_READ_UNSIGNED:
-	 case PARS_T_READ_HEX:
-	 case PARS_T_WRITE_REP:
-	 case PARS_T_READ_SCI:
-	 case PARS_T_READ_FLOAT:
-	 case PARS_T_READ_SCIORFLOAT:
-	 case PARS_T_READ_SCIHEX:
-	 case PARS_T_READ_CHAR:
-	 case PARS_T_READ_STR:
-	 case PARS_T_READ_PTR:
+	 case PARS_T_DEC:
+	 case PARS_T_OCT:
+	 case PARS_T_UNSIGNED:
+	 case PARS_T_HEX:
+	 case PARS_T_REP:
+	 case PARS_T_SCI:
+	 case PARS_T_FLOAT:
+	 case PARS_T_SCIORFLOAT:
+	 case PARS_T_SCIHEX:
+	 case PARS_T_CHAR:
+	 case PARS_T_STR:
+	 case PARS_T_PTR:
 	    eval_item->cache.flags |= DGD_CACHE_ARG_FLAG;
 	    eval_item->cache.argn[0] = argn++;
 
@@ -213,7 +213,7 @@ dgd_format_setle_argn( dgd_eval_t *eval ) {
 	    } else if(  eval_item->value.hash.attr.precision < 0 ) {
 	       argn = -eval_item->value.hash.attr.precision;
 	       eval_item->cache.flags |= DGD_CACHE_PREC_FLAG;
-	       eval_item->cache.argn[2] = argn;
+	       eval_item->cache.argn[2] = argn++;
 	    }	       
 	 default:
 	    break;
@@ -227,7 +227,7 @@ dgd_format_setle_argn( dgd_eval_t *eval ) {
 
 static
 int 
-dgd_format_setle_argp( dgd_eval_t *eval ) {
+dgd_format_settle_argp( dgd_eval_t *eval ) {
    cache_item_t *eval_item, *first_item;
    int res = EVAL_RES_DONE;
    unsigned int i;
@@ -247,25 +247,25 @@ dgd_format_setle_argp( dgd_eval_t *eval ) {
 	    eval_item->cache.flags |= DGD_CACHE_ARGP_FLAG;
 	    eval_item->cache.argp[0] = next_arg;
 	    switch( eval_item ) {
-	       case PARS_T_READ_PTR:
-	       case PARS_T_READ_STR:
+	       case PARS_T_PTR:
+	       case PARS_T_STR:
 	       case PARS_T_NEXT_ARG:
 		  va_arg( next_arg, char* );
 		  break;
-	       case PARS_T_READ_DEC:
-	       case PARS_T_READ_OCT:
-	       case PARS_T_READ_UNSIGNED:
-	       case PARS_T_READ_HEX:
+	       case PARS_T_DEC:
+	       case PARS_T_OCT:
+	       case PARS_T_UNSIGNED:
+	       case PARS_T_HEX:
 	       case PARS_T_WRITE_REP:
-	       case PARS_T_READ_CHAR:
+	       case PARS_T_CHAR:
 		  /* bytecount does not make sense since compiler will 
 		     expand short and char values to int */
 		  va_arg( next_arg, int );
 		  break;
-	       case PARS_T_READ_SCI:
-	       case PARS_T_READ_FLOAT:
-	       case PARS_T_READ_SCIORFLOAT:
-	       case PARS_T_READ_SCIHEX:
+	       case PARS_T_SCI:
+	       case PARS_T_FLOAT:
+	       case PARS_T_SCIORFLOAT:
+	       case PARS_T_SCIHEX:
 		  va_arg( next_arg, double );
 		  break;
 	       default:

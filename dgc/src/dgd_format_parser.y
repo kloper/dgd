@@ -29,7 +29,7 @@
 
 #include "dgd_types.h"
 #include "dgd_format_lexer.h"
-#include "dgd_compile_cache.h"
+#include "dgd_format_cache.h"
    
 #define YYDEBUG 1
 
@@ -241,7 +241,7 @@ intformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type               = PARS_T_READ_DEC;
+                       ring->type               = PARS_T_DEC;
 		       ring->cache.flags        = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
@@ -255,7 +255,7 @@ intformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_OCT;
+                       ring->type         = PARS_T_OCT;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
@@ -269,7 +269,7 @@ intformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_UNSIGNED;
+                       ring->type         = PARS_T_UNSIGNED;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
@@ -283,7 +283,7 @@ intformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_HEX;
+                       ring->type         = PARS_T_HEX;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
@@ -297,7 +297,7 @@ intformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_HEX;
+                       ring->type         = PARS_T_HEX;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
@@ -312,7 +312,7 @@ intformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_WRITE_REP;
+                       ring->type         = PARS_T_REP;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
@@ -329,7 +329,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_SCI;
+                       ring->type         = PARS_T_SCI;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
@@ -344,7 +344,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_SCI;
+                       ring->type         = PARS_T_SCI;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
@@ -359,7 +359,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_FLOAT;
+                       ring->type         = PARS_T_FLOAT;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
@@ -374,7 +374,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_FLOAT;
+                       ring->type         = PARS_T_FLOAT;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
@@ -389,7 +389,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_SCIORFLOAT;
+                       ring->type         = PARS_T_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
 		       ring->cache.flags  = 0;
@@ -404,7 +404,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_SCIORFLOAT;
+                       ring->type         = PARS_T_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 		       ring->cache.flags  = 0;
@@ -419,7 +419,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_SCIHEX;
+                       ring->type         = PARS_T_SCIHEX;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
@@ -434,7 +434,7 @@ doubleformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_SCIHEX;
+                       ring->type         = PARS_T_SCIHEX;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
@@ -452,7 +452,7 @@ stringformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_CHAR;
+                       ring->type         = PARS_T_CHAR;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
@@ -466,7 +466,7 @@ stringformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_STR;
+                       ring->type         = PARS_T_STR;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
@@ -483,7 +483,7 @@ ptrformat:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type         = PARS_T_READ_PTR;
+                       ring->type         = PARS_T_PTR;
 		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
@@ -727,7 +727,7 @@ fmt:
 
                        if( ring == NULL ) YYERROR;
 
-                       ring->type         = PARS_T_CHAR;
+                       ring->type         = PARS_T_BACKSLASH;
                        ring->value.ch     = $1.lex.value.ch;
 		       ring->cache.flags  = 0;
 
@@ -760,7 +760,7 @@ fmt:
 
                        dgd_ring_push_back( &($1.ring), ring );
 
-                       ring->type         = PARS_T_CHAR;
+                       ring->type         = PARS_T_BACKSLASH;
                        ring->value.ch     = $2.lex.value.ch;
 		       ring->cache.flags  = 0;
 

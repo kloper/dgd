@@ -34,8 +34,8 @@ GPATH += :$(srcdir)/src
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = gcc
-LD  = ld
+CC = cl
+LD  = link
 AR  = ar
 SED = sed
 CAT = cat
@@ -43,15 +43,15 @@ RANLIB = ranlib
 YACC = byacc
 MAKEDEPEND = makedepend
 
-CFLAGS =  -Wall -g -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1 
-LDFLAGS  =   -g
-LDOUTOPT = -o
-COUTOPT  = -o
+CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1 
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
+COUTOPT  = -Fo
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
-LIBPREFIX = lib
-LIBEXT = a
-OBJEXT = o
+LIBPREFIX = 
+LIBEXT = lib
+OBJEXT = obj
 
 SUBDIRS =
 TARGETS = $(LIBPREFIX)dgc.$(LIBEXT) $
@@ -62,12 +62,12 @@ HEADERS = \
 dgd_types.h \
 dgd_format_lexer.h \
 dgd_format_parser.h \
-dgd_compile_cache.h
+dgd_format_cache.h
 CFILES  = \
 dgd_format_parser.c \
 dgd_types.c \
 dgd_format_lexer.c \
-dgd_compile_cache.c
+dgd_format_cache.c
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs

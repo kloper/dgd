@@ -27,7 +27,7 @@
 #define _dgd_dgc_debug_h_
 
 #include <stdio.h>
-#include "dgd_compile_cache.h"
+#include "dgd_format_cache.h"
 
 void dgd_dump_parser_bytecode( FILE *stream, 
 			       cache_item_t *ring, 
