@@ -1,5 +1,5 @@
 #
-# $Id$
+# 
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/.
-BOOSTDIR   = $(top_srcdir)/./../boost_1_26_0
+STLDIR     = $(top_srcdir)/./../STLport-4.5-1020
+BOOSTDIR   = $(top_srcdir)/./../boost-1.30.2
 BUILDDIR   = $(srcdir)/Debug
 
 VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
@@ -38,17 +38,17 @@ MV  = mv
 CAT = cat
 SED = sed
 MKDIR = mkdir -p
-CXX = g++
-LD  = ld
+CXX = cl
+LD  = link
 AR  = ar
 RANLIB = ranlib
 MAKEDEPEND = makedepend
 GENGETOPT  = gengetopt
 
-CXXFLAGS =  -Wall -g
-LDFLAGS  =   -g
-LDOUTOPT = -o
-COUTOPT  = -o
+CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
+COUTOPT  = -Fo
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) $(BOOSTINCLUDES) \
 $(GETOPTINCLUDES) $(REGEXINCLUDES)
 LOCALINCLUDES = -I. -I.. -I$(top_srcdir) 
@@ -56,12 +56,12 @@ STLINCLUDES   = -I $(STLDIR)/stlport
 BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I$(top_srcdir)/getopt/src
 REGEXINCLUDES = -I$(top_srcdir)/regex/src
-DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
+DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
 BOOSTDEFINES =
 
-LIBPREFIX = lib
-LIBEXT = a
-OBJEXT = o
+LIBPREFIX = 
+LIBEXT = lib
+OBJEXT = obj
 
 SUBDIRS = 
 TARGET = $(LIBPREFIX)dgd.$(LIBEXT)

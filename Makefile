@@ -1,5 +1,5 @@
 #
-# $Id$
+# 
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ srcdir = .
 top_srcdir = .
 
 RM= rm -f
-ETAGS = echo
+ETAGS = etags
 
 SUBDIRS = getopt regex dgd test
 

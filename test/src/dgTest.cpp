@@ -1,5 +1,5 @@
 //
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 //
 // dgTest.cpp -- test for DGD
 //
+
+#include <dgConfig.h>
 
 #include <boost/smart_ptr.hpp>
 
@@ -260,7 +262,7 @@ int main( int argc, char** argv ) {
    pointers_test( *dgd_channel(main) );
    tie_test( dout );
    multifile_log_test( dout );
-//   bad_stream_test( cout );
+   bad_stream_test( cout );
    bad_stream_test( *dgd_channel(main) );
 
    return 0;

@@ -1,5 +1,5 @@
 #
-# $Id$
+# 
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,21 +33,21 @@ VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = gcc
-LD  = ld
+CC = cl
+LD  = link
 AR  = ar
 RANLIB = ranlib
 MAKEDEPEND = makedepend
 
-CFLAGS =  -Wall -g
-LDFLAGS  =  -g
-LDOUTOPT = -o
-COUTOPT  = -o
+CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  =  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
+COUTOPT  = -Fo
 
 INCLUDES = -I. -I.. -I$(top_srcdir) -I../src -I../devel/src
 
-EXEEXT = 
-OBJEXT = o
+EXEEXT = .exe
+OBJEXT = obj
 
 SUBDIRS =
 TARGETS = parser$(EXEEXT)

@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,10 @@
  * dgConfig.h.in 
  */
 
-#define DG_VERSION_STRING "dgd-0.25 Fri Sep 12 19:45:49 IDT 2003"
+#define DG_VERSION_STRING "dgd-0.25 Fri Oct 31 01:31:52 JST 2003"
+
+// This one seems to solve problem with vc7 and boost-1.30
+
 
 #endif /* _dgConfig_h_ */
 

@@ -1,5 +1,5 @@
 //
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 //
 // dgDebug.cpp -- implementation for dgDebug.h
 //
+
+#include "dgConfig.h"
 
 #include <regular_expression.h>
 
@@ -93,8 +95,7 @@ class exit_required: public std::exception {
  * Default constructor. Initializes the factory and opens the main
  * channel.
  */
-Debug::Debug() :
-   m_main_file( NULL ) 
+Debug::Debug()
 {
    std::fill( (char*)&m_args_info, 
 	      (char*)&m_args_info + sizeof(m_args_info), 
@@ -278,7 +279,7 @@ channel& Debug::create_channel( const std::string& name ) {
 stream Debug::create_file( const std::string& name ) {
    stream new_file( new std::ofstream( name.c_str() ) );
    if( new_file->fail() || new_file->bad() ) {
-      new_file.reset( NULL );
+      new_file.reset();
       return new_file;
    }
 
@@ -380,10 +381,10 @@ Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
       df->process_options( argc, argv );
    } catch( bad_params& ) {
       debug_factory = NULL;
-      df.reset( NULL );
+      df.reset();
    } catch( debug_disabled& ) {
       debug_factory = NULL;
-      df.reset( NULL );
+      df.reset();
    } catch( exit_required& ) {
       exit(0);
    }

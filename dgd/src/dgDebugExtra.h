@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ if(DGD::Debug::debug_factory) { \
  */
 #if defined(_TRACE)
 #define dgd_start_scope(c, text) \
-DGD::Debug::channel_ptr __cnl(NULL); \
+DGD::Debug::channel_ptr __cnl; \
 if(DGD::Debug::debug_factory) __cnl = dgd_channel(c); \
 (void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << text << " {" << std::endl << DGD::incr) )
 #else
