@@ -44,7 +44,7 @@ my $buildenv   = new cons( %{$ruleset},
 
 my $TARGET = "$BUILD/dgdtest%SUFEXE";
 
-KeepPrecious $buildenv, $TARGET;
+KeepPrecious $buildenv $TARGET;
 AfterBuild $buildenv $TARGET, q( 
   if( $status eq 'built' ) {
      $version->save();

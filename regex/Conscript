@@ -37,7 +37,7 @@ my $buildenv   = new cons( %{$ruleset} );
 
 my $TARGET = "$BUILD/%{PREFLIB}regex%{SUFLIB}";
 
-KeepPrecious $buildenv, $TARGET;
+KeepPrecious $buildenv $TARGET;
 
 Library $buildenv $TARGET, 
   map( "$BUILD/$_", qw(regex.c alloca.c) );

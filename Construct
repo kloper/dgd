@@ -25,7 +25,9 @@
 use strict;
 use Data::Dumper;
 use Getopt::Long;
+use Cwd;
 use File::Find;
+use File::Path;
 
 use Cons::Common;
 use Cons::Toolset;
@@ -43,7 +45,7 @@ map {
 	say( "error: unknown option $_", 'verbose' => 1 );
 	die;
     } elsif( /^clean$/ ) {
-	find( \&clean, '.' );
+	clean( cwd() );
 	return 1;
     } else {
 	say( "error: unknown command $_", 'verbose' => 1 );
@@ -61,8 +63,23 @@ Default $BLIB;
 Build map( "$_/Conscript", qw(regex dgd test) );
 
 sub clean {
-    if( /\.(o|a|so|obj|exe|lib|pdb|idb|pch|ilk)$/i ) {
-	print "removing $File::Find::name\n";
-	unlink;
-    } 
+    my ($root) = @_;
+    find( sub {
+	      if( /\.(o|a|so|obj|exe|lib|pdb|idb|pch|ilk)$/i ) {
+		  print "removing $File::Find::name\n";
+		  unlink;
+	      } 
+	  }, $root );
+
+    my $dirs = [];
+    find( sub {
+	      if( /Debug[\/\\]*$/ and -d ) {
+		  push @$dirs, $File::Find::name;
+	      } elsif( /Release[\/\\]*$/ and -d ) {
+		  push @$dirs, $File::Find::name;
+	      }
+	  }, $root );
+    if( scalar( @$dirs ) ) { 
+	rmtree( $dirs, 1 );
+    }
 }

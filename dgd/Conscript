@@ -41,7 +41,7 @@ our $buildenv   = new cons( %{$ruleset},
 
 my $TARGET = "$BUILD/%{PREFLIB}dgd%{SUFLIB}";
 
-KeepPrecious $buildenv, $TARGET;
+KeepPrecious $buildenv $TARGET;
 AfterBuild $buildenv $TARGET, q( 
   if( $status eq 'built' ) {
      $version->save();
@@ -82,10 +82,15 @@ map {
     our $params = { 'version' => \$version, 
 		    'toolset' => \$toolset };
     Command $buildenv $tgt, $src, 
-      q([perl] Cons::Template->apply( "%>", "%<", $params ); );
+      q([perl] Cons::Template->apply( '%>', '%<', $params ); );
 } qw( dgConfig.h.in );
 
-Command $buildenv [ "$BUILD/dgDebugOpt.h", 
-		    "$BUILD/dgDebugOpt.cpp" ], 
-  "$BUILD/dgDebugOpt.xml",
-  qq(clo++ -Dcxx_header_file=%<:b.h -Dcxx_namespace=DGD -Dcxx_source_file=%<:b.cpp -o c++ %<);
+if( defined($ruleset->{'CLOXXCOM'}) ) {
+    Command $buildenv [ "$BUILD/dgDebugOpt.h", 
+			"$BUILD/dgDebugOpt.cpp" ], 
+			  "$BUILD/dgDebugOpt.xml",
+			    qq(%CLOXXCOM -Dcxx_header_file=%<:b.h ) .
+			      qq(-Dcxx_namespace=DGD ) . 
+				qq(-Dcxx_source_file=%<:b.cpp -o c++ %<);
+}
+

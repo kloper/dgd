@@ -95,7 +95,7 @@
 	    <comment>Regexp on Channels which need to be turned on</comment>
 	</option>
         <option id="trace_turn_off" type="string" strict="yes"
-                mandatory="no"
+                mandatory="no" 
 	        default=".">
 	    <name>trace-turn-off</name>
 	    <comment>Regexp on Channels which need to be turned off</comment>
