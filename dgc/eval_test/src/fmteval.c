@@ -77,6 +77,11 @@ int main( int argc, char** argv ) {
    dgd_printf( "{%4$*2$.*1$d}{%3$-*1$d}\n", 10, 15, 108, 109 );
    dgd_printf( "{%*.*d}{%3$#*1$.*2$d}\n", 10, 15, 108, 109 );
    dgd_printf( "{%hhd}\n", 0x7fffffff );
+   dgd_printf( "{%hhq}{%d}{%3$d}\n", 110 );
+   dgd_printf( "{%1$d}{%1$X}{%1$u}{%1$o}\n", 0xfafafafa );
+   dgd_printf( "{%1$e}{%1$f}{%1$E}{%1$a}{%1$g}{%1$G}\n", 123.456 );
+   dgd_printf( "{%1$c}{%1$d}{%1$x}{%1$10.5c}\n", 'q' );
+   dgd_printf( "{%1$c}{%1$d}{%1$x}{%1$10.5c}\n", 0x7172 );
    return 0;
 }
 
