@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -180,9 +180,19 @@ class channel: public std::ostream {
       channelbuf m_tmp_buffer;
 };
 
-void assoc( std::ostream* s, channel& channel );
-void assoc( std::ostream& s, channel& channel );
-void assoc( std::ostream* s, const std::string& name );
+enum Assoc_type {
+   Assoc_Append = 0,
+   Assoc_Assign,
+   Assoc_Prepend,
+   Assoc_Delete
+};
+
+void assoc( std::ostream* s, channel& channel, 
+	    const Assoc_type action = Assoc_Append );
+void assoc( std::ostream& s, channel& channel, 
+	    const Assoc_type action = Assoc_Append );
+void assoc( std::ostream* s, const std::string& name, 
+	    const Assoc_type action = Assoc_Append );
 
 }; // end of namespace DGD
 

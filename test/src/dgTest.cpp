@@ -234,18 +234,17 @@ void overload_test( channel& debug ) {
 
 int main( int argc, char** argv ) {
    option_filter of;
-   char* filter[] = { "--debug.*" };
+   char* filter[] = { "--trace.*" };
    
    option_filter::option_set_container* option_sets = 
       of( argc, argv, 1, filter );
 
    Debug::debug_factory_ref dout = 
-      Debug::create_factory( (*option_sets)[0].argc, 
-			     (*option_sets)[0].argv );   
-      
+      Debug::create_factory( (*option_sets)[0] );   
+
    if( dout.get() == NULL )
       return 1;
-   
+				 
    dgd_trace( main, "Created by: " << dgd << make_pair( argc, argv ) << endl );
 
    stream s = dout->create_file( "dimka.log" );

@@ -279,13 +279,34 @@ void channel::header() {
  * associate more then one channel with the same physical stream. In
  * fact, unexpected formatting results can occur. Instead you can
  * associate multiple channels with a single DGD::channel.
+ * @param action - affects the operation performed with the
+ * association list. Assoc_Assign will clear the list before
+ * appending, Assoc_Append and Assoc_Prepend will put the pointer at
+ * the end or at the beginning of the list. Assoc_Delete will remove the 
+ * stream from the association list.
  * @see DGD::channelbuf
  * @see channelbuf::assoc(std::ostream*)
  */
-void assoc( std::ostream* s, channel& channel ) {
+void assoc( std::ostream* s, channel& channel, const Assoc_type action) {
    if( s != NULL ) {
       channelbuf& buf = channel.rdbuf();
-      buf.assoc( s );
+      channelbuf::Assoc_type atype;
+
+      switch( action ) {
+	 case Assoc_Assign:
+	    atype = channelbuf::Assoc_Assign;
+	    break;
+	 case Assoc_Append:
+	    atype = channelbuf::Assoc_Append;
+	    break;
+	 case Assoc_Prepend:
+	    atype = channelbuf::Assoc_Prepend;
+	    break;
+	 case Assoc_Delete:
+	    buf.dassoc( s );
+	    return;
+      }
+      buf.assoc( s, atype );
       channel.header();
    }
 }
@@ -299,12 +320,17 @@ void assoc( std::ostream* s, channel& channel ) {
  * associate more then one channel with the same physical stream. In
  * fact, unexpected formatting results can occur. Instead you can
  * associate multiple channels with a single DGD::channel.
+ * @param action - affects the operation performed with the
+ * association list. Assoc_Assign will clear the list before
+ * appending, Assoc_Append and Assoc_Prepend will put the pointer at
+ * the end or at the beginning of the list. Assoc_Delete will remove the 
+ * stream from the association list.
  * @see DGD::channelbuf
  * @see channelbuf::assoc(std::ostream*)
  * @see assoc(std::ostream*,channel& channel)
  */
-void assoc( std::ostream& s, channel& cnl ) {
-   assoc( &s, cnl );
+void assoc( std::ostream& s, channel& cnl, const Assoc_type action ) {
+   assoc( &s, cnl, action );
 }
 
 /**
@@ -318,94 +344,45 @@ void assoc( std::ostream& s, channel& cnl ) {
  * associate more then one channel with the same physical stream. In
  * fact, unexpected formatting results can occur. Instead you can
  * associate multiple channels with a single DGD::channel.
+ * @param action - affects the operation performed with the
+ * association list. Assoc_Assign will clear the list before
+ * appending, Assoc_Append and Assoc_Prepend will put the pointer at
+ * the end or at the beginning of the list. Assoc_Delete will remove the 
+ * stream from the association list.
  * @see DGD::channelbuf
  * @see channelbuf::assoc(std::ostream*)
  */
-void assoc( std::ostream* s, const std::string& name ) {
+void assoc( std::ostream* s, 
+	    const std::string& name, 
+	    const Assoc_type action ) {
    Debug* factory = Debug::factory();
    if( factory != NULL ) {
       Debug::channel_ptr c = factory->operator[]( name );
       if( c.get() != NULL && s != NULL ) {
 	 channelbuf& buf = c->rdbuf();
-	 buf.assoc( s );	 
+	 channelbuf::Assoc_type atype;
+	 
+	 switch( action ) {
+	    case Assoc_Assign:
+	       atype = channelbuf::Assoc_Assign;
+	       break;
+	    case Assoc_Append:
+	       atype = channelbuf::Assoc_Append;
+	       break;
+	    case Assoc_Prepend:
+	       atype = channelbuf::Assoc_Prepend;
+	       break;
+	    case Assoc_Delete:
+	       buf.dassoc( s );
+	       return;
+	 }
+
+	 buf.assoc( s, atype );	 
 	 c->header();
       }
    }
 }
 
-/**
- * @page tutor_channel DGD Channels - Things you need to know
- *
- * DGD::channelbuf can't be used to make output. After all, it is
- * derived from std::streambuf which is a kind of memory buffer. There
- * must be a stream. The DGD::channel is such a stream.
- *
- * Everything which @ref tutor_formatting "was told about formatting" is
- * also true for DGD::channel. If fact, it has all formatting-related
- * methods as DGD::channelbuf has.
- *
- * There is a number of things which differ DGD::channel from
- * std::ostream:
- * <ul>
- * <li> Channels are named. There is no default constructor. You must
- * pass a name of the channel when creating it. 
- * <li> Channels can be opened and closed. Closed channel makes no
- * output. By default it is closed. Use DGD::channel::open() method to
- * open the channel. There is also DGD::channel::is_open() and
- * DGD::channel::operator bool() which return the status of the
- * channel.
- * <li> DGD::channel makes no physical output, just formatting. To
- * achieve the output it must be associated with a physical stream
- * such as std::cout. Use DGD::assoc() functions to 
- * @ref tutor_assoc "make the association".
- * </ul>
- */
-
-/**
- * @page tutor_assoc DGD Channels - Ensuring real output
- *
- * Here we go. DGD::channel makes no physical output, but makes
- * formatting. To get the actual output we need to associate the
- * channel with a physical stream e.g std::cout, sort of std::ofstream
- * or any other object which is derived from std::ostream. 
- * There are three assoc() functions for making the association:
- * @code
- * void assoc( std::ostream* s, channel& channel );
- * void assoc( std::ostream& s, channel& channel );
- * void assoc( std::ostream* s, const std::string& name );
- * @endcode
- *
- * All functions make the same job, but the later one assumes
- * existence of the DGD::Debug factory and queries the channel object
- * from the factory by the given name.
- *
- * The only remaining tricky question about associations is: what if I
- * make more then one association of the same channel, or more then
- * one with the same physical stream?
- * In fact DGD makes no restrictions on what do you associate, how and
- * when. So, for example, it is legal to associate the same channel with
- * std::cout and std::cerr, the channel will replicate its output into
- * both streams. It is legal to register the same channel twice with
- * the same stream, its output will be duplicated in this stream. 
- * 
- * There are two additional association schemes worth to be mentioned
- * here. 
- *
- * It is possible to associate two different channels with the same
- * physical stream. But in this case DGD makes no garanties on
- * validity of the resulting stream formatting. Surely, there is other
- * simple way to avoid the problem and allow output from multiple
- * channels into single physical buffer.
- *
- * To avoid the problem mentioned above lets remind that assoc()
- * functions accept any std::ostream as a physical stream and
- * DGD::chnnel itself derives from std::ostream. So, it is possible to
- * associate DGD::channel with another DGD::channel. Te problem
- * could be solved by associating a single channel with a
- * physical stream and then associating multiple other channels with
- * that first channel. The example below demonstrates the soulution.
- * @include mult_assoc.cpp 
- */
 
 }; // end of namespace DGD
 

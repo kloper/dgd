@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -73,6 +73,12 @@ namespace DGD {
  */
 class channelbuf: public std::streambuf {
    public:
+      enum Assoc_type { 
+	 Assoc_Append = 0,
+	 Assoc_Assign,
+	 Assoc_Prepend,
+      };
+
       typedef std::streambuf Parent;
       typedef std::pair<unsigned,unsigned> position_type;
 #if defined(__STDC__) && !defined(_STLPORT)
@@ -129,7 +135,8 @@ class channelbuf: public std::streambuf {
       channelbuf();
       ~channelbuf();
 
-      void         assoc( std::ostream* );
+      void         assoc( std::ostream*, 
+			  const Assoc_type action = Assoc_Append );
       bool         dassoc( std::ostream* );
       void         dassoc( );
 

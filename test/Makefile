@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/.
+STLDIR     = $(top_srcdir)/./../STLport-4.5-1020
 BOOSTDIR   = $(top_srcdir)/./../boost-1.30.2
 BUILDDIR   = $(srcdir)/Debug
 
@@ -41,7 +41,7 @@ SED = sed
 
 CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP  -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
 LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
+EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5-1020/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
 LDLIBS = getopt.lib regex.lib dgd.lib
 LDOUTOPT = /out:
 COUTOPT  = -Fo

@@ -17,36 +17,36 @@ extern "C" {
 #if defined VERSION
 #  undef VERSION
 #endif
-#define VERSION "dgd-0.25 Wed Nov 26 00:39:10 JST 2003"
+#define VERSION "Unknown"
 
 struct dgd_gengetopt_args_info {
-  int debug_version_flag;	/* Print dgd version and exit (default=off).  */
-  int debug_help_flag;	/* Print debug help and exit (default=off).  */
-  int debug_enable_flag;	/* Enable debug (default=off).  */
-  char * debug_main_file_arg;	/* Primary debug output file.  */
-  int debug_min_width_arg;	/* Default minimum output width.  */
-  int debug_max_width_arg;	/* Default maximum output width.  */
-  int debug_indent_step_arg;	/* Default indent step.  */
-  int debug_allow_wrap_flag;	/* Allow character wrap by default (default=on).  */
-  int debug_allow_word_wrap_flag;	/* Allow word wrap by default (default=on).  */
-  char * debug_space_characters_arg;	/* Characters separating words.  */
-  char * debug_turn_on_arg;	/* Regexp on channels to turn on.  */
-  char * debug_turn_off_arg;	/* Regexp on channels to turn off.  */
+  int trace_version_flag;	/* Print dgd version and exit (default=off).  */
+  int trace_help_flag;	/* Print debug help and exit (default=off).  */
+  int trace_enable_flag;	/* Enable debug (default=off).  */
+  char * trace_main_file_arg;	/* Primary debug output file.  */
+  int trace_min_width_arg;	/* Default minimum output width.  */
+  int trace_max_width_arg;	/* Default maximum output width.  */
+  int trace_indent_step_arg;	/* Default indent step.  */
+  int trace_allow_wrap_flag;	/* Allow character wrap by default (default=on).  */
+  int trace_allow_word_wrap_flag;	/* Allow word wrap by default (default=on).  */
+  char * trace_space_characters_arg;	/* Characters separating words.  */
+  char * trace_turn_on_arg;	/* Regexp on channels to turn on.  */
+  char * trace_turn_off_arg;	/* Regexp on channels to turn off.  */
 
   int help_given ;	/* Whether help was given.  */
   int version_given ;	/* Whether version was given.  */
-  int debug_version_given ;	/* Whether debug-version was given.  */
-  int debug_help_given ;	/* Whether debug-help was given.  */
-  int debug_enable_given ;	/* Whether debug-enable was given.  */
-  int debug_main_file_given ;	/* Whether debug-main-file was given.  */
-  int debug_min_width_given ;	/* Whether debug-min-width was given.  */
-  int debug_max_width_given ;	/* Whether debug-max-width was given.  */
-  int debug_indent_step_given ;	/* Whether debug-indent-step was given.  */
-  int debug_allow_wrap_given ;	/* Whether debug-allow-wrap was given.  */
-  int debug_allow_word_wrap_given ;	/* Whether debug-allow-word-wrap was given.  */
-  int debug_space_characters_given ;	/* Whether debug-space-characters was given.  */
-  int debug_turn_on_given ;	/* Whether debug-turn-on was given.  */
-  int debug_turn_off_given ;	/* Whether debug-turn-off was given.  */
+  int trace_version_given ;	/* Whether trace-version was given.  */
+  int trace_help_given ;	/* Whether trace-help was given.  */
+  int trace_enable_given ;	/* Whether trace-enable was given.  */
+  int trace_main_file_given ;	/* Whether trace-main-file was given.  */
+  int trace_min_width_given ;	/* Whether trace-min-width was given.  */
+  int trace_max_width_given ;	/* Whether trace-max-width was given.  */
+  int trace_indent_step_given ;	/* Whether trace-indent-step was given.  */
+  int trace_allow_wrap_given ;	/* Whether trace-allow-wrap was given.  */
+  int trace_allow_word_wrap_given ;	/* Whether trace-allow-word-wrap was given.  */
+  int trace_space_characters_given ;	/* Whether trace-space-characters was given.  */
+  int trace_turn_on_given ;	/* Whether trace-turn-on was given.  */
+  int trace_turn_off_given ;	/* Whether trace-turn-off was given.  */
 } ;
 
 int dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info *args_info);

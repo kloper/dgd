@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/.
+STLDIR     = $(top_srcdir)/./../STLport-4.5-1020
 BOOSTDIR   = $(top_srcdir)/./../boost-1.30.2
 BUILDDIR   = $(srcdir)/Debug
 
@@ -41,7 +41,7 @@ SED = sed
 
 CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP  -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
 LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
+EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5-1020/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
 LDLIBS = getopt.lib regex.lib dgd.lib
 LDOUTOPT = /out:
 COUTOPT  = -Fo
@@ -65,7 +65,9 @@ CPPFILES = \
 stand_alone_channelbuf.cpp \
 formatting.cpp \
 mult_assoc.cpp \
-list_of_lists.cpp
+list_of_lists.cpp \
+example1.cpp \
+example1_simple1.cpp
 
 OBJECTS = ${patsubst %.cpp, %.$(OBJEXT), $(CPPFILES)}
 
@@ -104,30 +106,44 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 
 sa_chbuf$(EXEEXT): stand_alone_channelbuf.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
-	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/stand_alone_channelbuf.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/stand_alone_channelbuf.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
 else
 	$(CXX) $(LDFLAGS) $(BUILDDIR)/stand_alone_channelbuf.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
 fmt$(EXEEXT): formatting.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
-	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/formatting.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/formatting.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
 else
 	$(CXX) $(LDFLAGS) $(BUILDDIR)/formatting.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
 mult_assoc$(EXEEXT): mult_assoc.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
-	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/mult_assoc.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/mult_assoc.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
 else
 	$(CXX) $(LDFLAGS) $(BUILDDIR)/mult_assoc.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
 thesaurus$(EXEEXT): thesaurus.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
-	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/thesaurus.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/thesaurus.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
 else
 	$(CXX) $(LDFLAGS) $(BUILDDIR)/thesaurus.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
+endif
+
+example1$(EXEEXT): example1.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/example1.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+else
+	$(CXX) $(LDFLAGS) $(BUILDDIR)/example1.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
+endif
+
+example1_simple1$(EXEEXT): example1_simple1.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/example1_simple1.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+else
+	$(CXX) $(LDFLAGS) $(BUILDDIR)/example1_simple1.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
 %.$(OBJEXT): %.cpp

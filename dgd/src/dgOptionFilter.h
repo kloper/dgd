@@ -1,7 +1,5 @@
 // -*- c++ -*-
 //
-// 
-//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -63,7 +61,12 @@ class option_filter {
 	    char** argv;
 
 	    option_set_type() : argc(0), argv(NULL) {}
-	    
+	    option_set_type( int _argc, char** _argv ) {
+	       allocate( _argc );
+	       argc = _argc;
+	       std::copy( _argv, _argv+_argc, argv );
+	    }
+
 	    void allocate( int n ) {
 	       argc = n;
 	       argv = new char*[ argc + 1 ];
@@ -74,7 +77,7 @@ class option_filter {
 	       if( argv ) delete [] argv;
 	    }
       };
-	    
+
       typedef std::vector<option_set_type> option_set_container;
 
       option_set_container* operator () ( int argc, char** argv,

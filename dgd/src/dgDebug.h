@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@
 #include "dgDebugExtra.h"
 #include "dgDebugStd.h"
 #include "dgDebugOpt.h"
+#include "dgOptionFilter.h"
 
 /**
  * Depression Glass namespace
@@ -102,6 +103,8 @@ class Debug {
       ~Debug();
 
       void process_options( int argc, char** argv );
+      void process_options( const option_filter::option_set_type& options );
+
       stream create_file ( const std::string& name );
       stream append_file ( const stream& file );
       stream main_file() const;
@@ -115,6 +118,8 @@ class Debug {
       static Debug* debug_factory;
       static Debug* factory();
       static debug_factory_ref create_factory( int argc, char** argv );
+      static debug_factory_ref create_factory( 
+	 const option_filter::option_set_type& options  );
 
    protected:
       typedef std::list< channel_ptr > Channel_list;

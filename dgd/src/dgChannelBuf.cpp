@@ -299,10 +299,24 @@ channelbuf::~channelbuf() {
 
 /**
  * Append the given stream to the association list.
+ * @param dgs - pointer to the physical stream.
+ * @param action - affects the operation performed with the
+ * association list. Assoc_Assign will clear the list before
+ * appending, Assoc_Append and Assoc_Prepend will put the pointer at
+ * the end or at the beginning of the list.
  * @see DGD::channel
  */
-void channelbuf::assoc( std::ostream* dgs ) {
-   m_assoc.push_back( dgs );
+void channelbuf::assoc( std::ostream* dgs, const Assoc_type action ) {
+   switch( action ) {
+      case Assoc_Assign:
+	 m_assoc.clear();
+      case Assoc_Append:
+	 m_assoc.push_back( dgs );
+	 break;
+      case Assoc_Prepend:
+	 m_assoc.push_front( dgs );
+	 break;
+   }
 }
 
 /**
@@ -548,6 +562,174 @@ bool channelbuf::is_dos_eol( const char_type* p ) const {
 }
 
 /**
+ * @page tutor_intro DGD Basics - Introcuction
+ * 
+ * @section whydgd Why DGD?
+ *
+ * The most common question asked about DGD is "Why do you need just
+ * another tracing/logging library? Why not use the existing
+ * ones?". Those of you who think that any other library supports all
+ * of the below are invited to contact the author. DGD was created for
+ * debugging of different computation geometry algorithms with the
+ * following requirements:
+ *
+ * - There are ready output tracing methods for std::cout, I wanted
+ * to reuse them without changing. This requirement implies that basic
+ * output class (see DGD::channel) must be derived from std::ostream. 
+ * - The resulting trace log must be fixed width. I usually use
+ * 80 columns-wide emacs window and I don't like wide broken lines.
+ * - There is a need for automatic indentation and word/char wrapping
+ * - The resulting library must have simple kernel, without complex
+ * class hierarchy. This one allows to use fragments of DGD in
+ * different applications without need to link with the whole library.
+ * - The resulting library must be as portable as possible.
+ *
+ * @section missingfeatures Missing Features
+ *
+ * There are also features which are missing in DGD and present
+ * in other tracing libraries:
+ * - Message types, like @b NOTICE, @b WARING, @b ERROR, etc... Here I
+ * must to make a few points:
+ *    -# DGD is not message oriented. It is stream oriented and its
+ *       primary purpose is debugging of algorithms. I found that for
+ *       that purpose message types are irrelevant, I usually need them all
+ *       or need them off. 
+ *    -# Different applications require different message types, so
+ *       hard-coding message types in the library puts some restrictions on
+ *       its users.
+ *    -# If required, message types may be easily implemented on top
+ *       of DGD.
+ * - Different physical targets for the resulting trace. For example
+ * cyclic memory buffers, socket streams, etc... Some of these
+ * are still in the planning. The main problem here is
+ * portability. Yet, any stream which has std::ostream as a base class
+ * is ready to work with DGD.
+ * - Thread safety. DGD is @b not thread safe. More precisely, it is
+ * as thread safe as std::ostream is. My strong belief is that the
+ * application is responsible for stream synchronization.
+ * - Memory debugging. Is out of scope of DGD. There are good
+ * stand-alone tools for debugging memory leaks.
+ */
+
+/**
+ * @page tutor_example1 DGD Basics - Hello World
+ * 
+ * @section helloworldcode Simple Tracing with DGD
+ * 
+ * The best way to learn about any software library is to step over the
+ * code line by line. DGD is not exception. The number of sections
+ * below will demonstrate DGD features from the basic ones to more advanced.
+ *
+ * @section example1 The "Algorithm"
+ *
+ * The following code example represents some "algorithm" with tracing
+ * to std::cout.
+ *
+ * Here filling-up the list with sequence of integers is followed by
+ * printing the list in a loop. 
+ *
+ * @include example1.cpp
+ *
+ * Here is the output of the example:
+ * 
+ * @include example1.log
+ * 
+ * @section example1_simple1 Basic DGD tracing
+ *
+ * Lets consider the changes required to do same thing with DGD.
+ *
+ * @include example1_simple1.cpp
+ * 
+ * The output of this program is a little bit different:
+ * @include example1_simple1.log
+ *
+ * @dontinclude example1_simple1.cpp
+ * Now, lets review the most important changes brought by DGD.
+ * The easiest way to use DGD definitions is by including dgDebug.h
+ * file. All DGD classes and variables (except macros!) are members of
+ * DGD namespace, so it is convinient to import the namespace by
+ * 'using' directive.
+ * @skipline include
+ * @skipline using
+ *
+ * Pay attention that no changes were required to the output operator,
+ * this is due to design of DGD - you need not change or rewrite the
+ * existing tracing code. Sometimes it is desirable to keep two sets
+ * of tracing operators - one for generic std::ostream and one
+ * DGD::channel specific. The later one is usually needed when there
+ * is a strong need to enhance tracing provided by third party and
+ * allows to use special DGD features like trace stream manipulators.
+ *
+ * The next important thing appears at the beginning of function
+ * main():
+ * @skipline factory
+ * This line creates the global DGD::Debug object, called channel
+ * factory or the factory. There are two most important uses for this object:
+ * - it is used as a container of all known tracing channels. This is
+ * convenient, all channels can be accessed by name from any point of
+ * the program. 
+ * - it is automatically destroyed upon application exit or
+ * crash. This is important primary for flushing streams on exceptions.
+ * To understand how this mechanism works pay attention on the type of
+ * the object returned by create_factory(). It is smart pointer to the
+ * factory. When main() function exits (probably abnormally, because
+ * exception) destructor of the smart pointer will destroy the global
+ * factory. The factory destructor will flush all the streams.
+ *
+ * There are thread-safety issues caused by using globals can
+ * arise. To avoid these you can create Debug objects on the local
+ * stack or alternatively, by using a convenction. Try to use the
+ * factory as a read-only object most of the time, while
+ * updating/changing it from the main thread only.
+ *
+ * The next interesting line contains tracing statements:
+ * @skipline trace
+ * First of all dgd_trace() is a macro. The first parameter of this
+ * macro must be channel name (used as bare-word for simplicity) and
+ * the second parameter is the output operator to perform. This macro
+ * performs a number of tasks: 
+ * - If this program is compiled without _TRACE macro,
+ * this macro (and all other DGD macros) will be compiled as empty code.
+ * - The global factory object may be not initialized. In this case
+ * dgd_trace will do nothing.
+ * - The default 'main' channel can be closed or deleted by the user. In this
+ * case dgd_trace() will skip output operation.
+ * - If all the checks are successful, the output operator attached to
+ * the channel and executed.
+ * 
+ * The second interesting macro is dgd_expand(). This one used for
+ * convenience only. It substitutes string 'a' with sting '"a = " <<
+ * a' for readable output. 
+ *
+ * Note that the @em for statement which was used to print the list is now
+ * missing. This is due generic output operators for STL data
+ * structures defined by DGD. Note also, that the format of the output
+ * has also changed, and the new format is also defined by the
+ * build-in operator. To override this you can either define output
+ * operator for specific type or define output operator for
+ * DGD::channel.
+ *
+ * @section cmdline Controlling DGD::Debug with command line.
+ * 
+ * If you compiled the example from \ref example1_simple1
+ * "the previous section" you may figured out that nothing happens
+ * when you run it. By default tracing is turned off. In order to run
+ * the example and get its output you need to use at least one special
+ * command line switch. For our example: 
+ * @code
+ * example1_simple1 --trace-enable 
+ * @endcode
+ * The first option enables tracing explicitly. The output is written
+ * to standard error. The full list of the supported options can be
+ * obtained from Debug::process_options or by running 
+ * @code
+ * example1_simple1 --trace-help
+ * @endcode
+ * 
+ * 
+ */
+
+/**
  * @page tutor_channelbuf DGD Basics - channelbuf
  *
  * DGD::channelbuf is a basic class in the library. In fact, DGD is
@@ -703,6 +885,80 @@ bool channelbuf::is_dos_eol( const char_type* p ) const {
  * "min_width" characters wide. Minimum width is controlled by
  * DGD::channel::min_width(unsigned) method. The default value for
  * minimum width is 20.
+ */
+
+/**
+ * @page tutor_channel DGD Channels - Things you need to know
+ *
+ * DGD::channelbuf can't be used to make output. After all, it is
+ * derived from std::streambuf which is a kind of memory buffer. There
+ * must be a stream. The DGD::channel is such a stream.
+ *
+ * Everything which @ref tutor_formatting "was told about formatting" is
+ * also true for DGD::channel. If fact, it has all formatting-related
+ * methods as DGD::channelbuf has.
+ *
+ * There is a number of things which differ DGD::channel from
+ * std::ostream:
+ * <ul>
+ * <li> Channels are named. There is no default constructor. You must
+ * pass a name of the channel when creating it. 
+ * <li> Channels can be opened and closed. Closed channel makes no
+ * output. By default it is closed. Use DGD::channel::open() method to
+ * open the channel. There is also DGD::channel::is_open() and
+ * DGD::channel::operator bool() which return the status of the
+ * channel.
+ * <li> DGD::channel makes no physical output, just formatting. To
+ * achieve the output it must be associated with a physical stream
+ * such as std::cout. Use DGD::assoc() functions to 
+ * @ref tutor_assoc "make the association".
+ * </ul>
+ */
+
+/**
+ * @page tutor_assoc DGD Channels - Ensuring real output
+ *
+ * Here we go. DGD::channel makes no physical output, but makes
+ * formatting. To get the actual output we need to associate the
+ * channel with a physical stream e.g std::cout, sort of std::ofstream
+ * or any other object which is derived from std::ostream. 
+ * There are three assoc() functions for making the association:
+ * @code
+ * void assoc( std::ostream* s, channel& channel );
+ * void assoc( std::ostream& s, channel& channel );
+ * void assoc( std::ostream* s, const std::string& name );
+ * @endcode
+ *
+ * All functions make the same job, but the later one assumes
+ * existence of the DGD::Debug factory and queries the channel object
+ * from the factory by the given name.
+ *
+ * The only remaining tricky question about associations is: what if I
+ * make more then one association of the same channel, or more then
+ * one with the same physical stream?
+ * In fact DGD makes no restrictions on what do you associate, how and
+ * when. So, for example, it is legal to associate the same channel with
+ * std::cout and std::cerr, the channel will replicate its output into
+ * both streams. It is legal to register the same channel twice with
+ * the same stream, its output will be duplicated in this stream. 
+ * 
+ * There are two additional association schemes worth to be mentioned
+ * here. 
+ *
+ * It is possible to associate two different channels with the same
+ * physical stream. But in this case DGD makes no garanties on
+ * validity of the resulting stream formatting. Surely, there is other
+ * simple way to avoid the problem and allow output from multiple
+ * channels into single physical buffer.
+ *
+ * To avoid the problem mentioned above lets remind that assoc()
+ * functions accept any std::ostream as a physical stream and
+ * DGD::chnnel itself derives from std::ostream. So, it is possible to
+ * associate DGD::channel with another DGD::channel. Te problem
+ * could be solved by associating a single channel with a
+ * physical stream and then associating multiple other channels with
+ * that first channel. The example below demonstrates the soulution.
+ * @include mult_assoc.cpp 
  */
 
 }; // end of namespace DGD

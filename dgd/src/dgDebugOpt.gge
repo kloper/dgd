@@ -1,17 +1,17 @@
 package "dgd"
-version "dgd-0.25 Wed Nov 26 00:39:10 JST 2003"
+version "Unknown"
 
 #opt   long name    short  help                                 type   required
 #---   ---------    -----  ------                               ----   --------
-option "debug-version" -        "Print dgd version and exit"          flag  off
-option "debug-help"   -         "Print debug help and exit"           flag  off
-option "debug-enable" -         "Enable debug"                        flag  off
-option "debug-main-file" -      "Primary debug output file"           string no
-option "debug-min-width"  -     "Default minimum output width"        int    no
-option "debug-max-width"  -     "Default maximum output width"        int    no
-option "debug-indent-step" -    "Default indent step"                 int    no
-option "debug-allow-wrap" -     "Allow character wrap by default"     flag   on
-option "debug-allow-word-wrap" - "Allow word wrap by default"         flag   on
-option "debug-space-characters" - "Characters separating words"       string no
-option "debug-turn-on" -        "Regexp on channels to turn on"       string no
-option "debug-turn-off" -        "Regexp on channels to turn off"     string no
+option "trace-version" -        "Print dgd version and exit"          flag  off
+option "trace-help"   -         "Print debug help and exit"           flag  off
+option "trace-enable" -         "Enable debug"                        flag  off
+option "trace-main-file" -      "Primary debug output file"           string no
+option "trace-min-width"  -     "Default minimum output width"        int    no
+option "trace-max-width"  -     "Default maximum output width"        int    no
+option "trace-indent-step" -    "Default indent step"                 int    no
+option "trace-allow-wrap" -     "Allow character wrap by default"     flag   on
+option "trace-allow-word-wrap" - "Allow word wrap by default"         flag   on
+option "trace-space-characters" - "Characters separating words"       string no
+option "trace-turn-on" -        "Regexp on channels to turn on"       string no
+option "trace-turn-off" -        "Regexp on channels to turn off"     string no

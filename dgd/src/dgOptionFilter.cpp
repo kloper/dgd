@@ -90,7 +90,6 @@ option_filter::operator () ( int argc, char** argv, int filtc, char** filtv ) {
    result[filtc].allocate( unmatched_size + 1 );
    result[filtc].argv[0] = argv[0];
    
-
    k = 1;
    for( i = 1; i < (unsigned)argc; ++i )
       if( !matched_flags[i-1] )

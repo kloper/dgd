@@ -52,7 +52,7 @@ Debug* Debug::debug_factory = NULL;
  * @see Debug::create_factory(int,char**)
  * @see Debug::process_options(int,char**)
  */
-class bad_params: std::exception {
+class bad_params: public std::exception {
       const char *m_what;
    public:
 
@@ -112,49 +112,49 @@ Debug::Debug()
  * 
  * The following options are accepted:
  * <dl>
- * <dt>--debug-version
+ * <dt>--trace-version
  * <dd>Print DGD version to std::cout and exit the
  * application (actually throw DGD::exit_required exception).
- * <dt>--debug-help
+ * <dt>--trace-help
  * <dd>Print DGD help to std::cout and exit the
  * application (actually throw DGD::exit_required exception).
- * <dt>--debug-enable
- * <dd>Enable debug. By default the debug logging is disabled. This
+ * <dt>--trace-enable
+ * <dd>Enable trace. By default the trace logging is disabled. This
  * command line option enables it. Debug::process_options(int,char**)
  * will throw debug_disabled exception if this option is not specified
  * on command line.
- * <dt>--debug-main-file
+ * <dt>--trace-main-file
  * <dd>Create the main file. This option must be specified with a string
  * argument which defines the main file name. The main file is
  * created and its stream can be queried by Debug::main_file().
- * <dt>--debug-min-width
+ * <dt>--trace-min-width
  * <dd>Set default minimum line width for all existing and future
  * channels. This option must be specified with an integer parameter
  * which defines the default minimum line width. 
- * <dt>--debug-max-width
+ * <dt>--trace-max-width
  * <dd>Set default maximum line width for all existing and future
  * channels. This option must be specified with an integer parameter
  * which defines the default maximum line width. 
- * <dt>--debug-indent-step
+ * <dt>--trace-indent-step
  * <dd>Set default indentation step for all existing and future
  * channels. This option must be specified with an integer parameter
  * which defines the default indentation step. 
- * <dt>--debug-allow-wrap
+ * <dt>--trace-allow-wrap
  * <dd>Set default character wrapping policy for all existing and future
  * channels. 
- * <dt>--debug-allow-word-wrap
+ * <dt>--trace-allow-word-wrap
  * <dd>Set default word wrapping policy for all existing and future
  * channels. 
- * <dt>--debug-space-characters
+ * <dt>--trace-space-characters
  * <dd>Set default space character set for all existing and future
  * channels. This option must be specified with a string parameter
  * which defines the default space characters. 
- * <dt>--debug-turn-on
+ * <dt>--trace-turn-on
  * <dd>Turn on (open) channels. This option must be specified with a
  * string parameter which defines a GNU regular exception. This regexp
  * is applied on the current channel list. All channels with names
  * matching the regexp will be opened.
- * <dt>--debug-turn-off
+ * <dt>--trace-turn-off
  * <dd>Turn off (close) channels. This option must be specified with a
  * string parameter which defines a GNU regular exception. This regexp
  * is applied on the current channel list. All channels with names
@@ -166,22 +166,24 @@ void Debug::process_options( int argc, char** argv ) {
       throw bad_params();
    }
 
-   if( m_args_info.debug_version_flag ) {
+   if( m_args_info.trace_version_flag ) {
       dgd_cmdline_parser_print_version();
       throw exit_required();
    }
    
-   if( m_args_info.debug_help_flag ) {
+   if( m_args_info.trace_help_flag ) {
       dgd_cmdline_parser_print_help();
       throw exit_required();
    }      
 
-   if( !m_args_info.debug_enable_flag )
+   if( !m_args_info.trace_enable_flag )
       throw debug_disabled();
 
-   if( m_args_info.debug_main_file_given ) {
-      m_main_file = create_file( m_args_info.debug_main_file_arg );
-      assoc( m_main_file.get(), **m_current_channel );
+   if( m_args_info.trace_main_file_given ) {
+      m_main_file = create_file( m_args_info.trace_main_file_arg );
+      assoc( m_main_file.get(), **m_current_channel, Assoc_Assign );
+   } else {
+      assoc( &std::cerr, **m_current_channel, Assoc_Assign );
    }
 
    // apply options on existing channels
@@ -190,31 +192,40 @@ void Debug::process_options( int argc, char** argv ) {
 }
 
 /**
+ * Process command line options. This method applies the command line
+ * options set on the DGD::Debug object and its channels. See
+ * Debug::process_options(int,char**) for more info.
+ */
+void Debug::process_options( const option_filter::option_set_type& options ) {
+   process_options( options.argc, options.argv );
+}
+
+/**
  * Apply default channel-specific options on given channel.
  * @see Debug::process_options(int,char**)
  */
 void Debug::apply_options( channel_ptr& chnl ) {
-   if( m_args_info.debug_min_width_given ) 
-      chnl->min_width( m_args_info.debug_min_width_arg );
+   if( m_args_info.trace_min_width_given ) 
+      chnl->min_width( m_args_info.trace_min_width_arg );
    
-   if( m_args_info.debug_max_width_given ) 
-      chnl->max_width( m_args_info.debug_max_width_arg );
+   if( m_args_info.trace_max_width_given ) 
+      chnl->max_width( m_args_info.trace_max_width_arg );
    
-   if( m_args_info.debug_indent_step_given ) 
-      chnl->indent_step( m_args_info.debug_indent_step_arg );
+   if( m_args_info.trace_indent_step_given ) 
+      chnl->indent_step( m_args_info.trace_indent_step_arg );
 
-   if( m_args_info.debug_allow_wrap_given )
-      chnl->wrap( ((m_args_info.debug_allow_wrap_flag == 0)? false: true) );
-   if( m_args_info.debug_allow_word_wrap_flag )
-      chnl->word_wrap( ((m_args_info.debug_allow_word_wrap_flag == 0)? 
+   if( m_args_info.trace_allow_wrap_given )
+      chnl->wrap( ((m_args_info.trace_allow_wrap_flag == 0)? false: true) );
+   if( m_args_info.trace_allow_word_wrap_flag )
+      chnl->word_wrap( ((m_args_info.trace_allow_word_wrap_flag == 0)? 
 			false:true) );
    
-   if( m_args_info.debug_space_characters_given ) 
-      chnl->space_chars( m_args_info.debug_space_characters_arg );
+   if( m_args_info.trace_space_characters_given ) 
+      chnl->space_chars( m_args_info.trace_space_characters_arg );
 
-   if( m_args_info.debug_turn_on_given ) {
+   if( m_args_info.trace_turn_on_given ) {
       try {
-	 regex e( m_args_info.debug_turn_on_arg );
+	 regex e( m_args_info.trace_turn_on_arg );
 	 if( regex_match( e, chnl->name().c_str() ) ) {
 	    chnl->open();
 	 }
@@ -223,9 +234,9 @@ void Debug::apply_options( channel_ptr& chnl ) {
       }
    }
 
-   if( m_args_info.debug_turn_off_given ) {
+   if( m_args_info.trace_turn_off_given ) {
       try {
-	 regex e( m_args_info.debug_turn_off_arg );
+	 regex e( m_args_info.trace_turn_off_arg );
 	 if( regex_match( e, chnl->name().c_str() ) ) {
 	    chnl->close();
 	 }
@@ -234,8 +245,8 @@ void Debug::apply_options( channel_ptr& chnl ) {
       }
    }
 
-   if( m_args_info.debug_space_characters_given ) 
-      chnl->space_chars( m_args_info.debug_space_characters_arg );
+   if( m_args_info.trace_space_characters_given ) 
+      chnl->space_chars( m_args_info.trace_space_characters_arg );
 }
 
 /**
@@ -390,6 +401,16 @@ Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
    }
 
    return df;
+}
+
+/**
+ * Create global Debug factory. This function must be called at most
+ * once during the application lifetime. See
+ * Debug::create_factory(int,char**) for more info.
+ */
+Debug::debug_factory_ref Debug::create_factory( 
+   const option_filter::option_set_type& options  ) {
+   return create_factory( options.argc, options.argv );
 }
 
 /**

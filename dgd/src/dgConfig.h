@@ -32,7 +32,7 @@
  * dgConfig.h.in 
  */
 
-#define DG_VERSION_STRING "dgd-0.25 Wed Nov 26 00:39:10 JST 2003"
+#define DG_VERSION_STRING "Unknown"
 
 #if defined(_STLPORT_VERSION) && _STLPORT_VERSION <= 450
 // This one seems to solve problem with vc7 and boost-1.30

@@ -40,18 +40,18 @@ dgd_cmdline_parser_print_help (void)
 "Usage: %s [OPTIONS]...\n\
    -h         --help                           Print help and exit\n\
    -V         --version                        Print version and exit\n\
-              --debug-version                  Print dgd version and exit (default=off)\n\
-              --debug-help                     Print debug help and exit (default=off)\n\
-              --debug-enable                   Enable debug (default=off)\n\
-              --debug-main-file=STRING         Primary debug output file\n\
-              --debug-min-width=INT            Default minimum output width\n\
-              --debug-max-width=INT            Default maximum output width\n\
-              --debug-indent-step=INT          Default indent step\n\
-              --debug-allow-wrap               Allow character wrap by default (default=on)\n\
-              --debug-allow-word-wrap          Allow word wrap by default (default=on)\n\
-              --debug-space-characters=STRING  Characters separating words\n\
-              --debug-turn-on=STRING           Regexp on channels to turn on\n\
-              --debug-turn-off=STRING          Regexp on channels to turn off\n\
+              --trace-version                  Print dgd version and exit (default=off)\n\
+              --trace-help                     Print debug help and exit (default=off)\n\
+              --trace-enable                   Enable debug (default=off)\n\
+              --trace-main-file=STRING         Primary debug output file\n\
+              --trace-min-width=INT            Default minimum output width\n\
+              --trace-max-width=INT            Default maximum output width\n\
+              --trace-indent-step=INT          Default indent step\n\
+              --trace-allow-wrap               Allow character wrap by default (default=on)\n\
+              --trace-allow-word-wrap          Allow word wrap by default (default=on)\n\
+              --trace-space-characters=STRING  Characters separating words\n\
+              --trace-turn-on=STRING           Regexp on channels to turn on\n\
+              --trace-turn-off=STRING          Regexp on channels to turn off\n\
 ", PACKAGE);
 }
 
@@ -80,28 +80,28 @@ dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info
 
   args_info->help_given = 0 ;
   args_info->version_given = 0 ;
-  args_info->debug_version_given = 0 ;
-  args_info->debug_help_given = 0 ;
-  args_info->debug_enable_given = 0 ;
-  args_info->debug_main_file_given = 0 ;
-  args_info->debug_min_width_given = 0 ;
-  args_info->debug_max_width_given = 0 ;
-  args_info->debug_indent_step_given = 0 ;
-  args_info->debug_allow_wrap_given = 0 ;
-  args_info->debug_allow_word_wrap_given = 0 ;
-  args_info->debug_space_characters_given = 0 ;
-  args_info->debug_turn_on_given = 0 ;
-  args_info->debug_turn_off_given = 0 ;
+  args_info->trace_version_given = 0 ;
+  args_info->trace_help_given = 0 ;
+  args_info->trace_enable_given = 0 ;
+  args_info->trace_main_file_given = 0 ;
+  args_info->trace_min_width_given = 0 ;
+  args_info->trace_max_width_given = 0 ;
+  args_info->trace_indent_step_given = 0 ;
+  args_info->trace_allow_wrap_given = 0 ;
+  args_info->trace_allow_word_wrap_given = 0 ;
+  args_info->trace_space_characters_given = 0 ;
+  args_info->trace_turn_on_given = 0 ;
+  args_info->trace_turn_off_given = 0 ;
 #define clear_args() { \
-  args_info->debug_version_flag = 0;\
-  args_info->debug_help_flag = 0;\
-  args_info->debug_enable_flag = 0;\
-  args_info->debug_main_file_arg = NULL; \
-  args_info->debug_allow_wrap_flag = 1;\
-  args_info->debug_allow_word_wrap_flag = 1;\
-  args_info->debug_space_characters_arg = NULL; \
-  args_info->debug_turn_on_arg = NULL; \
-  args_info->debug_turn_off_arg = NULL; \
+  args_info->trace_version_flag = 0;\
+  args_info->trace_help_flag = 0;\
+  args_info->trace_enable_flag = 0;\
+  args_info->trace_main_file_arg = NULL; \
+  args_info->trace_allow_wrap_flag = 1;\
+  args_info->trace_allow_word_wrap_flag = 1;\
+  args_info->trace_space_characters_arg = NULL; \
+  args_info->trace_turn_on_arg = NULL; \
+  args_info->trace_turn_off_arg = NULL; \
 }
 
   clear_args();
@@ -117,18 +117,18 @@ dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info
       static struct option long_options[] = {
         { "help",	0, NULL, 'h' },
         { "version",	0, NULL, 'V' },
-        { "debug-version",	0, NULL, 0 },
-        { "debug-help",	0, NULL, 0 },
-        { "debug-enable",	0, NULL, 0 },
-        { "debug-main-file",	1, NULL, 0 },
-        { "debug-min-width",	1, NULL, 0 },
-        { "debug-max-width",	1, NULL, 0 },
-        { "debug-indent-step",	1, NULL, 0 },
-        { "debug-allow-wrap",	0, NULL, 0 },
-        { "debug-allow-word-wrap",	0, NULL, 0 },
-        { "debug-space-characters",	1, NULL, 0 },
-        { "debug-turn-on",	1, NULL, 0 },
-        { "debug-turn-off",	1, NULL, 0 },
+        { "trace-version",	0, NULL, 0 },
+        { "trace-help",	0, NULL, 0 },
+        { "trace-enable",	0, NULL, 0 },
+        { "trace-main-file",	1, NULL, 0 },
+        { "trace-min-width",	1, NULL, 0 },
+        { "trace-max-width",	1, NULL, 0 },
+        { "trace-indent-step",	1, NULL, 0 },
+        { "trace-allow-wrap",	0, NULL, 0 },
+        { "trace-allow-word-wrap",	0, NULL, 0 },
+        { "trace-space-characters",	1, NULL, 0 },
+        { "trace-turn-on",	1, NULL, 0 },
+        { "trace-turn-off",	1, NULL, 0 },
         { NULL,	0, NULL, 0 }
       };
 
@@ -172,124 +172,124 @@ dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info
         
         case 0:	/* Long option with no short option */
           /* Print dgd version and exit.  */
-          if (strcmp (long_options[option_index].name, "debug-version") == 0)
+          if (strcmp (long_options[option_index].name, "trace-version") == 0)
           {
-            args_info->debug_version_flag = !(args_info->debug_version_flag);
+            args_info->trace_version_flag = !(args_info->trace_version_flag);
             break;
           }
           /* Print debug help and exit.  */
-          else if (strcmp (long_options[option_index].name, "debug-help") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-help") == 0)
           {
-            args_info->debug_help_flag = !(args_info->debug_help_flag);
+            args_info->trace_help_flag = !(args_info->trace_help_flag);
             break;
           }
           /* Enable debug.  */
-          else if (strcmp (long_options[option_index].name, "debug-enable") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-enable") == 0)
           {
-            args_info->debug_enable_flag = !(args_info->debug_enable_flag);
+            args_info->trace_enable_flag = !(args_info->trace_enable_flag);
             break;
           }
           /* Primary debug output file.  */
-          else if (strcmp (long_options[option_index].name, "debug-main-file") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-main-file") == 0)
           {
-            if (args_info->debug_main_file_given)
+            if (args_info->trace_main_file_given)
               {
-                fprintf (stderr, "%s: `--debug-main-file' option given more than once\n", PACKAGE);
+                fprintf (stderr, "%s: `--trace-main-file' option given more than once\n", PACKAGE);
                 clear_args ();
                 return (1);
               }
-            args_info->debug_main_file_given = 1;
-            args_info->debug_main_file_arg = gengetopt_strdup (optarg);
+            args_info->trace_main_file_given = 1;
+            args_info->trace_main_file_arg = gengetopt_strdup (optarg);
             break;
           }
           /* Default minimum output width.  */
-          else if (strcmp (long_options[option_index].name, "debug-min-width") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-min-width") == 0)
           {
-            if (args_info->debug_min_width_given)
+            if (args_info->trace_min_width_given)
               {
-                fprintf (stderr, "%s: `--debug-min-width' option given more than once\n", PACKAGE);
+                fprintf (stderr, "%s: `--trace-min-width' option given more than once\n", PACKAGE);
                 clear_args ();
                 return (1);
               }
-            args_info->debug_min_width_given = 1;
-            args_info->debug_min_width_arg = atoi (optarg);
+            args_info->trace_min_width_given = 1;
+            args_info->trace_min_width_arg = atoi (optarg);
             break;
           }
           /* Default maximum output width.  */
-          else if (strcmp (long_options[option_index].name, "debug-max-width") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-max-width") == 0)
           {
-            if (args_info->debug_max_width_given)
+            if (args_info->trace_max_width_given)
               {
-                fprintf (stderr, "%s: `--debug-max-width' option given more than once\n", PACKAGE);
+                fprintf (stderr, "%s: `--trace-max-width' option given more than once\n", PACKAGE);
                 clear_args ();
                 return (1);
               }
-            args_info->debug_max_width_given = 1;
-            args_info->debug_max_width_arg = atoi (optarg);
+            args_info->trace_max_width_given = 1;
+            args_info->trace_max_width_arg = atoi (optarg);
             break;
           }
           /* Default indent step.  */
-          else if (strcmp (long_options[option_index].name, "debug-indent-step") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-indent-step") == 0)
           {
-            if (args_info->debug_indent_step_given)
+            if (args_info->trace_indent_step_given)
               {
-                fprintf (stderr, "%s: `--debug-indent-step' option given more than once\n", PACKAGE);
+                fprintf (stderr, "%s: `--trace-indent-step' option given more than once\n", PACKAGE);
                 clear_args ();
                 return (1);
               }
-            args_info->debug_indent_step_given = 1;
-            args_info->debug_indent_step_arg = atoi (optarg);
+            args_info->trace_indent_step_given = 1;
+            args_info->trace_indent_step_arg = atoi (optarg);
             break;
           }
           /* Allow character wrap by default.  */
-          else if (strcmp (long_options[option_index].name, "debug-allow-wrap") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-allow-wrap") == 0)
           {
-            args_info->debug_allow_wrap_flag = !(args_info->debug_allow_wrap_flag);
+            args_info->trace_allow_wrap_flag = !(args_info->trace_allow_wrap_flag);
             break;
           }
           /* Allow word wrap by default.  */
-          else if (strcmp (long_options[option_index].name, "debug-allow-word-wrap") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-allow-word-wrap") == 0)
           {
-            args_info->debug_allow_word_wrap_flag = !(args_info->debug_allow_word_wrap_flag);
+            args_info->trace_allow_word_wrap_flag = !(args_info->trace_allow_word_wrap_flag);
             break;
           }
           /* Characters separating words.  */
-          else if (strcmp (long_options[option_index].name, "debug-space-characters") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-space-characters") == 0)
           {
-            if (args_info->debug_space_characters_given)
+            if (args_info->trace_space_characters_given)
               {
-                fprintf (stderr, "%s: `--debug-space-characters' option given more than once\n", PACKAGE);
+                fprintf (stderr, "%s: `--trace-space-characters' option given more than once\n", PACKAGE);
                 clear_args ();
                 return (1);
               }
-            args_info->debug_space_characters_given = 1;
-            args_info->debug_space_characters_arg = gengetopt_strdup (optarg);
+            args_info->trace_space_characters_given = 1;
+            args_info->trace_space_characters_arg = gengetopt_strdup (optarg);
             break;
           }
           /* Regexp on channels to turn on.  */
-          else if (strcmp (long_options[option_index].name, "debug-turn-on") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-turn-on") == 0)
           {
-            if (args_info->debug_turn_on_given)
+            if (args_info->trace_turn_on_given)
               {
-                fprintf (stderr, "%s: `--debug-turn-on' option given more than once\n", PACKAGE);
+                fprintf (stderr, "%s: `--trace-turn-on' option given more than once\n", PACKAGE);
                 clear_args ();
                 return (1);
               }
-            args_info->debug_turn_on_given = 1;
-            args_info->debug_turn_on_arg = gengetopt_strdup (optarg);
+            args_info->trace_turn_on_given = 1;
+            args_info->trace_turn_on_arg = gengetopt_strdup (optarg);
             break;
           }
           /* Regexp on channels to turn off.  */
-          else if (strcmp (long_options[option_index].name, "debug-turn-off") == 0)
+          else if (strcmp (long_options[option_index].name, "trace-turn-off") == 0)
           {
-            if (args_info->debug_turn_off_given)
+            if (args_info->trace_turn_off_given)
               {
-                fprintf (stderr, "%s: `--debug-turn-off' option given more than once\n", PACKAGE);
+                fprintf (stderr, "%s: `--trace-turn-off' option given more than once\n", PACKAGE);
                 clear_args ();
                 return (1);
               }
-            args_info->debug_turn_off_given = 1;
-            args_info->debug_turn_off_arg = gengetopt_strdup (optarg);
+            args_info->trace_turn_off_given = 1;
+            args_info->trace_turn_off_arg = gengetopt_strdup (optarg);
             break;
           }
 
