@@ -1,3 +1,56 @@
+2002-11-01  dimka
+	* INSTALL:
+	* Makefile:
+	* NEWS:
+	* README:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgStream.h:
+	* doc/Makefile:
+	* doc/dgd_faq.html:
+	* doc/doxygen/dgd.doxy:
+	* doc/html/dgd.wmk:
+	* doc/html/doxygen_html.wmk:
+	* doc/html/style/style.css:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+		Cygwin & Linux port.
+
+2002-10-31  dimka
+	* Makefile:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/Makefile:
+	* doc/doxygen/dgd.doxy:
+	* doc/html/dgd.wmk:
+	* getopt/Makefile:
+	* getopt/Makefile.in:
+	* reconf:
+	* regex/Makefile:
+	* regex/Makefile.in:
+	* regex/src/regex.h:
+	* regex/src/regular_expression.h:
+	* test/Makefile:
+	* test/Makefile.in:
+	* util/bin/html2wmk:
+	* util/bin/mkdis:
+		Cygwin & Linux port.
+
 2002-09-28  dimka
 	* Makefile:
 	* NEWS:
