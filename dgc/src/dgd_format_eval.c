@@ -27,19 +27,40 @@
 
 #define EVAL_ACTION_LOOKUP_SIZE 512
 
-#define DGD_INT_ACTION 0
-#define DGD_OCT_ACTION 1
-#define DGD_HEX_ACTION 2
-#define DGD_FREE_ACTION 2
-
 typedef struct _dgd_action_lookup_t {
-      char *name;
-      dgd_action_callback_t action;
+      char                 *name;
+      dgd_action_callback_t callback;
+      dgd_action_t          action;
 } dgd_action_lookup_t;
 
 dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE] = {
-   { NULL, NULL }
+   { "dec",      NULL, { 0, 0, 0, 0 } },
+   { "oct",      NULL, { 0, 0, 0, 0 } },
+   { "hex",      NULL, { 0, 0, 0, 0 } },
+   { "unsigned", NULL, { 0, 0, 0, 0 } },
+   { "report",   NULL, { 0, 0, 0, 0 } },
+   { "sci",      NULL, { 0, 0, 0, 0 } },
+   { "float",    NULL, { 0, 0, 0, 0 } },
+   { "scifloat", NULL, { 0, 0, 0, 0 } },
+   { "scihex",   NULL, { 0, 0, 0, 0 } },
+   { "char",     NULL, { 0, 0, 0, 0 } },
+   { "str",      NULL, { 0, 0, 0, 0 } },
+   { "ptr",      NULL, { 0, 0, 0, 0 } },
+   { NULL,       NULL, { 0, 0, 0, 0 } }
 };
+
+#define EVAL_ACTION_DEC      0
+#define EVAL_ACTION_OCT      1
+#define EVAL_ACTION_HEX      2
+#define EVAL_ACTION_UNSIGNED 3
+#define EVAL_ACTION_REPORT   4
+#define EVAL_ACTION_SCI      5
+#define EVAL_ACTION_FLOAT    6
+#define EVAL_ACTION_SCIFLOAT 7
+#define EVAL_ACTION_SCIHEX   8
+#define EVAL_ACTION_CHAR     9
+#define EVAL_ACTION_STR      10
+#define EVAL_ACTION_PTR      11
 
 static
 dgd_action_callback_t* lookup( char* name ) {
@@ -73,7 +94,9 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
    int res = EVAL_RES_DONE;
    str_range_t *lexeme;
    unsigned int size;
+   int index;
    unsigned int rc;
+   dgd_action_callback_t callback;
 
    if( eval == NULL || str == NULL ) {
       if( eval != NULL ) 
@@ -87,12 +110,24 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
    }
 
 
-   eval->state = EVAL_STATE_NORMAL;
-
    eval_item = eval->next_item;
 
    do {
+      index = -1;
+
       switch( eval_item->type ) {
+	 case EVAL_T_INT:
+	    eval_item->value.argload.num = va_arg( arg, int );
+	    eval->state = EVAL_STATE_NORMAL;
+	    break;
+	 case EVAL_T_DOUBLE:
+	    eval_item->value.argload.dnum = va_arg( arg, double );
+	    eval->state = EVAL_STATE_NORMAL;
+	    break;
+	 case EVAL_T_PTR:
+	    eval_item->value.argload.vptr = va_arg( arg, void* );
+	    eval->state = EVAL_STATE_NORMAL;
+	    break;
 	 case PARS_T_WORD:
 	    if( eval->state == EVAL_STATE_RANGED ) 
 	       lexeme = (lexeme*)data;
@@ -130,6 +165,25 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 
 	    eval->state = EVAL_STATE_NORMAL;
 
+	    break;
+	 case PARS_T_DEC:
+	    index = EVAL_ACTION_DEC;
+
+	    callback = dgd_action_lookup_table[index].callback;
+	    if( callback != NULL ) {
+	       dgd_action_t *action;
+
+	       if( eval->state == EVAL_STATE_NORMAL ) {
+		  action = &(dgd_action_lookup_table[index].action);
+		  action.flags     = eval->flags;
+		  action.error     = 0;
+		  action.user_data = eval->user_data;
+		  action.data      = eval->data;
+	       }
+	       
+	       rc = callback( action, str, &(eval_item->value.call.attr),
+			      
+	    }
 	    break;
 	 default:
 	    break;
