@@ -53,18 +53,19 @@
 
 #define EVAL_ACTION_LOOKUP_SIZE 512
 
-#define EVAL_ACTION_DEC      0
-#define EVAL_ACTION_OCT      1
-#define EVAL_ACTION_HEX      2
-#define EVAL_ACTION_UNSIGNED 3
-#define EVAL_ACTION_REPORT   4
-#define EVAL_ACTION_SCI      5
-#define EVAL_ACTION_FLOAT    6
-#define EVAL_ACTION_SCIFLOAT 7
-#define EVAL_ACTION_SCIHEX   8
-#define EVAL_ACTION_CHAR     9
-#define EVAL_ACTION_STR      10
-#define EVAL_ACTION_PTR      11
+#define EVAL_ACTION_ERROR    0
+#define EVAL_ACTION_DEC      1
+#define EVAL_ACTION_OCT      2
+#define EVAL_ACTION_HEX      3
+#define EVAL_ACTION_UNSIGNED 4
+#define EVAL_ACTION_REPORT   5
+#define EVAL_ACTION_SCI      6
+#define EVAL_ACTION_FLOAT    7
+#define EVAL_ACTION_SCIFLOAT 8
+#define EVAL_ACTION_SCIHEX   9
+#define EVAL_ACTION_CHAR     10
+#define EVAL_ACTION_STR      11
+#define EVAL_ACTION_PTR      12
 
 typedef struct _dgd_action_t {
       unsigned int  state;

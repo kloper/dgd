@@ -818,7 +818,7 @@ dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
    cache_item_t *eval_item;
    cache_item_t *parse_prefix = NULL;
    cache_item_t *ring = NULL;
-   unsigned argn = 0;
+   unsigned argn = 0, maxargn = 0, i;
 
    eval_item = parse_ring;
 
@@ -830,6 +830,7 @@ dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
 	    
 	    ring->type = EVAL_T_PTR;
 	    ring->value.argload.index = argn++;
+	    maxargn = max( maxargn, argn );
 	    ring->value.argload.attr.valid_mask = 0;
 
 	    dgd_ring_push_and_sort( &parse_prefix, ring );
@@ -859,6 +860,7 @@ dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
 	       if( eval_item->value.call.attr.width < 0 ) 
 		  argn = -eval_item->value.call.attr.width;
 	       ring->value.argload.index = argn++;
+	       maxargn = max( maxargn, argn );
 	       ring->value.argload.attr.valid_mask = 0;
 
 	       dgd_ring_push_and_sort( &parse_prefix, ring );
@@ -876,6 +878,7 @@ dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
 	       if( eval_item->value.call.attr.precision < 0 ) 
 		  argn = -eval_item->value.call.attr.precision;
 	       ring->value.argload.index = argn++;
+	       maxargn = max( maxargn, argn );
 	       ring->value.argload.attr.valid_mask = 0;
 
 	       dgd_ring_push_and_sort( &parse_prefix, ring );
@@ -906,6 +909,7 @@ dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
 	    if( eval_item->value.call.attr.valid_mask & CALL_ATTR_ABSPOS ) 
 	       argn = eval_item->value.call.attr.position;
 	    ring->value.argload.index = argn++;
+	    maxargn = max( maxargn, argn );
 	    dgd_call_attr_assign( &(ring->value.argload.attr),
 				  &(eval_item->value.call.attr) );
 
