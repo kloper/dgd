@@ -1,12 +1,17 @@
 #ifndef lint
-static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
+static char const 
+yyrcsid[] = "$FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $";
 #endif
+#include <stdlib.h>
 #define YYBYACC 1
 #define YYMAJOR 1
 #define YYMINOR 9
-#define yyclearin (yychar=(-1))
+#define YYLEX yylex()
+#define YYEMPTY -1
+#define yyclearin (yychar=(YYEMPTY))
 #define yyerrok (yyerrflag=0)
-#define YYRECOVERING (yyerrflag!=0)
+#define YYRECOVERING() (yyerrflag!=0)
+static int yygrowstack();
 #define YYPREFIX "yy"
 #line 1 "src/dgd_format_parser.y"
  
@@ -67,7 +72,8 @@ static char*           dgd_format_string = NULL;
 static cache_t        *cache = NULL;
 static cache_item_t   *start_ring;
 
-#line 71 "src/dgd_format_parser.c"
+#line 76 "src/dgd_format_parser.c"
+#define YYERRCODE 256
 #define LEX_EOF 257
 #define LEX_ZERO 258
 #define LEX_MINUS 259
@@ -113,8 +119,7 @@ static cache_item_t   *start_ring;
 #define LEX_T_STRING 299
 #define LEX_T_PTR 300
 #define LEX_T_REPORT 301
-#define YYERRCODE 256
-short yylhs[] = {                                        -1,
+const short yylhs[] = {                                        -1,
     1,    1,    2,    2,    3,    3,    3,    3,    4,    4,
     5,    6,    6,    6,    6,    6,    6,    7,    7,    7,
     7,    7,    7,    7,    7,    8,    8,    9,   10,   11,
@@ -123,7 +128,7 @@ short yylhs[] = {                                        -1,
    16,   17,   17,   17,   18,   18,   18,   18,   19,   19,
    19,   19,   20,   20,    0,    0,    0,    0,    0,    0,
 };
-short yylen[] = {                                         2,
+const short yylen[] = {                                         2,
     1,    2,    1,    3,    1,    1,    3,    3,    1,    1,
     3,    1,    1,    1,    1,    1,    1,    1,    1,    1,
     1,    1,    1,    1,    1,    1,    1,    1,    3,    1,
@@ -132,7 +137,7 @@ short yylen[] = {                                         2,
     1,    1,    1,    2,    1,    2,    2,    3,    2,    2,
     2,    0,    3,    1,    1,    1,    1,    2,    2,    2,
 };
-short yydefred[] = {                                      0,
+const short yydefred[] = {                                      0,
    64,    0,   66,   67,    0,    0,   65,    2,   69,   70,
    68,   47,   49,   50,   51,    0,   52,    0,   48,    0,
     0,    0,    0,   56,    0,   54,   59,   60,   61,    0,
@@ -142,11 +147,11 @@ short yydefred[] = {                                      0,
    19,   20,   21,   22,   23,   24,   25,   41,    0,   29,
     9,   10,    0,    0,    6,    0,    0,    0,    8,   11,
 };
-short yydgoto[] = {                                       5,
+const short yydgoto[] = {                                       5,
     6,   52,   73,   74,   75,   59,   68,   42,   43,   44,
    45,   46,   47,   48,   49,   20,   21,   22,   23,    7,
 };
-short yysindex[] = {                                    -52,
+const short yysindex[] = {                                    -52,
     0, -255,    0,    0,  -42,   -7,    0,    0,    0,    0,
     0,    0,    0,    0,    0, -257,    0, -253,    0,   -7,
    -7,   -7,  -72,    0, -246,    0,    0,    0,    0, -209,
@@ -156,7 +161,7 @@ short yysindex[] = {                                    -52,
     0,    0,    0,    0,    0,    0,    0,    0, -259,    0,
     0,    0, -208, -175,    0, -259, -259, -175,    0,    0,
 };
-short yyrindex[] = {                                      0,
+const short yyrindex[] = {                                      0,
     0, -258,    0,    0,    0,  -99,    0,    0,    0,    0,
     0,    0,    0,    0,    0, -126,    0, -214,    0,  -99,
   -99,  -99,  -51,    0, -170,    0,    0,    0,    0,    0,
@@ -166,12 +171,12 @@ short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0, -180, -260,    0,    0,    0, -220,    0,    0,
 };
-short yygindex[] = {                                      0,
+const short yygindex[] = {                                      0,
     0,    0,    0,  -22,   21,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,   31,   93,
 };
 #define YYTABLESIZE 266
-short yytable[] = {                                       1,
+const short yytable[] = {                                       1,
     1,    1,    1,    1,    1,   24,   69,   71,    8,    5,
    26,   72,    1,   25,    1,    5,    1,   50,    1,    1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -200,7 +205,7 @@ short yytable[] = {                                       1,
    12,   13,   14,   15,   16,   17,    0,    0,    0,    0,
     0,    0,    0,   18,    0,   19,
 };
-short yycheck[] = {                                     258,
+const short yycheck[] = {                                     258,
   259,  260,  261,  262,  263,  263,  268,  267,  264,  270,
   264,  271,  271,  271,  273,  276,  275,  264,  277,  278,
   279,  280,  281,  282,  283,  284,  285,  286,  287,  288,
@@ -235,7 +240,7 @@ short yycheck[] = {                                     258,
 #endif
 #define YYMAXTOKEN 301
 #if YYDEBUG
-char *yyname[] = {
+const char * const yyname[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -253,7 +258,7 @@ char *yyname[] = {
 "LEX_T_SCIORFLOAT_LOW","LEX_T_SCIORFLOAT_HIGH","LEX_T_SCIHEX_LOW",
 "LEX_T_SCIHEX_HIGH","LEX_T_CHAR","LEX_T_STRING","LEX_T_PTR","LEX_T_REPORT",
 };
-char *yyrule[] = {
+const char * const yyrule[] = {
 "$accept : fmt",
 "cmdbegin : LEX_PERCENT",
 "cmdbegin : LEX_PERCENT LEX_REFERENCE",
@@ -330,6 +335,9 @@ char *yyrule[] = {
 #ifndef YYSTYPE
 typedef int YYSTYPE;
 #endif
+#if YYDEBUG
+#include <stdio.h>
+#endif
 #ifdef YYSTACKSIZE
 #undef YYMAXDEPTH
 #define YYMAXDEPTH YYSTACKSIZE
@@ -337,10 +345,11 @@ typedef int YYSTYPE;
 #ifdef YYMAXDEPTH
 #define YYSTACKSIZE YYMAXDEPTH
 #else
-#define YYSTACKSIZE 500
-#define YYMAXDEPTH 500
+#define YYSTACKSIZE 10000
+#define YYMAXDEPTH 10000
 #endif
 #endif
+#define YYINITSTACKSIZE 200
 int yydebug;
 int yynerrs;
 int yyerrflag;
@@ -349,10 +358,11 @@ short *yyssp;
 YYSTYPE *yyvsp;
 YYSTYPE yyval;
 YYSTYPE yylval;
-short yyss[YYSTACKSIZE];
-YYSTYPE yyvs[YYSTACKSIZE];
-#define yystacksize YYSTACKSIZE
-#line 744 "src/dgd_format_parser.y"
+short *yyss;
+short *yysslim;
+YYSTYPE *yyvs;
+int yystacksize;
+#line 746 "src/dgd_format_parser.y"
 
 static 
 int yylex() {
@@ -724,20 +734,73 @@ dgd_format_settle_args( cache_t *cache,
 
    return NULL;
 }
-#line 728 "src/dgd_format_parser.c"
+#line 738 "src/dgd_format_parser.c"
+/* allocate initial stack or double stack size, up to YYMAXDEPTH */
+static int yygrowstack()
+{
+    int newsize, i;
+    short *newss;
+    YYSTYPE *newvs;
+
+    if ((newsize = yystacksize) == 0)
+        newsize = YYINITSTACKSIZE;
+    else if (newsize >= YYMAXDEPTH)
+        return -1;
+    else if ((newsize *= 2) > YYMAXDEPTH)
+        newsize = YYMAXDEPTH;
+    i = yyssp - yyss;
+    newss = yyss ? (short *)realloc(yyss, newsize * sizeof *newss) :
+      (short *)malloc(newsize * sizeof *newss);
+    if (newss == NULL)
+        return -1;
+    yyss = newss;
+    yyssp = newss + i;
+    newvs = yyvs ? (YYSTYPE *)realloc(yyvs, newsize * sizeof *newvs) :
+      (YYSTYPE *)malloc(newsize * sizeof *newvs);
+    if (newvs == NULL)
+        return -1;
+    yyvs = newvs;
+    yyvsp = newvs + i;
+    yystacksize = newsize;
+    yysslim = yyss + newsize - 1;
+    return 0;
+}
+
 #define YYABORT goto yyabort
 #define YYREJECT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
+
+#ifndef YYPARSE_PARAM
+#if defined(__cplusplus) || __STDC__
+#define YYPARSE_PARAM_ARG void
+#define YYPARSE_PARAM_DECL
+#else	/* ! ANSI-C/C++ */
+#define YYPARSE_PARAM_ARG
+#define YYPARSE_PARAM_DECL
+#endif	/* ANSI-C/C++ */
+#else	/* YYPARSE_PARAM */
+#ifndef YYPARSE_PARAM_TYPE
+#define YYPARSE_PARAM_TYPE void *
+#endif
+#if defined(__cplusplus) || __STDC__
+#define YYPARSE_PARAM_ARG YYPARSE_PARAM_TYPE YYPARSE_PARAM
+#define YYPARSE_PARAM_DECL
+#else	/* ! ANSI-C/C++ */
+#define YYPARSE_PARAM_ARG YYPARSE_PARAM
+#define YYPARSE_PARAM_DECL YYPARSE_PARAM_TYPE YYPARSE_PARAM;
+#endif	/* ANSI-C/C++ */
+#endif	/* ! YYPARSE_PARAM */
+
 int
-yyparse(void)
+yyparse (YYPARSE_PARAM_ARG)
+    YYPARSE_PARAM_DECL
 {
     register int yym, yyn, yystate;
 #if YYDEBUG
-    register char *yys;
-    extern char *getenv();
+    register const char *yys;
 
-    if (yys = getenv("YYDEBUG"))
+    if ((yys = getenv("YYDEBUG")))
     {
         yyn = *yys;
         if (yyn >= '0' && yyn <= '9')
@@ -749,12 +812,13 @@ yyparse(void)
     yyerrflag = 0;
     yychar = (-1);
 
+    if (yyss == NULL && yygrowstack()) goto yyoverflow;
     yyssp = yyss;
     yyvsp = yyvs;
     *yyssp = yystate = 0;
 
 yyloop:
-    if (yyn = yydefred[yystate]) goto yyreduce;
+    if ((yyn = yydefred[yystate])) goto yyreduce;
     if (yychar < 0)
     {
         if ((yychar = yylex()) < 0) yychar = 0;
@@ -777,7 +841,7 @@ yyloop:
             printf("%sdebug: state %d, shifting to state %d\n",
                     YYPREFIX, yystate, yytable[yyn]);
 #endif
-        if (yyssp >= yyss + yystacksize - 1)
+        if (yyssp >= yysslim && yygrowstack())
         {
             goto yyoverflow;
         }
@@ -794,12 +858,12 @@ yyloop:
         goto yyreduce;
     }
     if (yyerrflag) goto yyinrecovery;
-#ifdef lint
+#if defined(lint) || defined(__GNUC__)
     goto yynewerror;
 #endif
 yynewerror:
     yyerror("syntax error");
-#ifdef lint
+#if defined(lint) || defined(__GNUC__)
     goto yyerrlab;
 #endif
 yyerrlab:
@@ -818,7 +882,7 @@ yyinrecovery:
                     printf("%sdebug: state %d, error recovery shifting\
  to state %d\n", YYPREFIX, *yyssp, yytable[yyn]);
 #endif
-                if (yyssp >= yyss + yystacksize - 1)
+                if (yyssp >= yysslim && yygrowstack())
                 {
                     goto yyoverflow;
                 }
@@ -890,12 +954,13 @@ case 3:
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = yyvsp[0].lex.value.lexeme;
                        ring->value.call.num_param = 0;
+		       ring->value.call.index     = -1;
 
                        yyval.ring = ring;                       
                      }
 break;
 case 4:
-#line 144 "src/dgd_format_parser.y"
+#line 145 "src/dgd_format_parser.y"
 { 
                        cache_item_t *args_ring = yyvsp[0].ring; 
                        cache_item_t *ring      = dgd_cache_alloc( cache, 1 );
@@ -904,7 +969,8 @@ case 4:
 
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = yyvsp[-2].lex.value.lexeme;
-                       ring->value.call.num_param = dgd_ring_size( args_ring );
+                       ring->value.call.num_param = -1;
+		       ring->value.call.index     = -1;
 
                        dgd_ring_push_front( &args_ring, ring );
 
@@ -912,31 +978,31 @@ case 4:
                      }
 break;
 case 5:
-#line 162 "src/dgd_format_parser.y"
+#line 164 "src/dgd_format_parser.y"
 { 
                        yyval.ring = yyvsp[0].ring;  
                      }
 break;
 case 6:
-#line 166 "src/dgd_format_parser.y"
+#line 168 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[0].ring;  
                      }
 break;
 case 7:
-#line 170 "src/dgd_format_parser.y"
+#line 172 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[-2].ring;
                      }
 break;
 case 8:
-#line 174 "src/dgd_format_parser.y"
+#line 176 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[-2].ring;
                      }
 break;
 case 9:
-#line 181 "src/dgd_format_parser.y"
+#line 183 "src/dgd_format_parser.y"
 { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
@@ -951,7 +1017,7 @@ case 9:
                      }
 break;
 case 10:
-#line 194 "src/dgd_format_parser.y"
+#line 196 "src/dgd_format_parser.y"
 { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
@@ -965,7 +1031,7 @@ case 10:
                      }
 break;
 case 11:
-#line 209 "src/dgd_format_parser.y"
+#line 211 "src/dgd_format_parser.y"
 {
                        cache_item_t *key_ring   = yyvsp[-2].ring;
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
@@ -980,7 +1046,7 @@ case 11:
                      }
 break;
 case 12:
-#line 225 "src/dgd_format_parser.y"
+#line 227 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -995,7 +1061,7 @@ case 12:
                      }
 break;
 case 13:
-#line 238 "src/dgd_format_parser.y"
+#line 240 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1010,7 +1076,7 @@ case 13:
                      }
 break;
 case 14:
-#line 251 "src/dgd_format_parser.y"
+#line 253 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1025,7 +1091,7 @@ case 14:
                      }
 break;
 case 15:
-#line 264 "src/dgd_format_parser.y"
+#line 266 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1040,7 +1106,7 @@ case 15:
                      }
 break;
 case 16:
-#line 277 "src/dgd_format_parser.y"
+#line 279 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1058,7 +1124,7 @@ case 16:
                      }
 break;
 case 17:
-#line 293 "src/dgd_format_parser.y"
+#line 295 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1073,7 +1139,7 @@ case 17:
                      }
 break;
 case 18:
-#line 309 "src/dgd_format_parser.y"
+#line 311 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1088,7 +1154,7 @@ case 18:
                      }
 break;
 case 19:
-#line 322 "src/dgd_format_parser.y"
+#line 324 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1106,7 +1172,7 @@ case 19:
                      }
 break;
 case 20:
-#line 338 "src/dgd_format_parser.y"
+#line 340 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1121,7 +1187,7 @@ case 20:
                      }
 break;
 case 21:
-#line 351 "src/dgd_format_parser.y"
+#line 353 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1139,7 +1205,7 @@ case 21:
                      }
 break;
 case 22:
-#line 367 "src/dgd_format_parser.y"
+#line 369 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1154,7 +1220,7 @@ case 22:
                      }
 break;
 case 23:
-#line 380 "src/dgd_format_parser.y"
+#line 382 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1172,7 +1238,7 @@ case 23:
                      }
 break;
 case 24:
-#line 396 "src/dgd_format_parser.y"
+#line 398 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1187,7 +1253,7 @@ case 24:
                      }
 break;
 case 25:
-#line 409 "src/dgd_format_parser.y"
+#line 411 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1205,7 +1271,7 @@ case 25:
                      }
 break;
 case 26:
-#line 428 "src/dgd_format_parser.y"
+#line 430 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1220,7 +1286,7 @@ case 26:
                      }
 break;
 case 27:
-#line 441 "src/dgd_format_parser.y"
+#line 443 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1235,7 +1301,7 @@ case 27:
                      }
 break;
 case 28:
-#line 457 "src/dgd_format_parser.y"
+#line 459 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1250,81 +1316,81 @@ case 28:
                      }
 break;
 case 29:
-#line 474 "src/dgd_format_parser.y"
+#line 476 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[-1].ring;
                      }
 break;
 case 30:
-#line 481 "src/dgd_format_parser.y"
+#line 483 "src/dgd_format_parser.y"
 {
                        yyval.attr.byte_count = sizeof(dgd_char_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 31:
-#line 486 "src/dgd_format_parser.y"
+#line 488 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_short_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 32:
-#line 491 "src/dgd_format_parser.y"
+#line 493 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_longlong_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 33:
-#line 496 "src/dgd_format_parser.y"
+#line 498 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_long_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 34:
-#line 501 "src/dgd_format_parser.y"
+#line 503 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_intmax_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 35:
-#line 506 "src/dgd_format_parser.y"
+#line 508 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_size_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 36:
-#line 511 "src/dgd_format_parser.y"
+#line 513 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_ptrdiff_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 37:
-#line 516 "src/dgd_format_parser.y"
+#line 518 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_set_default( &(yyval.attr) );
                      }
 break;
 case 38:
-#line 523 "src/dgd_format_parser.y"
+#line 525 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(long double);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 39:
-#line 528 "src/dgd_format_parser.y"
+#line 530 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_set_default( &(yyval.attr) );
                      }
 break;
 case 40:
-#line 535 "src/dgd_format_parser.y"
+#line 537 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyvsp[0].ring->value.call.attr),
                                              &(yyvsp[-1].attr) );
@@ -1332,7 +1398,7 @@ case 40:
                      }
 break;
 case 41:
-#line 544 "src/dgd_format_parser.y"
+#line 546 "src/dgd_format_parser.y"
 {
 
                        dgd_call_attr_assign( &(yyvsp[0].ring->value.call.attr),
@@ -1341,117 +1407,117 @@ case 41:
                      }
 break;
 case 47:
-#line 562 "src/dgd_format_parser.y"
+#line 564 "src/dgd_format_parser.y"
 {
                        yyval.attr.zero_pad   = 1;
                        yyval.attr.valid_mask = CALL_ATTR_ZERO_PAD;
                      }
 break;
 case 48:
-#line 567 "src/dgd_format_parser.y"
+#line 569 "src/dgd_format_parser.y"
 {
                        yyval.attr.alternate  = 1;
                        yyval.attr.valid_mask = CALL_ATTR_ALTERNATE;
                      }
 break;
 case 49:
-#line 572 "src/dgd_format_parser.y"
+#line 574 "src/dgd_format_parser.y"
 {
                        yyval.attr.left_adjust = 1;
                        yyval.attr.valid_mask  = CALL_ATTR_LEFT_ADJUST;
                      }
 break;
 case 50:
-#line 577 "src/dgd_format_parser.y"
+#line 579 "src/dgd_format_parser.y"
 {
                        yyval.attr.blank      = 1;
                        yyval.attr.valid_mask = CALL_ATTR_BLANK;
                      }
 break;
 case 51:
-#line 582 "src/dgd_format_parser.y"
+#line 584 "src/dgd_format_parser.y"
 {
                        yyval.attr.sign       = 1;
                        yyval.attr.valid_mask = CALL_ATTR_SIGN;
                      }
 break;
 case 52:
-#line 590 "src/dgd_format_parser.y"
+#line 592 "src/dgd_format_parser.y"
 {
                        yyval.attr.width      = yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_WIDTH;
                      }
 break;
 case 53:
-#line 595 "src/dgd_format_parser.y"
+#line 597 "src/dgd_format_parser.y"
 {
                        yyval.attr.width      = 0;
                        yyval.attr.valid_mask = CALL_ATTR_WIDTH;
                      }
 break;
 case 54:
-#line 600 "src/dgd_format_parser.y"
+#line 602 "src/dgd_format_parser.y"
 {
                        yyval.attr.width      = -(int)yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_WIDTH;
                      }
 break;
 case 55:
-#line 609 "src/dgd_format_parser.y"
+#line 611 "src/dgd_format_parser.y"
 {
                        yyval.attr.valid_mask = 0;
                      }
 break;
 case 56:
-#line 613 "src/dgd_format_parser.y"
+#line 615 "src/dgd_format_parser.y"
 {
                        yyval.attr.precision  = yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_PRECISION;
                      }
 break;
 case 57:
-#line 618 "src/dgd_format_parser.y"
+#line 620 "src/dgd_format_parser.y"
 {
                        yyval.attr.precision  = 0;
                        yyval.attr.valid_mask = CALL_ATTR_PRECISION;
                      }
 break;
 case 58:
-#line 623 "src/dgd_format_parser.y"
+#line 625 "src/dgd_format_parser.y"
 {
                        yyval.attr.precision  = -(int)yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_PRECISION;
                      }
 break;
 case 59:
-#line 631 "src/dgd_format_parser.y"
+#line 633 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[0].attr) );
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[-1].attr) );
                      }
 break;
 case 60:
-#line 636 "src/dgd_format_parser.y"
+#line 638 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[0].attr) );
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[-1].attr) );
                      }
 break;
 case 61:
-#line 641 "src/dgd_format_parser.y"
+#line 643 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[0].attr) );
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[-1].attr) );
                      }
 break;
 case 62:
-#line 646 "src/dgd_format_parser.y"
+#line 648 "src/dgd_format_parser.y"
 {
                        yyval.attr.valid_mask = 0;
                      }
 break;
 case 63:
-#line 653 "src/dgd_format_parser.y"
+#line 655 "src/dgd_format_parser.y"
 {
 
                        dgd_call_attr_assign( &(yyvsp[0].ring->value.call.attr),
@@ -1464,7 +1530,7 @@ case 63:
 	             }
 break;
 case 64:
-#line 664 "src/dgd_format_parser.y"
+#line 666 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring = NULL;
 
@@ -1483,13 +1549,13 @@ case 64:
                      }
 break;
 case 65:
-#line 685 "src/dgd_format_parser.y"
+#line 687 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[0].ring;
                      }
 break;
 case 66:
-#line 689 "src/dgd_format_parser.y"
+#line 691 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1502,7 +1568,7 @@ case 66:
                      }
 break;
 case 67:
-#line 700 "src/dgd_format_parser.y"
+#line 702 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1515,14 +1581,14 @@ case 67:
                      }
 break;
 case 68:
-#line 711 "src/dgd_format_parser.y"
+#line 713 "src/dgd_format_parser.y"
 {
                        dgd_ring_push_back( &(yyvsp[-1].ring), yyvsp[0].ring );
                        yyval.ring = yyvsp[-1].ring;
                      }
 break;
 case 69:
-#line 716 "src/dgd_format_parser.y"
+#line 718 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1537,7 +1603,7 @@ case 69:
                      }
 break;
 case 70:
-#line 729 "src/dgd_format_parser.y"
+#line 731 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1551,7 +1617,7 @@ case 70:
                        yyval.ring = yyvsp[-1].ring;
                      }
 break;
-#line 1555 "src/dgd_format_parser.c"
+#line 1621 "src/dgd_format_parser.c"
     }
     yyssp -= yym;
     yystate = *yyssp;
@@ -1594,7 +1660,7 @@ break;
         printf("%sdebug: after reduction, shifting from state %d \
 to state %d\n", YYPREFIX, *yyssp, yystate);
 #endif
-    if (yyssp >= yyss + yystacksize - 1)
+    if (yyssp >= yysslim && yygrowstack())
     {
         goto yyoverflow;
     }

@@ -37,7 +37,7 @@ typedef struct _cache_item_t {
 		  str_range_t           name;
 		  int                   index;
 		  call_attr_t           attr;
-		  unsigned int          num_param;
+		  int                   num_param;
 		  struct _cache_item_t *arg;
 		  struct _cache_item_t *width;
 		  struct _cache_item_t *precision;

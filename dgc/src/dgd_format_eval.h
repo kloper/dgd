@@ -44,6 +44,7 @@
 #define EVAL_ERR_CALLBACK  4
 #define EVAL_ERR_SMALLDATA 5
 #define EVAL_ERR_LOOKUP    6
+#define EVAL_ERR_EXTARG    7
 
 #define EVAL_FLAG_CACHE_CALLS 0x00000001
 #define EVAL_FLAG_CACHE_STDS  0x00000002
@@ -113,6 +114,8 @@ void dgd_eval_init( dgd_eval_t   *eval,
 int dgd_format_eval( dgd_eval_t *eval, 
 		     str_bounded_range_t *str, 
 		     va_list arg );
+
+int dgd_iterate_ext_arg( void *iterator,  ext_arg_t *arg );
 
 #endif /* _dgd_format_eval_h_ */
 

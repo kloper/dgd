@@ -30,6 +30,74 @@
 #include <dgd_format_eval.h>
 #include <dgd_format_generic.h>
 
+int my_string_callback( dgd_action_t *action, 
+			str_bounded_range_t *str,
+			void* argv ) {
+   typedef struct {
+	 unsigned int argn;
+	 char        *curr;
+   } persistent_t;
+
+   persistent_t *p;
+   ext_args_t *args = (ext_args_t*)argv;
+   unsigned int i, size;
+
+   if( args == NULL || 
+       args->argc == 0 || args->argc > DGD_MAX_EXT_ARGS ||
+       args->argv == NULL ) {
+      action->error = EVAL_ERR_BAD_ARG;
+      return EVAL_RES_ERROR;
+   }
+
+   if( action->data_size < sizeof(persistent_t) || action->data == NULL ) {
+      action->error = EVAL_ERR_SMALLDATA;
+      return EVAL_RES_ERROR;
+   }
+   
+   p = (persistent_t*)action->data;
+
+   if( action->state == EVAL_STATE_NORMAL ) {
+      p->argn = 0;
+      p->curr = ((ext_arg_t*)(args->argv))->value.begin;
+   }
+
+   for( i = p->argn; i < args->argc; i++ ) {
+      ext_arg_t *pair = (ext_arg_t*)(args->argv) + i;      
+      size = min( pair->value.end - p->curr, 
+		  (str->high_bound - str->end) );
+      if(size > 0 ) {
+	 memcpy( (char*)str->end, p->curr, size );
+	 str->end += size;
+	 p->curr += size;
+      }
+
+      if( p->curr != pair->value.end ) {
+	 action->state = EVAL_STATE_RANGED;
+	 return EVAL_RES_RANGE;
+      } else {
+	 p->argn++;
+	 p->curr = ((ext_arg_t*)(args->argv) + i + 1)->value.begin;
+      }
+   } 
+
+   return EVAL_RES_DONE;
+}
+
+void my_init_callbacks() {
+   dgd_action_lookup_t *curr;
+   
+   for( curr = dgd_action_lookup_table;
+	curr->name != NULL;
+	curr++ ) {
+      if( curr == dgd_action_lookup_table + EVAL_ACTION_LOOKUP_SIZE - 1 )
+	 return;
+   }
+   
+   memset( (char*)curr, '\0', sizeof( *curr ) );
+   curr->name = "s";   
+   curr->callback = my_string_callback;
+}
+
 void dgd_printf( char* format, ... ) {
    va_list arg;
    cache_t *cache;
@@ -68,6 +136,7 @@ int main( int argc, char** argv ) {
    unsigned int n = -1;
 
    dgd_generic_callback_init( dgd_action_lookup_table );
+   my_init_callbacks();
 
    dgd_printf( "{%d}\n", 101 );
    dgd_printf( "{%10d}\n", 102 );
@@ -87,6 +156,7 @@ int main( int argc, char** argv ) {
    dgd_printf( "{%1$p}{%1$x}\n", "hello" );
    dgd_printf( "{%s}{%n}\n", "zz", &n ); 
    dgd_printf( "{%d}\n", n );
+   dgd_printf( "{%{s:*}}{%d}\n", "hello",15 );
    return 0;
 }
 

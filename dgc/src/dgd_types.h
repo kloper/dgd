@@ -71,7 +71,7 @@ typedef struct _ext_arg_t {
 
 typedef struct _ext_args_t {
       unsigned int argc;
-      ext_arg_t   *argv;
+      void        *argv;
 } ext_args_t;
 
 #define dgd_out_of_range(r) (((r)==NULL)||\

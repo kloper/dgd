@@ -28,6 +28,8 @@
 #include "dgd_format_eval.h"
 #include "dgd_format_parser.h"
 
+unsigned int dgd_eval_argc( cache_item_t *eval_item );
+
 dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE] = {
    { "error",    NULL, { 0, 0, 0, 0 } },
    { "dec",      NULL, { 0, 0, 0, 0 } },
@@ -53,7 +55,8 @@ int lookup( str_range_t *name ) {
 	curr->name != NULL &&
 	   curr < dgd_action_lookup_table + EVAL_ACTION_LOOKUP_SIZE;
 	curr++ ) {
-      if( strncmp( name->begin, curr->name, name->end - name->begin ) == 0 )
+      if( strncmp( name->begin, curr->name, name->end - name->begin ) == 0 &&
+	  *(curr->name + (name->end - name->begin)) == '\0' )
 	 return curr-dgd_action_lookup_table;
    }
    return -1;
@@ -201,7 +204,7 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	 case PARS_T_CALL_BY_NAME:
 	    index = eval_item->value.call.index;
 
-	    if( inedex < 0 ) 
+	    if( index < 0 ) 
 	       index = lookup( &(eval_item->value.call.name) );
 
 	    if( index < 0 ) {
@@ -214,12 +217,32 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	    eval_item->value.call.index = index;
 	    eval_item->value.call.arg   = &tmp;
 
-	    tmp.value.argload.v.args.argc = eval_item->value.call.num_param;
-	    tmp.value.argload.v.args.argv = ext_args;
+	    if( eval_item->value.call.num_param < 0 ) 
+	       tmp.value.argload.v.args.argc = 
+		  eval_item->value.call.num_param =
+		  dgd_eval_argc( eval_item->next );
 
-	    for( i = 0; i < tmp.value.argload.v.args.argc; i++ ) {
+	    if( tmp.value.argload.v.args.argc <= DGD_MAX_EXT_ARGS ) {
+	       cache_item_t *iterator = eval_item;
+	       tmp.value.argload.v.args.argv = ext_args;
 	       
+	       dgd_ring_forward(iterator);
+	       for( i = 0; 
+		    i < tmp.value.argload.v.args.argc && 
+		       i < DGD_MAX_EXT_ARGS;
+		    i++ ) {
+		  rc = dgd_iterate_ext_arg( &iterator,  ext_args + i );
+		  if( rc == EVAL_RES_ERROR ) {
+		     eval->error = EVAL_ERR_EXTARG;
+		     res = EVAL_RES_ERROR;
+		     eval->state = EVAL_STATE_NORMAL;
+		     goto finish;
+		  }
+	       }
+	    } else {
+	       tmp.value.argload.v.args.argv = eval_item;
 	    }
+
 	    /* fall through */
 	 case PARS_T_OCT:
 	    if( index < 0 ) 
@@ -339,4 +362,80 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
    
 }
 
+#define EXTARG_STATE_NORMAL     0
+#define EXTARG_STATE_PAIR_NAME  1
+#define EXTARG_STATE_PAIR_VALUE 2
+#define EXTARG_STATE_DONE       3
 
+int dgd_iterate_ext_arg( void *iterator,  ext_arg_t *arg ) {
+   cache_item_t **eval_item = (cache_item_t**) iterator;
+   unsigned int res = EVAL_RES_DONE;
+   unsigned int state = EXTARG_STATE_NORMAL;
+   str_range_t *fill_range;
+
+   arg->name.begin = arg->name.end = NULL;
+   arg->value.begin = arg->value.end = NULL;
+
+   while( state != EXTARG_STATE_DONE ) {
+      switch( state ) {
+	 case EXTARG_STATE_PAIR_VALUE:
+	 case EXTARG_STATE_NORMAL:
+	    state = EXTARG_STATE_DONE;
+	    fill_range = &(arg->value);
+	    break;
+	 case EXTARG_STATE_PAIR_NAME:
+	    state = EXTARG_STATE_PAIR_VALUE;
+	    fill_range = &(arg->name);
+	    break;
+      }
+
+      switch( (*eval_item)->type ) {
+	 case PARS_T_LEXEME:
+	    *fill_range = (*eval_item)->value.lexeme.lexeme;
+	    break;
+	 case PARS_T_NEXT_ARG:
+	    if( (*eval_item)->value.next_arg.arg != NULL ) {
+	       fill_range->begin = 
+		  (*eval_item)->value.next_arg.arg->value.argload.v.ptr;
+	       fill_range->end = 
+		  fill_range->begin + strlen( fill_range->begin );
+	    }
+	    break;
+	 case PARS_T_PAIR:
+	    state = EXTARG_STATE_PAIR_NAME;
+	    break;
+	 default:
+	    res = EVAL_RES_ERROR;
+	    goto finish;
+      }
+      dgd_ring_forward( *eval_item );
+   }
+
+  finish:
+   return res;
+}
+
+static
+unsigned int dgd_eval_argc( cache_item_t *eval_item ) {
+   unsigned int count = 0;
+   cache_item_t *first = eval_item;
+
+   do {
+      switch( eval_item->type ) {
+	 case PARS_T_LEXEME:
+	 case PARS_T_NEXT_ARG:
+	    count++;
+	    break;
+	 case PARS_T_PAIR:
+	    count++;
+	    dgd_ring_forward( eval_item );
+	    dgd_ring_forward( eval_item );
+	    break;
+	 default:
+	    return count;
+      }
+      dgd_ring_forward( eval_item );
+   } while( eval_item != first );
+
+   return count;
+}
