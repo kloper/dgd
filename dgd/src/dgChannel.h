@@ -180,6 +180,7 @@ class channel: public std::ostream {
 };
 
 void assoc( std::ostream* s, channel& channel );
+void assoc( std::ostream& s, channel& channel );
 void assoc( std::ostream* s, const std::string& name );
 
 }; // end of namespace DGD

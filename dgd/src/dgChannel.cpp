@@ -271,6 +271,11 @@ void channel::header() {
 /**
  * Associate physical stream with a channel. See DGD::channel
  * documentation for more information.
+ * @warning DGD provides no limit on number of channels associated with the
+ * same physical stream (like std::cout). But it is not recommended to
+ * associate more then one channel with the same physical stream. In
+ * fact, unexpected formatting results can occur. Instead you can
+ * associate multiple channels with a single DGD::channel.
  * @see DGD::channelbuf
  * @see channelbuf::assoc(std::ostream*)
  */
@@ -283,10 +288,33 @@ void assoc( std::ostream* s, channel& channel ) {
 }
 
 /**
+ * Associate physical stream with a channel. See DGD::channel
+ * documentation for more information. This one is a simple alias to
+ * assoc(std::ostream*,channel& channel).
+ * @warning DGD provides no limit on number of channels associated with the
+ * same physical stream (like std::cout). But it is not recommended to
+ * associate more then one channel with the same physical stream. In
+ * fact, unexpected formatting results can occur. Instead you can
+ * associate multiple channels with a single DGD::channel.
+ * @see DGD::channelbuf
+ * @see channelbuf::assoc(std::ostream*)
+ * @see assoc(std::ostream*,channel& channel)
+ */
+void assoc( std::ostream& s, channel& cnl ) {
+   assoc( &s, cnl );
+}
+
+/**
  * Associate physical stream with a channel. This function acts as
  * void assoc(std::ostream*,channel&), but takes name of the channel
  * instead. The DGD::Debug factory is searched for the channel with
- * the given name. See DGD::channel documentation for more information.
+ * the given name. See DGD::channel documentation for more
+ * information.
+ * @warning DGD provides no limit on number of channels associated with the
+ * same physical stream (like std::cout). But it is not recommended to
+ * associate more then one channel with the same physical stream. In
+ * fact, unexpected formatting results can occur. Instead you can
+ * associate multiple channels with a single DGD::channel.
  * @see DGD::channelbuf
  * @see channelbuf::assoc(std::ostream*)
  */
@@ -301,6 +329,52 @@ void assoc( std::ostream* s, const std::string& name ) {
       }
    }
 }
+
+/**
+ * @page tutor_assoc DGD Channels - Ensuring real output
+ *
+ * Here we go. DGD::channel makes no physical output, but makes
+ * formatting. To get the actual output we need to associate the
+ * channel with a physical stream e.g std::cout, sort of std::ofstream
+ * or any other object which is derived from std::ostream. 
+ * There are three assoc() functions for making the association:
+ * @code
+ * void assoc( std::ostream* s, channel& channel );
+ * void assoc( std::ostream& s, channel& channel );
+ * void assoc( std::ostream* s, const std::string& name );
+ * @endcode
+ *
+ * All functions make the same job, but the later one assumes
+ * existence of the DGD::Debug factory and queries the channel object
+ * from the factory by the given name.
+ *
+ * The only remaining tricky question about associations is: what if I
+ * make more then one association of the same channel, or more then
+ * one with the same physical stream?
+ * In fact DGD makes no restrictions on what do you associate, how and
+ * when. So, for example, it is legal to associate the same channel with
+ * std::cout and std::cerr, the channel will replicate its output into
+ * both streams. It is legal to register the same channel twice with
+ * the same stream, its output will be duplicated in this stream. 
+ * 
+ * There are two additional association schemes worth to be mentioned
+ * here. 
+ *
+ * It is possible to associate two different channels with the same
+ * physical stream. But in this case DGD makes no garanties on
+ * validity of the resulting stream formatting. Surely, there is other
+ * simple way to avoid the problem and allow output from multiple
+ * channels into single physical buffer.
+ *
+ * To avoid the problem mentioned above lets remind that assoc()
+ * functions accept any std::ostream as a physical stream and
+ * DGD::chnnel itself derives from std::ostream. So, it is possible to
+ * associate DGD::channel with another DGD::channel. Te problem
+ * could be solved by associating a single channel with a
+ * physical stream and then associating multiple other channels with
+ * that first channel. The example below demonstrates the soulution.
+ * @include mult_assoc.cpp 
+ */
 
 }; // end of namespace DGD
 
