@@ -24,6 +24,7 @@
 
 #include <list>
 #include <vector>
+#include <algorithm>
 
 #include <regular_expression.h>
 
