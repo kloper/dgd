@@ -2923,7 +2923,7 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-ac_config_files="$ac_config_files Makefile getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile"
+ac_config_files="$ac_config_files Makefile doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3256,13 +3256,14 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+  "doc/doxygen/dgd.doxy" ) CONFIG_FILES="$CONFIG_FILES doc/doxygen/dgd.doxy" ;;
   "getopt/Makefile" ) CONFIG_FILES="$CONFIG_FILES getopt/Makefile" ;;
   "regex/Makefile" ) CONFIG_FILES="$CONFIG_FILES regex/Makefile" ;;
   "dgd/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgd/Makefile" ;;
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
   "dgd/src/dgDebugOpt.gge" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgDebugOpt.gge" ;;
   "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
-  *) { { echo "$as_me:3265: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:3266: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -3501,7 +3502,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:3504: creating $ac_file" >&5
+    { echo "$as_me:3505: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -3519,7 +3520,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:3522: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:3523: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -3532,7 +3533,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:3535: error: cannot find input file: $f" >&5
+           { { echo "$as_me:3536: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;

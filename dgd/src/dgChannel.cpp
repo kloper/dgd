@@ -29,6 +29,12 @@
 
 namespace DGD {
 
+/**
+ * channel constructor. This one solves the chicken and egg problem of
+ * stream and streambuf construction. It calls std::ostream::init()
+ * with NULL pointer, effectively disabling the channel. Use open()
+ * method to enable it.
+ */
 channel::channel( const std::string& name ) :
    Parent( NULL ),
    m_name( name ),
@@ -37,101 +43,196 @@ channel::channel( const std::string& name ) :
    m_buffer.pubsetbuf( NULL, 100 );
 }
 
+/**
+ * Open and effectively initialize the channel. This method calls
+ * std::ostream::init() with pointer to m_buffer. Note that m_buffer
+ * is not affected by close(), this enables multiple close() and
+ * open() operations on the channel.
+ */
 void channel::open() {
    m_is_open = true;
    init( &m_buffer );   
 }
 
+/**
+ * Close and effectively disable the channel.
+ */
 void channel::close() {
    m_is_open = false;
    init( NULL );
 }
 
+/**
+ * Return channel open/close status.
+ */
 bool channel::is_open() const {
    return m_is_open;
 }
 
+/**
+ * Return channel open/close status. This operator is used for 
+ * @verbatim
+ * if( channel ) { .... }
+ * @endverbatim
+ * expressions.
+ */
 channel::operator bool () const {
    return m_is_open;
 }
 
+/**
+ * Return channel name. 
+ */
 const std::string& channel::name() const {
    return m_name;
 }
 
+/**
+ * Return pointer to channel buffer. See DGD::channelbuf for more
+ * info. This method is const so preventing non-const methods on the
+ * channel buffer. Use channel::rdbuf() for changing channel buffer
+ * directly.
+ */
 channelbuf* channel::rdbuf() const {
    return (m_is_open? (channelbuf*)&m_buffer : NULL );
 }
 
+/**
+ * Return the channel buffer. This method allows direct access to the
+ * channel buffer. See DGD::channelbuf for more info. @note This
+ * method must be used carefully since direct access to the channel
+ * buffer can cause unexpected results.
+ */
 channelbuf& channel::rdbuf() {
    return m_buffer;
 }
 
+/**
+ * Change indentation step. @note This method does not affect the
+ * indentation level itself.
+ */
 void channel::indent_step( unsigned int step ) {
    m_buffer.indent_step( step );
 }
 
+/**
+ * Return indentation step.
+ */
 unsigned int channel::indent_step() const {
    return m_buffer.indent_step();
 }
 
+/**
+ * Increment indentation level by indentation step.
+ */
 void channel::incr_indent() {
    m_buffer.incr_indent();
 }
 
+/**
+ * Decrement indentation level by indentation step.
+ */
 void channel::decr_indent() {
    m_buffer.decr_indent();
 }
 
+/**
+ * Change indentation level. @note The parameter need not to be
+ * multiple of the indentation level.
+ */
 void channel::indent( unsigned int val ) {
    m_buffer.indent( val );
 }
 
+/**
+ * Return indentation level.
+ */
 unsigned int channel::indent() const {
    return m_buffer.indent();
 }
 
+/**
+ * Change minimum line width. The effective indentation level is
+ * determined as 
+ * @verbatim
+ * elevel = min( indentation level, max_width()-min_width() );
+ * @endverbatim
+ */
 void channel::min_width( unsigned int width ) {
    m_buffer.min_width( width );
 }
 
+/**
+ * Return minimum line width.
+ */
 unsigned int channel::min_width() const {
    return m_buffer.min_width();
 }
 
+/**
+ * Change maximum line width. 
+ */
 void channel::max_width( unsigned int width ) {
    m_buffer.max_width( width );
 }
 
+/**
+ * Return maximum line width.
+ */
 unsigned int channel::max_width() const {
    return m_buffer.max_width();
 }
 
+/**
+ * Disable or enable character wrapping.
+ */
 void channel::wrap( bool allow ) {
    m_buffer.wrap( allow );
 }
 
+/**
+ * Return character wrapping flag.
+ */
 bool channel::wrap() const {
    return m_buffer.wrap();
 }
 
+/**
+ * Disable or enable word wrapping.
+ */
 void channel::word_wrap( bool allow ) {
    m_buffer.word_wrap( allow );
 }
 
+/**
+ * Return character wrapping flag.
+ */
 bool channel::word_wrap() const {
    return m_buffer.word_wrap();
 
 }
 
+/**
+ * Change space characters. This method accepts a null-terminated
+ * character string. Each character in the string will be considering
+ * like a space between words during word wrapping.
+ */
 void channel::space_chars(const char* spc ) {
    m_buffer.space_chars( spc );
 }
 
+/**
+ * Return space characters.
+ */
 std::string channel::space_chars() const {
    return m_buffer.space_chars();
 }
 
+/**
+ * Dump header information into the channel.
+ * Normally this method is invoked by assoc(), but it can be called in
+ * any other places.
+ */
 void channel::header() {
    channel& self = *this;
    time_t local_time;
@@ -145,6 +246,10 @@ void channel::header() {
    
 }
 
+/**
+ * Associate physical stream with a channel. See DGD::channel
+ * documentation for more information.
+ */
 void assoc( stream s, channel& channel ) {
    if( s.get() != NULL ) {
       channelbuf& buf = channel.rdbuf();
@@ -153,6 +258,12 @@ void assoc( stream s, channel& channel ) {
    }
 }
 
+/**
+ * Associate physical stream with a channel. This function acts as
+ * void assoc(stream,channel&), but takes name of the channel
+ * instead. The DGD::Debug factory is searched for the channel with
+ * the given name. See DGD::channel documentation for more information.
+ */
 void assoc( stream s, const std::string& name ) {
    Debug* factory = Debug::factory();
    if( factory != NULL ) {

@@ -73,7 +73,7 @@ $as_unset CDPATH || test "${CDPATH+set}" != set || { CDPATH=:; export CDPATH; }
 
 exec 6>&1
 
-config_files=" Makefile getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile"
+config_files=" Makefile doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile"
 
 ac_cs_usage="\
 \`$as_me' instantiates files from templates according to the
@@ -182,13 +182,14 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+  "doc/doxygen/dgd.doxy" ) CONFIG_FILES="$CONFIG_FILES doc/doxygen/dgd.doxy" ;;
   "getopt/Makefile" ) CONFIG_FILES="$CONFIG_FILES getopt/Makefile" ;;
   "regex/Makefile" ) CONFIG_FILES="$CONFIG_FILES regex/Makefile" ;;
   "dgd/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgd/Makefile" ;;
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
   "dgd/src/dgDebugOpt.gge" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgDebugOpt.gge" ;;
   "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
-  *) { { echo "$as_me:3265: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:3266: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -278,8 +279,8 @@ s,@target_cpu@,i686,;t t
 s,@target_vendor@,pc,;t t
 s,@target_os@,cygwin,;t t
 s,@CVS@,cvs.exe,;t t
-s,@DGD_VERSION@,dgd-0.12 Tue Sep  3 12:45:12  2002,;t t
-s,@DGD_SHORT_VERSION@,0.12,;t t
+s,@DGD_VERSION@,dgd-0.13 Thu Sep 12 02:36:25  2002,;t t
+s,@DGD_SHORT_VERSION@,0.13,;t t
 s,@BUILDDIR@,Debug,;t t
 s,@TARGETS@,,;t t
 s,@CXX_DYNAMIC_FLAGS@,,;t t
@@ -419,7 +420,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:3504: creating $ac_file" >&5
+    { echo "$as_me:3505: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -437,7 +438,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:3522: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:3523: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -450,7 +451,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:3535: error: cannot find input file: $f" >&5
+           { { echo "$as_me:3536: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
