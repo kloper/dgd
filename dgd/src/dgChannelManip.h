@@ -53,23 +53,14 @@ class channel_manip_void {
 	 m_method(m) {}
 };
 
+
+class channel_manip_nop {
+   public:
+      channel_manip_nop() {}
+};
+
 typedef channel_manip<bool> channel_manip_bool;
 typedef channel_manip<unsigned int>  channel_manip_uint;
-
-inline channel& operator <<( channel& cnl, const channel_manip_void& manip ) {
-   (cnl.*(manip.m_method))();
-   return cnl;
-}
-
-inline channel& operator <<( channel& cnl, const channel_manip_bool& manip ) {
-   (cnl.*(manip.m_method))( manip.m_argument );
-   return cnl;
-}
-
-inline channel& operator <<( channel& cnl, const channel_manip_uint& manip ) {
-   (cnl.*(manip.m_method))( manip.m_argument );
-   return cnl;
-}
 
 inline std::ostream& operator <<( std::ostream& cnl, 
 				  const channel_manip_void& manip ) {
@@ -90,10 +81,17 @@ inline std::ostream& operator <<( std::ostream& cnl,
    return cnl;
 }
 
+inline channel& operator <<( std::ostream& cnl, 
+			     const channel_manip_nop& manip ) {
+   
+   return static_cast<channel&>(cnl);
+}
+
 /* --- */
 
 const channel_manip_void incr = channel_manip_void( &channel::incr_indent );
 const channel_manip_void decr = channel_manip_void( &channel::decr_indent );
+const channel_manip_nop  dgd  = channel_manip_nop();
 
 inline channel_manip_uint step( unsigned int s ) {
    return channel_manip_uint( &channel::indent_step, s );
