@@ -1,7 +1,7 @@
 <webmake>
 
 <{!--
-   --  $Id: dgd\\doc\\html\\Attic\\dgd.wmk,v 1.5 2002/11/24 22:17:39 dimka Exp $
+   --  $Id: dgd\\doc\\html\\Attic\\dgd.wmk,v 1.6 2002/11/30 00:12:00 dimka Exp $
    -- 
    --  This program is free software; you can redistribute it and/or modify
    --  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@
 <media src="style" name="*.css"  namesubst="s/\.css//" />
 
 <template name="dgd_version" format="text/html">
-0.20
+0.21
 </template>
 
 <template name="sfhome" format="text/html">
@@ -263,6 +263,7 @@ http://sourceforge.net/project/showfiles.php?group_id=62230
       <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_namespacemembers)">Namespace&nbsp;Members</a></tr>
       <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_functions)">Compound&nbsp;Members</a></tr>
       <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_globals)">File&nbsp;Members</a></tr>
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_pages)">Related&nbsp;Pages</a></tr>
    </table>
 </content>
 
@@ -424,7 +425,7 @@ http://sourceforge.net/project/showfiles.php?group_id=62230
                ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: width="100%" title="$[crumbs]" text="construction"}
+               ${box: width="100%" title="$[crumbs]" text="doxygen_html_pages"}
             </td>
 	 </tr>
       </table>

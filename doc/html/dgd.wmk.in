@@ -1,7 +1,7 @@
 <webmake>
 
 <{!--
-   --  $Id: dgd\\doc\\html\\Attic\\dgd.wmk.in,v 1.1 2002/09/28 20:49:44 dimka Exp $
+   --  $Id: dgd\\doc\\html\\Attic\\dgd.wmk.in,v 1.2 2002/11/30 00:12:00 dimka Exp $
    -- 
    --  This program is free software; you can redistribute it and/or modify
    --  it under the terms of the GNU General Public License as published by
@@ -263,6 +263,7 @@ http://sourceforge.net/project/showfiles.php?group_id=62230
       <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_namespacemembers)">Namespace&nbsp;Members</a></tr>
       <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_functions)">Compound&nbsp;Members</a></tr>
       <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_globals)">File&nbsp;Members</a></tr>
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_pages)">Related&nbsp;Pages</a></tr>
    </table>
 </content>
 
@@ -424,7 +425,7 @@ http://sourceforge.net/project/showfiles.php?group_id=62230
                ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: width="100%" title="$[crumbs]" text="construction"}
+               ${box: width="100%" title="$[crumbs]" text="doxygen_html_pages"}
             </td>
 	 </tr>
       </table>
