@@ -32,8 +32,8 @@ die if( !defined( $ruleset ) );
 
 our $BUILD      = $toolset->option( 'build' );
 our $INCLUDE    = [ "%STLPORT_INCLUDE", "%BOOST_INCLUDE", "$BLIB/include" ];
-our $LIBPATH    = [ "$BLIB/lib", "%STLPORT_LIB" ];
-our $LIBS       = "-ldgd -lregex";
+our $LIBPATH    = [ "$BLIB/lib", "%STLPORT_LIB", "%BOOST_LIB" ];
+our $LIBS       = "-ldgd";
 
 Link $BUILD => 'src';
 

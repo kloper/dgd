@@ -12,7 +12,7 @@ perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo --build=Release -v
 (clean)
 /d/perl/bin/perl -I cons ./cons/cons.pl -- clean ;;
 (win|win-debug|*)
-/d/perl/bin/perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost,clo --boost-root-dir=d:/boost-1.31.0 -v3 ;;
+/d/perl/bin/perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost,clo --boost-root-dir=d:/boost -v3 ;;
 esac
 
 # 

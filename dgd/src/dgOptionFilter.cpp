@@ -33,7 +33,11 @@
  * Implementation of DGD::option_filter
  */
 
+#if defined(HAVE_GNU_REGEXP)
 #include <regular_expression.h>
+#else 
+#include <boost/regex.hpp>
+#endif
 
 #include "dgOptionFilter.h"
 
@@ -54,6 +58,10 @@ namespace DGD {
  */
 option_filter::option_set_container* 
 option_filter::operator () ( int argc, char** argv, int filtc, char** filtv ) {
+#if !defined(HAVE_GNU_REGEXP)
+   using namespace boost;
+#endif
+
    unsigned int i, j, k;
    typedef std::list<char*> opt_list;
    typedef std::vector<bool> matched_bitset;
@@ -70,7 +78,7 @@ option_filter::operator () ( int argc, char** argv, int filtc, char** filtv ) {
       opt_list matched_options;
       for( i = 1; i < (unsigned)argc; ++i ) {
 	 regex filter( filtv[j] );
-	 if( regex_match( filter, argv[i] ) ) {
+	 if( regex_match( argv[i], filter ) ) {
 	    matched_options.push_back( argv[i] );
 	    matched_flags[i-1] = true;
 	 }

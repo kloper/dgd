@@ -44,10 +44,10 @@ extern "C" {
 
 namespace DGD {
 
-class bad_regex: public std::exception {
+class bad_expression: public std::exception {
    public:
-      bad_regex() : m_what( "bad regular expression" ) {}
-      bad_regex( const char* s ) : m_what( s ) {}
+      bad_expression() : m_what( "bad regular expression" ) {}
+      bad_expression( const char* s ) : m_what( s ) {}
 
       const char* what() const DGD_THROW { 
 	 return m_what;
@@ -64,27 +64,27 @@ class regex {
 
       regex( const char* rx ) {
 	 if( rx == NULL ) 
-	    throw bad_regex( "null string given" );
+	    throw bad_expression( "null string given" );
 
 	 std::fill( (char*)&m_regexp, (char*)&m_regexp + sizeof(m_regexp), 0 );
 	 const char* reason = 
 	    re_compile_pattern( rx, strlen( rx ), &m_regexp );
 	 if( reason != NULL )
-	    throw bad_regex( reason );
+	    throw bad_expression( reason );
       };
       
    private:
       re_pattern_buffer m_regexp;
 };
 
-inline bool regex_match( regex& rx, const char* str ) {
+inline bool regex_match( const char* str, regex& rx ) {
    int res = re_match( &(rx.m_regexp), str, strlen(str), 0, NULL );
    switch( res ) {
       case 0:
       case -1:
 	 return false;
       case -2:
-	 throw bad_regex( "internal error" );
+	 throw bad_expression( "internal error" );
    }
    return true;
 }

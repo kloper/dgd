@@ -39,7 +39,7 @@ our $INCLUDE    = [ "..", "%STLPORT_INCLUDE", "%BOOST_INCLUDE",
 Link $BUILD => 'src';
 
 our $buildenv   = new cons( %{$ruleset},
-			   'CPPPATH' => $INCLUDE );
+			    'CPPPATH' => $INCLUDE );
 
 my $TARGET = "$BUILD/%{PREFLIB}dgd%{SUFLIB}";
 

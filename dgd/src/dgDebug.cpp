@@ -24,7 +24,11 @@
 
 #include "dgConfig.h"
 
+#if defined(HAVE_GNU_REGEXP)
 #include <regular_expression.h>
+#else
+#include <boost/regex.hpp>
+#endif
 
 /**
  * @file dgDebug.cpp
@@ -147,7 +151,7 @@ Debug::Debug()
  * which defines the default space characters. 
  * <dt>--trace-turn-on
  * <dd>Turn on (open) channels. This option must be specified with a
- * string parameter which defines a GNU regular exception. This regexp
+ * string parameter which defines a regular expression. This regexp
  * is applied on the current channel list. All channels with names
  * matching the regexp will be opened.
  * <dt>--trace-turn-off
@@ -158,6 +162,9 @@ Debug::Debug()
  * </dl>
  */
 void Debug::process_options( int argc, char** argv ) {
+#if !defined(HAVE_GNU_REGEXP)
+   using namespace boost;
+#endif
    parser optp;
 
    try {
@@ -216,6 +223,10 @@ void Debug::process_options( const option_filter::option_set_type& options ) {
  * @see Debug::process_options(int,char**)
  */
 void Debug::apply_options( channel_ptr& chnl ) {
+#if !defined(HAVE_GNU_REGEXP)
+   using namespace boost;
+#endif
+
    if( m_args_given.trace_min_width ) 
       chnl->min_width( m_args_info.trace_min_width );
    
@@ -233,10 +244,10 @@ void Debug::apply_options( channel_ptr& chnl ) {
    if( m_args_given.trace_turn_on ) {
       try {
 	 regex e( m_args_info.trace_turn_on.c_str() );
-	 if( regex_match( e, chnl->name().c_str() ) ) {
+	 if( regex_match( chnl->name().c_str(), e ) ) {
 	    chnl->open();
 	 }
-      } catch( bad_regex&  ) {
+      } catch( bad_expression&  ) {
 	 throw bad_params( "bad regular expression" );
       }
    }
@@ -244,10 +255,10 @@ void Debug::apply_options( channel_ptr& chnl ) {
    if( m_args_given.trace_turn_off ) {
       try {
 	 regex e( m_args_info.trace_turn_off.c_str() );
-	 if( regex_match( e, chnl->name().c_str() ) ) {
+	 if( regex_match( chnl->name().c_str(), e ) ) {
 	    chnl->close();
 	 }
-      } catch( bad_regex& ) {
+      } catch( bad_expression& ) {
 	 throw bad_params( "bad regular expression" );
       }
    }
