@@ -32,10 +32,12 @@
  * dgConfig.h.in 
  */
 
-#define DG_VERSION_STRING "dgd-0.25 Fri Oct 31 01:31:52 JST 2003"
+#define DG_VERSION_STRING "dgd-0.25 Wed Nov 26 00:39:10 JST 2003"
 
+#if defined(_STLPORT_VERSION) && _STLPORT_VERSION <= 450
 // This one seems to solve problem with vc7 and boost-1.30
-
+#include <typeinfo.h> 
+#endif
 
 #endif /* _dgConfig_h_ */
 

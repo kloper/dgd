@@ -1504,7 +1504,7 @@ _ACEOF
 _ACEOF
 
 
-     CXXFLAGS="$CXXFLAGS -nologo -Zm300 -W3 -GR -GX -TP -MTd"
+     CXXFLAGS="$CXXFLAGS -nologo -Zm300 -W3 -GR -GX -TP"
      CFLAGS="$CFLAGS -nologo -W3 -GR -GX -MTd"
      LIBEXT=lib
      if test "x$with_pch" = "xyes"; then
@@ -1512,25 +1512,21 @@ _ACEOF
         CFLAGS="$CFLAGS -YX"
      fi
 
-     LDFLAGS="$LDFLAGS /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT"
+     LDFLAGS="$LDFLAGS /nologo /machine:I386 /NODEFAULTLIB:LIBC"
 
      if test "x$enable_debug" = "xyes"; then
-        cat >>confdefs.h <<\_ACEOF
-#define _DEBUG 1
-_ACEOF
-
-        CXXFLAGS="$CXXFLAGS -Gm  -Zi -Od"
+        CXXFLAGS="$CXXFLAGS  -MTd -Gm  -Zi -Od"
 	CFLAGS="$CFLAGS -Gm  -Zi -Od"
-        LDFLAGS="$LDFLAGS /debugtype:cv"
+        LDFLAGS="$LDFLAGS /NODEFAULTLIB:LIBCMT /debugtype:cv"
         BUILDDIR=Debug
      else
         cat >>confdefs.h <<\_ACEOF
 #define NODEBUG 1
 _ACEOF
 
-        CXXFLAGS="$CXXFLAGS -O2"
+        CXXFLAGS="$CXXFLAGS  -MT -O2"
         CFLAGS="$CFLAGS -O2"
-        LDFLAGS="$LDFLAGS "
+        LDFLAGS="$LDFLAGS /NODEFAULTLIB:LIBCMTD"
         BUILDDIR=Release
      fi
 

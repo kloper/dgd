@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/./../STLport-4.5-1020
+STLDIR     = $(top_srcdir)/.
 BOOSTDIR   = $(top_srcdir)/./../boost-1.30.2
 BUILDDIR   = $(srcdir)/Debug
 
@@ -39,9 +39,9 @@ LD  = link
 MAKEDEPEND = makedepend
 SED = sed
 
-CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP  -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
 LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5-1020/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
+EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
 LDLIBS = getopt.lib regex.lib dgd.lib
 LDOUTOPT = /out:
 COUTOPT  = -Fo
@@ -53,7 +53,7 @@ BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I $(top_srcdir)/getopt/src
 DGDINCLUDES    = -I $(top_srcdir)/dgd/src
 
-DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_TRACE $(BOOSTDEFINES)
+DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1  -D_TRACE $(BOOSTDEFINES)
 
 LIBPREFIX = 
 LIBEXT = lib

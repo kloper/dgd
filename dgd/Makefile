@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/./../STLport-4.5-1020
+STLDIR     = $(top_srcdir)/.
 BOOSTDIR   = $(top_srcdir)/./../boost-1.30.2
 BUILDDIR   = $(srcdir)/Debug
 
@@ -45,7 +45,7 @@ RANLIB = ranlib
 MAKEDEPEND = makedepend
 GENGETOPT  = gengetopt
 
-CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP  -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
 LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
 LDOUTOPT = /out:
 COUTOPT  = -Fo
@@ -56,7 +56,7 @@ STLINCLUDES   = -I $(STLDIR)/stlport
 BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I$(top_srcdir)/getopt/src
 REGEXINCLUDES = -I$(top_srcdir)/regex/src
-DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
+DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
 BOOSTDEFINES =
 
 LIBPREFIX = 

@@ -1,6 +1,6 @@
 dnl -*- m4 -*-
 dnl
-dnl $Id$
+dnl 
 dnl
 dnl This program is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ with_msvc=yes
      AC_DEFINE(WIN32)
      AC_DEFINE(_WINDOWS)
 
-     CXXFLAGS="$CXXFLAGS -nologo -Zm300 -W3 -GR -GX -TP -MTd" 
+     CXXFLAGS="$CXXFLAGS -nologo -Zm300 -W3 -GR -GX -TP" 
      CFLAGS="$CFLAGS -nologo -W3 -GR -GX -MTd" 
      LIBEXT=lib
      if test "x$with_pch" = "xyes"; then
@@ -101,19 +101,19 @@ with_msvc=yes
         CFLAGS="$CFLAGS -YX"
      fi
 
-     LDFLAGS="$LDFLAGS /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT"
+     LDFLAGS="$LDFLAGS /nologo /machine:I386 /NODEFAULTLIB:LIBC"
 
      if test "x$enable_debug" = "xyes"; then 
-        AC_DEFINE(_DEBUG)
-        CXXFLAGS="$CXXFLAGS -Gm  -Zi -Od"
+dnl        AC_DEFINE(_DEBUG)
+        CXXFLAGS="$CXXFLAGS  -MTd -Gm  -Zi -Od"
 	CFLAGS="$CFLAGS -Gm  -Zi -Od"
-        LDFLAGS="$LDFLAGS /debugtype:cv"
+        LDFLAGS="$LDFLAGS /NODEFAULTLIB:LIBCMT /debugtype:cv"
         BUILDDIR=Debug
      else
         AC_DEFINE(NODEBUG)
-        CXXFLAGS="$CXXFLAGS -O2"
+        CXXFLAGS="$CXXFLAGS  -MT -O2"
         CFLAGS="$CFLAGS -O2"
-        LDFLAGS="$LDFLAGS "
+        LDFLAGS="$LDFLAGS /NODEFAULTLIB:LIBCMTD"
         BUILDDIR=Release
      fi
 

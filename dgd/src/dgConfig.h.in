@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,6 +33,11 @@
  */
 
 #define DG_VERSION_STRING "@DGD_VERSION@"
+
+#if defined(_STLPORT_VERSION) && _STLPORT_VERSION <= 450
+// This one seems to solve problem with vc7 and boost-1.30
+#include <typeinfo.h> 
+#endif
 
 #endif /* _dgConfig_h_ */
 
