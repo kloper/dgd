@@ -60,7 +60,7 @@ Export qw(BLIB toolset options version);
 
 Default $BLIB;
 
-Build map( "$_/Conscript", qw(regex dgd test) );
+Build map( "$_/Conscript", qw(regex dgd test samples doc) );
 
 sub clean {
     my ($root) = @_;

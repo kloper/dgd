@@ -6,9 +6,9 @@ my $config;
 
 $config = {
     "name"       => "dgd",
-    "long_name"  => "Depression Glass Debug Library",
+    "long_name"  => "DGD Library",
     "logo"       => "dgd_logo.gif",
-    "version"    => "",
+    "version"    => "0.0.25.107",
     "page"       => "/dgd/page",
     "image_dir"  => "images",
     "style_dir"  => "style",

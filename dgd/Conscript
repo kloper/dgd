@@ -89,7 +89,7 @@ if( defined($ruleset->{'CLOXXCOM'}) ) {
     Command $buildenv [ "$BUILD/dgDebugOpt.h", 
 			"$BUILD/dgDebugOpt.cpp" ], 
 			  "$BUILD/dgDebugOpt.xml",
-			    qq(%CLOXXCOM -Dcxx_header_file=%<:b.h ) .
+			    qq(#%CLOXXCOM# -Dcxx_header_file=%<:b.h ) .
 			      qq(-Dcxx_namespace=DGD ) . 
 				qq(-Dcxx_source_file=%<:b.cpp -o c++ %<);
 }

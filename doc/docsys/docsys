@@ -1,6 +1,7 @@
 #!/d/perl/bin/perl
 
 use HTML::Mason;
+use Cwd;
 use File::Basename;
 use File::Copy;
 use strict;
@@ -95,7 +96,7 @@ sub generate_component( $$@ ) {
     }
 }
 
-$root_dir = "/home/dimka/dgd/doc/docsys";
+$root_dir = cwd();
 
 my $interp = HTML::Mason::Interp->new
     (comp_root  => $root_dir,
