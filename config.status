@@ -276,8 +276,8 @@ s,@target_cpu@,i686,;t t
 s,@target_vendor@,pc,;t t
 s,@target_os@,cygwin,;t t
 s,@CVS@,cvs.exe,;t t
-s,@DGD_VERSION@,dgd-0.05 Thu Aug 22 17:20:21  2002,;t t
-s,@DGD_SHORT_VERSION@,0.05,;t t
+s,@DGD_VERSION@,dgd-0.06 Thu Aug 22 21:20:17  2002,;t t
+s,@DGD_SHORT_VERSION@,0.06,;t t
 s,@BUILDDIR@,Debug,;t t
 s,@TARGETS@,,;t t
 s,@CXX_DYNAMIC_FLAGS@,,;t t

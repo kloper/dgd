@@ -26,6 +26,7 @@
 
 #include <dgDebug.h>
 #include <dgDebugStd.h>
+#include <dgOptionFilter.h>
 
 using namespace std;
 using namespace DGD;
@@ -142,8 +143,15 @@ void empty_test( channel& debug ) {
 }
 
 int main( int argc, char** argv ) {
-//   Debug dout( argc, argv );
-   Debug::debug_factory_ref dout = Debug::create_factory( argc, argv );
+   option_filter of;
+   char* filter[] = { "--debug.*" };
+
+   option_filter::option_set_container* option_sets = 
+      of( argc, argv, 1, filter );
+
+   Debug::debug_factory_ref dout = 
+      Debug::create_factory( option_sets->at(0).argc, 
+			     option_sets->at(0).argv );
       
    if( dout.get() == NULL )
       return 1;

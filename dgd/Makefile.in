@@ -72,7 +72,8 @@ CPPFILES = \
 dgChannel.cpp \
 dgChannelBuf.cpp \
 dgDebug.cpp \
-dgDebugOpt.cpp
+dgDebugOpt.cpp \
+dgOptionFilter.cpp
 
 GGEFILES = \
 dgDebugOpt.gge
@@ -90,6 +91,7 @@ all:  builddir $(TARGET) subdirs
 	$(GENGETOPT) --no-handle-help --no-handle-version --no-handle-error --file-name=${basename $@} --func-name=dgd_cmdline_parser < $<
 	$(CAT) ${basename $@}.c | $(SED) 's/gengetopt_args_info/dgd_gengetopt_args_info/' | $(SED) 's%src/%%g' > tmp.c
 	$(MV) tmp.c $@
+	$(RM) ${basename $@}.c
 	$(CAT) ${basename $@}.h | $(SED) 's/gengetopt_args_info/dgd_gengetopt_args_info/' | $(SED) 's%src/%%g' > tmp.h
 	$(MV) tmp.h ${basename $@}.h
 
