@@ -1,0 +1,41 @@
+#!/d/perl/bin/perl.exe -w --
+
+use strict;
+use File::Basename;
+use File::Copy;
+
+my $exe_name = $0;
+my $localdir = dirname($exe_name);
+my $source = $ARGV[0];
+my $target = $ARGV[1];
+
+die "Source directory $source does not exists..." if( !(-e $source) ||
+						   !(-d $source) );
+die "Target directory $target does not exists..." if( !(-e $target) ||
+						   !(-d $target) );
+
+my @dir_stack = ( $source );
+while( scalar( @dir_stack ) > 0 ) {
+    my $dir = $dir_stack[0];
+    shift @dir_stack;
+    
+    local *dir_handle;	
+    opendir dir_handle, $dir or die "Cn't open directory $dir: $!";
+    close dir_handle;
+    local $_;
+    
+    my @files = readdir dir_handle;
+    for (@files) {
+	my $full_file_name = "$dir/$_";
+	my $full_target_file_name = $full_file_name;
+	$full_target_file_name =~ s/^$source/$target/;
+	if( -d $full_file_name ) {
+	    if( $_ ne "." && $_ ne ".." ) {
+		push @dir_stack, $full_file_name;
+		mkdir $full_target_file_name;
+	    }
+	} else {
+	    copy( $full_file_name, $full_target_file_name );
+	}	
+    }
+}						   
