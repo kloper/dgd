@@ -25,7 +25,7 @@
 #include <list>
 #include <vector>
 
-#include <boost/regex.hpp>
+#include <regular_expression.h>
 
 #include "dgOptionFilter.h"
 
@@ -46,8 +46,8 @@ option_filter::operator () ( int argc, char** argv, int filtc, char** filtv ) {
    for( j = 0; j < (unsigned)filtc; ++j ) {
       opt_list matched_options;
       for( i = 1; i < (unsigned)argc; ++i ) {
-	 boost::regex filter( filtv[j] );
-	 if( boost::regex_match( argv[i], filter ) ) {
+	 regex filter( filtv[j] );
+	 if( regex_match( filter, argv[i] ) ) {
 	    matched_options.push_back( argv[i] );
 	    matched_flags[i-1] = true;
 	 }

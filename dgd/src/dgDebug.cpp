@@ -22,7 +22,7 @@
 // dgDebug.cpp -- implementation for dgDebug.h
 //
 
-#include <boost/regex.hpp>
+#include <regular_expression.h>
 
 #include "dgDebug.h"
 
@@ -100,22 +100,22 @@ void Debug::apply_options( channel_ptr& chnl ) {
 
    if( m_args_info.debug_turn_on_given ) {
       try {
-	 boost::regex e( m_args_info.debug_turn_on_arg );
-	 if( boost::regex_match( chnl->name(), e ) ) {
+	 regex e( m_args_info.debug_turn_on_arg );
+	 if( regex_match( e, chnl->name().c_str() ) ) {
 	    chnl->open();
 	 }
-      } catch( boost::bad_expression& ) {
+      } catch( bad_regex&  ) {
 	 throw bad_params( "bad regular expression" );
       }
    }
 
    if( m_args_info.debug_turn_off_given ) {
       try {
-	 boost::regex e( m_args_info.debug_turn_off_arg );
-	 if( boost::regex_match( chnl->name(), e ) ) {
+	 regex e( m_args_info.debug_turn_off_arg );
+	 if( regex_match( e, chnl->name().c_str() ) ) {
 	    chnl->close();
 	 }
-      } catch( boost::bad_expression& ) {
+      } catch( bad_regex& ) {
 	 throw bad_params( "bad regular expression" );
       }
    }

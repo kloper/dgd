@@ -41,8 +41,8 @@ SED = sed
 
 CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od
 LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../boost/libs/regex/build/lib -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/getopt/Debug 
-LDLIBS = getopt.lib dgd.lib
+EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
+LDLIBS = getopt.lib regex.lib dgd.lib
 LDOUTOPT = /out:
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) \
 $(BOOSTINCLUDES) $(GETOPTINCLUDES) $(DGDINCLUDES)
