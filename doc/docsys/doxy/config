@@ -1,4 +1,4 @@
-<%once>
+	<%once>
 my $config;
 </%once>
 
@@ -7,7 +7,7 @@ my $config;
 $config = $m->comp( "/dgd/config" );
 $config->{"name"} = "dgd_doxygen";
 $config->{"style_comp"} = "/doxy/style.css";
-$config->{"colorscheme"} = "flame";
+$config->{"colorscheme"} = "sky-red";
 $config->{"copy_asis"} = {
     "../doxygen/html/*.gif" => "html/images/doxy_gen_\$basename",
     "../doxygen/html/*.jpg" => "html/images/doxy_gen_\$basename",

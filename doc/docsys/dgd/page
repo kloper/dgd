@@ -25,12 +25,6 @@ $config
 </tr>
 
 <tr>
-<td align="right" style="padding: 2px; ">
-<& /lib/navbar, config => $config &>
-</td>
-</tr>
-
-<tr>
 <td>
 
 <table cellspacing="1" cellpadding="0" border="0" 

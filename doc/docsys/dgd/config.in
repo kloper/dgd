@@ -14,7 +14,7 @@ $config = {
     "style_dir"  => "style",
     "html_dir"   => "html",
     "style_comp" => "/dgd/style.css",
-    "colorscheme" => "sky",
+    "colorscheme" => "sky-blue",
     "copy_asis"  => { "images/*" => "html/images/\$basename" },
     "sitemap"  => [ "/dgd/home",
 		    "/dgd/news",

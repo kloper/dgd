@@ -1,8 +1,8 @@
 #!/bin/bash
 
 case $1 in
-(cygwin|cygwin-debug)
-perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo -v3 ;;
+(cyg|cygwin|cygwin-debug)
+perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo --boost-root-dir=/d/boost-1.31.0 -v3 ;;
 (cygwin-release)
 perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo --build=Release -v3 ;;
 (win-release)

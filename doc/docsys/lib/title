@@ -4,22 +4,30 @@ $config
 
 <table cellpadding="0" width="100%">
 <tr>
-  <td style="padding-left: 20px; padding-top: 20px;">
-  <img src="<&/lib/local, $config, $config->{"logo"} &>">
-  </td>
-  <td style="padding-left: 20px; padding-top: 20px;">
-    <div align="left">
-    <h1 style="font-size: xx-large; 
-               color: <&/lib/color, "white", 90 &>;">
+  <td style="padding-left: 10px;" width="30%">
+    <div align="left" 
+         style="font-size: x-large; 
+                color: <&/lib/color, "white", 90 &>;">
     <% $config->{"long_name"} %>
-    </h1>
     </div>
-    <div align="right">
+  </td>
+  <td align="right" width="70%">
+    <table width="100%">
+      <tr>
+	<td align="right">
 % use POSIX;
 % my $date = scalar( localtime() );
 % $date =~ s/\s+/&nbsp;/g;
-    Version:&nbsp;<%$config->{"version"}%>&nbsp;|&nbsp;Updated:&nbsp;<% $date %>
-    </div>
+	  Version:&nbsp;<%$config->{"version"}%>&nbsp;|&nbsp;Updated:&nbsp;<% $date %>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <& /lib/navbar, config => $config &>
+	</td>
+      </tr>
+    </table>
   </td>
+  <td>
 </tr>
 </table>
