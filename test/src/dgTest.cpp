@@ -25,6 +25,7 @@
 #include <boost/smart_ptr.hpp>
 
 #include <dgDebug.h>
+#include <dgDebugStd.h>
 
 using namespace std;
 using namespace DGD;
@@ -127,7 +128,11 @@ void manip_test( channel& debug ) {
 
 void two_channels_test() {
    dgd_start_scope( dimka, "void two_channels_test()" );
-   dgd_trace( dimka, "Hello World" << endl );
+   dgd_echo( "Item 1" << endl );
+   std::pair<int, int> p( 10,20 );
+   dgd_scope( dimka, "p = " );
+   dgd_echo( p << endl );
+   dgd_end_scope( dimka );
    dgd_end_scope( dimka );
 }
 

@@ -69,7 +69,7 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 
    do {
       unsigned int indent = std::min( m_indent, m_max_width - m_min_width );
-      if( m_column < indent ) {
+      if( m_column < indent && pos < pptr() ) {
 	 propagate( ' ', indent - m_column );
 	 m_column = indent;	 
       }

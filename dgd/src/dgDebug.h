@@ -33,9 +33,11 @@
 
 #include <boost/smart_ptr.hpp>
 
+#include "dgConfig.h"
 #include "dgChannel.h"
 #include "dgChannelManip.h"
 #include "dgDebugExtra.h"
+#include "dgDebugStd.h"
 #include "dgDebugOpt.h"
 
 namespace DGD {
