@@ -26,6 +26,11 @@
 #ifndef _dgDebugStd_h_
 #define _dgDebugStd_h_
 
+/**
+ * @file dgDebugStd.h
+ * Set of output operators for frequently used STL and standard types.
+ */
+
 #include <list>
 #include <vector>
 #include <map>
@@ -35,6 +40,9 @@
 
 namespace DGD {
 
+/**
+ * Pair output operator. Will print a pair in a form "[first second]"
+ */
 template <class First_type, class Second_type>
 inline channel& operator << ( channel& cnl,
 			      const std::pair<First_type, Second_type>& p ) {
@@ -42,6 +50,11 @@ inline channel& operator << ( channel& cnl,
    return cnl;
 }
 
+/**
+ * Specialzation of pair output operator. This one is used when
+ * printing an option set <int argc, char** argv> received by main().
+ * Prints space separated options.
+ */
 template <>
 inline channel& operator << ( channel& cnl,
 			      const std::pair<int, char**>& params ) {
@@ -53,6 +66,16 @@ inline channel& operator << ( channel& cnl,
    return cnl;
 }
 
+/**
+ * List output operator. Prints list in form:
+ * @code 
+ * {
+ *    item1
+ *    item2
+ *    ...
+ * }
+ * @endcode
+ */
 template <class Item_type>
 inline channel& operator << ( channel& cnl, 
 			      const std::list<Item_type>& l ) {
@@ -66,6 +89,16 @@ inline channel& operator << ( channel& cnl,
    return cnl;
 }
 
+/**
+ * Vector output operator. Prints vector in form:
+ * @code 
+ * {
+ *    item1
+ *    item2
+ *    ...
+ * }
+ * @endcode
+ */
 template <class Item_type>
 inline channel& operator << ( channel& cnl, 
 			      const std::vector<Item_type>& v ) {
@@ -79,6 +112,17 @@ inline channel& operator << ( channel& cnl,
    return cnl;
 }
 
+/**
+ * Map output operator. Prints map in form:
+ * @code 
+ * {
+ *    item1
+ *    item2
+ *    ...
+ * }
+ * @endcode
+ * Order of elements is defined by std::map<...>::iterator
+ */
 template <class Key_type, class Value_type>
 inline channel& operator << ( channel& cnl, 
 			      const std::map<Key_type, Value_type>& m ) {
@@ -92,6 +136,12 @@ inline channel& operator << ( channel& cnl,
    return cnl;
 }
 
+/**
+ * Memory location/block. This class is used to print extended
+ * information about pointers and memory blocks. It encapsulates a
+ * pointer and optionally contains information about size of memory
+ * block referenced by the pointer.
+ */
 template <class T>
 struct dgd_reference {
       const T* const m_pointer;
@@ -110,6 +160,22 @@ struct dgd_reference {
 	 m_size( peer.m_size ) {}
 };
 
+
+/** 
+ * Memory reference manipulator. This function is used as a
+ * DGD::channel manipulator for pointer formatting. It returns
+ * dgd_reference representing the memory pointer or block. The default
+ * values are set for T* pointer representation without hexa memory dump.
+ * @param p - pointer to type T. This pointer is used for referencing
+ * only so it is full const.
+ * @param use_as_void - if true the p pointer will be treated as
+ * void*, otherwise it will be treated as T* and printed in form 
+ * (T*)0xXXXXXXXX. 
+ * @param size - if greater then zero p will be treated as a pointer
+ * to a memory block of that size, and when printed it will appear as
+ * hexa dump.
+ * @see DGD::mem()
+ */
 template <class T> 
 inline dgd_reference<T> mem_ref( const T* const p,
 				 const bool use_as_void = false,
@@ -117,6 +183,12 @@ inline dgd_reference<T> mem_ref( const T* const p,
    return dgd_reference<T>(p, use_as_void, size);
 }
 
+/**
+ * Memory reference manipulator. This function is almost identical to
+ * DGD::mem_ref(), the only difference that default values are set to
+ * T* pointer with hexa memory dump of T.
+ * @see DGD::mem_ref()
+ */
 template <class T> 
 inline dgd_reference<T> mem( const T* const p,
 			     const unsigned int size = sizeof(T),
@@ -124,6 +196,10 @@ inline dgd_reference<T> mem( const T* const p,
    return dgd_reference<T>(p, use_as_void, size);
 }
 
+/**
+ * Output operator for pointer and memory dump. Prints out pointer hex
+ * value, and optionally it's type and hexa dump of referenced memory.
+ */
 template <class T> 
 inline std::ostream& operator << ( std::ostream& cnl,
 				   const dgd_reference<T>& ptr ) {

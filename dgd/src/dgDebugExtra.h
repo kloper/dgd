@@ -27,16 +27,17 @@
 #define _dgDebugExtra_h_
 
 /**
- * @def dgd_file
- * 
+ * @file dgDebugExtra.h
+ * Set of useful macros for use with DGD.
+ */
+
+/**
  * Expands to constant string in format "filename(line)"
  */
 #define dgd_file (char*)__FILE__ << "(" << __LINE__ <<") "
 
 
 /** 
- * @def dgd_expand(s)
- *
  * Expands into expression in form "s = " << s. For example dgd_expand(a+b)
  * will expand into "a+b = " << (a+b)
  *
@@ -44,8 +45,23 @@
  */
 #define dgd_expand(s) #s " = " << dgd << (s)
 
+/**
+ * Expands into channel pointer given channel name.
+ * @param name channel name. Note that there is no need in quoting the
+ * name each time the macro is used.
+ */
 #define dgd_channel(name) ((DGD::Debug::debug_factory->operator[](#name)))
 
+/**
+ * @def dgd_trace(name, arg)
+ * Trace expand. Expands into expression equivalent to: 
+ * @code 
+ * DGD::channel& cnl = *DGD::Debug::debug_factory->operator[]( "name" );
+ * cnl << arg; 
+ * @endcode
+ * Existence of the Debug factory and channel is checked before any
+ * output operation, as well as closed channel output.
+ */
 #if defined(_TRACE)
 #define dgd_trace(name, arg) \
 if(DGD::Debug::debug_factory) { \
@@ -56,6 +72,16 @@ if(DGD::Debug::debug_factory) { \
 #define dgd_trace(name, arg)
 #endif 
 
+/**
+ * Start global indented output scope. This macro in conjunction with
+ * dgd_end_scope, dgd_echo, dgd_scope and dgd_end_scope_text is used
+ * to simplify use of DGD channels. Here indented scope is a indented
+ * "{...}" block. 
+ * This macro creates local channel
+ * pointer and starts the indented scope. The indented scope must be
+ * ended with dgd_end_scope or dgd_end_scope_text. The global scope
+ * can contain any number of local scopes opened by dgd_scope.
+ */
 #if defined(_TRACE)
 #define dgd_start_scope(c, text) \
 DGD::Debug::channel_ptr __cnl(NULL); \
@@ -65,6 +91,12 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << text << " {" << std::endl << DGD
 #define dgd_start_scope(c, text) 
 #endif
 
+/**
+ * Start local indented output scope. This macro starts local indented
+ * scope. 
+ * @see dgd_start_scope
+ * @see dgd_end_scope
+ */
 #if defined(_TRACE)
 #define dgd_scope(c, text) \
 __cnl.get() && __cnl->is_open() && ((*__cnl) << text <<  " {" << std::endl << DGD::incr)
@@ -72,6 +104,13 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << text <<  " {" << std::endl << DG
 #define dgd_scope(c, text)
 #endif
 
+/**
+ * Echo expand. This macro is similar to dgd_trace, but it can be
+ * called inside indented scope only.
+ * @see dgd_start_scope
+ * @see dgd_scope
+ * @see dgd_end_scope
+ */
 #if defined(_TRACE) 
 #define dgd_echo( text ) \
 __cnl.get() && __cnl->is_open() && ((*__cnl) << text)
@@ -79,6 +118,9 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << text)
 #define dgd_echo( text )
 #endif
 
+/**
+ * Close the current scope.
+ */
 #if defined(_TRACE)
 #define dgd_end_scope(c) \
 __cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr << "}" << std::endl)
@@ -86,6 +128,9 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr << "}" << std::endl)
 #define dgd_end_scope(c)
 #endif
 
+/**
+ * Close the current scope, output the given text before closing.
+ */
 #if defined(_TRACE)
 #define dgd_end_scope_text(c, text) \
 __cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr<< text << "}" << std::endl)

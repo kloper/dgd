@@ -24,12 +24,32 @@
 
 #include <regular_expression.h>
 
+/**
+ * @file dgDebug.cpp
+ * Implementation of DGD::Debug.
+ */
+
 #include "dgDebug.h"
 
 namespace DGD {
 
+/**
+ * Global Debug factory pointer . Use this global static variable with
+ * care. It is initialized by Debug::create_factory(int,char**). This
+ * variable is not const, nor const pointer, but changing this
+ * variable directly is not recommended.
+ * @see Debug::create_factory(int,char**)
+ * @see Debug::factory()
+ */
 Debug* Debug::debug_factory = NULL;
 
+/**
+ * Bad command line option exception. This exception is thrown when
+ * Debug::process_options(int,char**) encounters invalid command line
+ * option.
+ * @see Debug::create_factory(int,char**)
+ * @see Debug::process_options(int,char**)
+ */
 class bad_params: std::exception {
       const char *m_what;
    public:
@@ -42,6 +62,12 @@ class bad_params: std::exception {
       }
 };
 
+/**
+ * Disabled Debug exception. This exception is thrown when
+ * Debug::create_factory(int,char**) tries to create the debug
+ * factory, but the debug output is diabled by command line options.
+ * @see Debug::process_options(int,char**)
+ */
 class debug_disabled: public std::exception {
    public:
       const char* what() const {
@@ -49,6 +75,13 @@ class debug_disabled: public std::exception {
       }
 };
 
+/**
+ * Exit application exception. This exception is thrown when
+ * Debug::process_options(int,char**) encounters option which requires
+ * the entire application termination.
+ * @see Debug::create_factory(int,char**)
+ * @see Debug::process_options(int,char
+ */
 class exit_required: public std::exception {
    public:
       const char* what() const {
@@ -56,6 +89,10 @@ class exit_required: public std::exception {
       }
 };
 
+/**
+ * Default constructor. Initializes the factory and opens the main
+ * channel.
+ */
 Debug::Debug() :
    m_main_file( NULL ) 
 {
@@ -68,6 +105,61 @@ Debug::Debug() :
    m_current_channel = m_channels.begin();
 }
 
+/**
+ * Process command line options. This method applies the command line
+ * options set on the DGD::Debug object and its channels. 
+ * 
+ * The following options are accepted:
+ * <dl>
+ * <dt>--debug-version
+ * <dd>Print DGD version to std::cout and exit the
+ * application (actually throw DGD::exit_required exception).
+ * <dt>--debug-help
+ * <dd>Print DGD help to std::cout and exit the
+ * application (actually throw DGD::exit_required exception).
+ * <dt>--debug-enable
+ * <dd>Enable debug. By default the debug logging is disabled. This
+ * command line option enables it. Debug::process_options(int,char**)
+ * will throw debug_disabled exception if this option is not specified
+ * on command line.
+ * <dt>--debug-main-file
+ * <dd>Create the main file. This option must be specified with a string
+ * argument which defines the main file name. The main file is
+ * created and its stream can be queried by Debug::main_file().
+ * <dt>--debug-min-width
+ * <dd>Set default minimum line width for all existing and future
+ * channels. This option must be specified with an integer parameter
+ * which defines the default minimum line width. 
+ * <dt>--debug-max-width
+ * <dd>Set default maximum line width for all existing and future
+ * channels. This option must be specified with an integer parameter
+ * which defines the default maximum line width. 
+ * <dt>--debug-indent-step
+ * <dd>Set default indentation step for all existing and future
+ * channels. This option must be specified with an integer parameter
+ * which defines the default indentation step. 
+ * <dt>--debug-allow-wrap
+ * <dd>Set default character wrapping policy for all existing and future
+ * channels. 
+ * <dt>--debug-allow-word-wrap
+ * <dd>Set default word wrapping policy for all existing and future
+ * channels. 
+ * <dt>--debug-space-characters
+ * <dd>Set default space character set for all existing and future
+ * channels. This option must be specified with a string parameter
+ * which defines the default space characters. 
+ * <dt>--debug-turn-on
+ * <dd>Turn on (open) channels. This option must be specified with a
+ * string parameter which defines a GNU regular exception. This regexp
+ * is applied on the current channel list. All channels with names
+ * matching the regexp will be opened.
+ * <dt>--debug-turn-off
+ * <dd>Turn off (close) channels. This option must be specified with a
+ * string parameter which defines a GNU regular exception. This regexp
+ * is applied on the current channel list. All channels with names
+ * matching the regexp will be closed.
+ * </dl>
+ */
 void Debug::process_options( int argc, char** argv ) {
    if (dgd_cmdline_parser (argc, argv, &m_args_info) != 0) {
       throw bad_params();
@@ -96,6 +188,10 @@ void Debug::process_options( int argc, char** argv ) {
       apply_options( *i );
 }
 
+/**
+ * Apply default channel-specific options on given channel.
+ * @see Debug::process_options(int,char**)
+ */
 void Debug::apply_options( channel_ptr& chnl ) {
    if( m_args_info.debug_min_width_given ) 
       chnl->min_width( m_args_info.debug_min_width_arg );
@@ -141,6 +237,11 @@ void Debug::apply_options( channel_ptr& chnl ) {
       chnl->space_chars( m_args_info.debug_space_characters_arg );
 }
 
+/**
+ * Destructor. All memory is deallocated automatically by smart
+ * pointers. This destructor flushes all files and channels.
+ * @see Debug::Debug()
+ */
 Debug::~Debug() {
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i ) 
       (*i)->flush();
@@ -148,6 +249,12 @@ Debug::~Debug() {
       (*f)->flush();
 }
 
+/**
+ * Create channel. This method creates a new channel if there is no channel
+ * with the given name in the channels list. If a channel with the
+ * given name does already exist it is returned.
+ * @see Debug::operator[]
+ */
 channel& Debug::create_channel( const std::string& name ) {
    channel_ptr chnl;
 
@@ -164,6 +271,10 @@ channel& Debug::create_channel( const std::string& name ) {
    return *chnl;
 }
 
+/**
+ * Create a file stream. This method will return NULL stream if
+ * the file can't be created.
+ */
 stream Debug::create_file( const std::string& name ) {
    stream new_file( new std::ofstream( name.c_str() ) );
    if( new_file->fail() || new_file->bad() ) {
@@ -175,14 +286,26 @@ stream Debug::create_file( const std::string& name ) {
    return new_file;
 }
 
+/**
+ * Return main file stream
+ */
 stream Debug::main_file() const {
    return m_main_file;
 }
 
+/**
+ * @fun int Debug::operator channel_ref ( ) const 
+ * DGD::Debug to DGD::channel& conversion. Returns current channel.
+ */
 Debug::operator Debug::channel_ref () const {
    return **m_current_channel;
 }
 
+/**
+ * Get channel by name. 
+ * @return Pointer to the channel with the given name or NULL.
+ * @see Debug::create_channel(const std::string&)
+ */
 Debug::channel_ptr Debug::operator[] ( const std::string& name ) {
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i )
       if( (*i)->name() == name )
@@ -190,16 +313,47 @@ Debug::channel_ptr Debug::operator[] ( const std::string& name ) {
    return channel_ptr();
 }
 
+/**
+ * Set current channel. 
+ * @see Debug::current()
+ */
 void Debug::current( const std::string& name ) {
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i )
       if( (*i)->name() == name )
 	 m_current_channel = i;
 }
 
+/**
+ * Return current channel.
+ * @see Debug::current(const std::string&)
+ */
 Debug::channel_ptr Debug::current() const {
    return *m_current_channel;
 }
 
+/**
+ * Create global Debug factory. This function must be called at most
+ * once during the application lifetime. It creates the factory and
+ * calls Debug::process_options(int,char**).
+ * @return This method returns a smart pointer to the factory. This
+ * smart pointer <b>must</b> be used to ensure proper factory
+ * destruction, even when the application crashes. Usually you need
+ * only a single instance of the pointer:
+ * @code
+ * int main( int argc, char** argv ) {
+ *     using namespace DGD;
+ *     debug_factory_ref factory = create_factory( argc, argv );
+ *     ...
+ * }
+ * @endcode
+ * Note that the 'factory' variable is destructed always when main()
+ * does exit. It will be destructed even if application crashes on
+ * unexpected exception. It is bad idea to make this variable global 
+ * or static since not all compilers ensure that global variables are
+ * destructed on the crash (at least msvc6.0sp5 does not).
+ * @see Debug::debug_factory
+ * @see Debug::factory()
+ */
 Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
    if( debug_factory != NULL )
       return debug_factory_ref( debug_factory );
@@ -222,6 +376,10 @@ Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
    return df;
 }
 
+/**
+ * Return pointer to the global Debug factory.
+ * @see Debug::create_factory(int,char**)
+ */
 Debug* Debug::factory() {
    return Debug::debug_factory;
 }

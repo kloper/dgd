@@ -22,10 +22,22 @@
 // dgChannelBuf.cpp -- implementation for dgChannelBuf.h
 //
 
+/**
+ * @file dgChannelBuf.cpp
+ *
+ * implementation of DGD::channelbuf
+ */
+
 #include "dgChannelBuf.h"
 
 namespace DGD {
 
+/** 
+ * Sets or resets channelbuf internal buffer.
+ * @param ptr - if NULL causes automatic buffer allocation.
+ * @param size - if zero DefaultBufferSize is used. Otherwise
+ * defines the allocated buffer size.
+ */
 channelbuf::Parent* 
 channelbuf::setbuf( char_type* ptr , std::streamsize size) {
    if( pbase() != NULL ) {
@@ -51,6 +63,11 @@ channelbuf::setbuf( char_type* ptr , std::streamsize size) {
    return this;
 }
 
+/** 
+ * Synchronizes (i.e. flushes) the buffer.  
+ * @return always 0
+ */
+
 int channelbuf::sync() {
    overflow( traits_type::eof() );
 
@@ -63,6 +80,21 @@ int channelbuf::sync() {
    return 0;
 }
 
+/**
+ * Called when there is no write position.  This function overrides
+ * the same function in std::streambuf. This function is called
+ * every time there is no enough space in the internal buffer. 
+ *
+ * Once called, this function processes the content of the buffer,
+ * makes formatting decisions and then propagates the formatted output
+ * to associated streams.
+ *
+ * @param ch - character which failed to be pushed into stream. could
+ * be set to char_traits::eof value to indicate empty value.
+ *
+ * @return always 0
+ * @see DGD::channel
+ */
 channelbuf::int_type channelbuf::overflow( int_type ch ) {   
    const char_type* pos = pbase();
    bool run_flag = true;
@@ -193,13 +225,24 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 
    return 0;
 }
-   
+ 
+/**
+ * Propagate character string to associated streams. 
+ * @param begin - pointer to beginning of propagated string
+ * @param end   - pointer to the end of the propagated string (one
+ * character after the end!)
+ */
 void channelbuf::propagate( const char_type* begin, const char_type* end ) {
    for( Assoc_list::iterator i = m_assoc.begin(); i != m_assoc.end(); ++i ) {
       (*i)->write( begin, end-begin );
    }
 }
 
+/**
+ * Propagate given character to associated streams. 
+ * @param ch - character to propagate
+ * @param size - number of duplications.
+ */
 void channelbuf::propagate( const char_type ch, std::streamsize size ) {
    for( Assoc_list::iterator i = m_assoc.begin(); i != m_assoc.end(); ++i ) {
       for( int x = 0; x < size; ++x )
@@ -207,6 +250,9 @@ void channelbuf::propagate( const char_type ch, std::streamsize size ) {
    }
 }
 
+/**
+ * Default constructor 
+ */
 channelbuf::channelbuf() :
    Parent(),
    m_indent_step( DefaultIndentStep ),
@@ -221,99 +267,205 @@ channelbuf::channelbuf() :
    m_spaces( " \t" ) {
 }
 
+/**
+ * Destructor. Note that channelbuf tries to sync itself before being 
+ * destructed.
+ */
 channelbuf::~channelbuf() {
    sync();
 }
 
+/**
+ * Append the given stream to the association list.
+ * @see DGD::channel
+ */
 void channelbuf::assoc( const stream& dgs ) {
    m_assoc.push_back( dgs );
 }
 
+/**
+ * Return current channel line
+ */
 unsigned int channelbuf::line() const {
    return m_line;
 }
 
+/**
+ * Return current channel column
+ */
 unsigned int channelbuf::column() const {
    return m_column;
 }
 
+/**
+ * Change indentation step. @note sync() is called before the value is
+ * actually changed. So this operation affects only future input.
+ * @see channel::indent_step(unsigned int)
+ */
 void channelbuf::indent_step( unsigned int step ) {
    sync();
    m_indent_step = step;
 }
 
+/**
+ * Return indentation step value.
+ * @see channel::indent_step() const
+ */
 unsigned int channelbuf::indent_step() const {
    return m_indent_step;
 }
 
+/**
+ * Increment indentation level by value of indentation step. @note
+ * sync() is called before the value is actually changed. So this
+ * operation affects only future input.
+ * @see channel::incr_indent()
+ */
 void channelbuf::incr_indent() {
    sync();
    m_indent += m_indent_step;
 }
 
+/**
+ * Decrement indentation level by value of indentation step. @note
+ * sync() is called before the value is actually changed. So this
+ * operation affects only future input.
+ * @see channel::decr::indent()
+ */
 void channelbuf::decr_indent() {
    sync();
    m_indent -= m_indent_step;
 }
 
+/**
+ * Change indentation level directly. @note sync() is called before
+ * the value is actually changed. So this operation affects only
+ * future input.
+ * @see channel::indent(const unsigned int)
+ */
 void channelbuf::indent( const unsigned int val ) {
    sync();
    m_indent = val;
 }
 
+/**
+ * Return indentation level value.
+ * @see channel::indent() const
+ */
 unsigned int channelbuf::indent() const {
    return m_indent;
 }
 
+/**
+ * Change minimum line width. @note sync() is called before
+ * the value is actually changed. So this operation affects only
+ * future input.
+ * @see channel::min_width(unsigned int)
+ */
 void channelbuf::min_width( unsigned int width ) {
    sync();
    m_min_width = width;
 }
 
+/**
+ * Return minimum line width value.
+ * @see channel::min_width() const
+ */
 unsigned int channelbuf::min_width() const {
    return m_min_width;
 }
+
+/**
+ * Change maximum line width. @note sync() is called before
+ * the value is actually changed. So this operation affects only
+ * future input.
+ * @see channel::max_width(unsigned int)
+ */
 
 void channelbuf::max_width( unsigned int width ) {
    sync();
    m_max_width = width;
 }
 
+/**
+ * Return maximum line width value.
+ * @see channel::max_width() const
+ */
 unsigned int channelbuf::max_width() const {
    return m_max_width;
 }
 
+/**
+ * Set character wrapping. @note sync() is called before
+ * the value is actually changed. So this operation affects only
+ * future input.
+ * @see channel::wrap(bool)
+ */
 void channelbuf::wrap( bool allow ) {
    sync();
    m_wrap = allow;
 }
 
+/**
+ * Return character wrapping state.
+ * @see channel::wrap() const
+ */
 bool channelbuf::wrap() const {
    return m_wrap;
 }
 
+
+/**
+ * Set word wrapping. @note sync() is called before
+ * the value is actually changed. So this operation affects only
+ * future input.
+ * @see channel::word_wrap(bool)
+ */
 void channelbuf::word_wrap( bool allow ) {
    sync();
    m_word_wrap = allow;
 }
 
+/**
+ * Return word wrapping state.
+ * @see channel::word_wrap() const
+ */
 bool channelbuf::word_wrap() const {
    return m_word_wrap;
 }
+
+
+/**
+ * Set space character set. @note sync() is called before
+ * the value is actually changed. So this operation affects only
+ * future input.
+ * @see channel::space_chars(const char*)
+ */
 
 void channelbuf::space_chars(const char* spc ) {
    sync();
    m_spaces = spc;
 }
 
+/**
+ * Return space characters set.
+ * @see channel::space_chars() const
+ */
 std::string channelbuf::space_chars() const {
    return m_spaces;
 }
 
+/**
+ * Return current channel line and column.
+ */
 channelbuf::position_type channelbuf::position() const {
    return position_type( m_line, m_column );
 }
 
+/**
+ * strchr() equivalent. Given string s with length n, finds a first
+ * occurrence of any character found in null-terminated string c_set.
+ */
 channelbuf::char_type* channelbuf::find_one_of( const char_type* s, 
 						const unsigned int n,
 						const char_type* c_set ) const
@@ -331,7 +483,6 @@ channelbuf::char_type* channelbuf::find_one_of( const char_type* s,
    
    return (char_type*)res;
 }
-
 
 bool channelbuf::is_dos_eol( const char_type* p ) const {
    if( (*p == '\n' && *(p+1) == '\r') || (*p == '\r' && *(p+1) == '\n') )

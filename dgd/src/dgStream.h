@@ -26,11 +26,22 @@
 #ifndef _dgStream_h_
 #define _dgStream_h_
 
+/**
+ * @file dgStream.h
+ * Declaration of DGD::stream
+ */
+
 #include <iostream>
 #include <boost/smart_ptr.hpp>
 
 namespace DGD {
 
+/**
+ * Right now DGD::stream is a simple smart pointer to any std::ostream
+ * or its children. 
+ * @see DGD::debug
+ * @see DGD::assoc()
+ */
 typedef boost::shared_ptr< std::ostream > stream;
 
 }; // end of namespace DGD

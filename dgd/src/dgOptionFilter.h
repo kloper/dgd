@@ -27,10 +27,33 @@
 #ifndef _dgOptionFilter_h_
 #define _dgOptionFilter_h_
 
+/**
+ * @file dgOptionFilter.h
+ * Declaration of DGD::option_filter.
+ */
+
 #include <vector>
 
 namespace DGD {
 
+/**
+ * Command line options set filter. This class is designed to separate
+ * a set of command line options as received by @code main(int argc,
+ * char** argv) @endcode into subsets. This can be used by application
+ * using DGD::Debug for separating debug options from the
+ * application-specific options. 
+ * Terminology:
+ * <dl>
+ * <dt> Options set
+ * <dd> In the context of this class a pair of <int,char**>
+ * representing a set of option strings.
+ * <dt> Option set filter
+ * <dd> A regular expression which is applied on the given option set
+ * (usually full option set received by main()). If the option matches
+ * the filter it is copied to the option set associated with that filter.
+ * </dl>
+ * @see DGD::Debug
+ */
 class option_filter {
    public:
       class option_set_type {
@@ -61,6 +84,7 @@ class option_filter {
        * by the first filter, second set by the second filter and so on, 
        * the last set contains options which were not selected by any filter.
        * so the following is always true result->size() == filtc + 1
+       * @see DGD::Debug
        */
       option_set_container* operator () ( int argc, char** argv,
 					  int filtc, char** filtv );

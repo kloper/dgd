@@ -1,0 +1,290 @@
+2002-09-09  dimka
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgDebugStd.h:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		Added mem() and mem_ref() manipulators for better pointer treating
+
+2002-09-03  dimka
+	* Makefile:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgConfig.h.in:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebugOpt.cpp:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.gge.in:
+	* dgd/src/dgDebugOpt.h:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+		Added --debug-help and --debug-version options
+
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugStd.h:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		Minor new features: it is now possible to print pair<argc,argv> and every
+		channel now dumps some information on assoc.
+
+2002-08-27  dimka
+	* dgd/src/dgChannelManip.h:
+		added new manipulator. It does no action but ensures that next action is
+		on channel.
+
+	* dgd/src/dgDebugExtra.h:
+		Made dgd_expand to use dgd modifier. This slows the output a little bit,
+		but more secure.
+
+2002-08-26  dimka
+	* dgd/src/dgOptionFilter.cpp:
+	* test/src/dgTest.cpp:
+		old STLPort provides no vector::at() (at least it is possible to) so, moved
+		all at() to operator[].
+
+	* Makefile:
+	* Makefile.in:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgOptionFilter.cpp:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* regex/Makefile.in:
+	* regex/doc/Makefile.in:
+	* regex/doc/include.awk:
+	* regex/doc/regex.aux:
+	* regex/doc/regex.cps:
+	* regex/doc/regex.info:
+	* regex/doc/regex.texi:
+	* regex/doc/texinfo.tex:
+	* regex/doc/xregex.texi:
+	* regex/etc/AUTHORS:
+	* regex/etc/COPYING:
+	* regex/etc/ChangeLog:
+	* regex/etc/INSTALL:
+	* regex/etc/NEWS:
+	* regex/etc/README:
+	* regex/src/regex.c:
+	* regex/src/regex.h:
+	* regex/src/regular_expression.h:
+	* test/Makefile:
+		Switched from boost::regex to good old GNU regex. This is only for
+		not depending on particular STL version.
+
+	* dgd/src/dgOptionFilter.cpp:
+		Fixed compilation issue with old STL.
+
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+		Compatibility fixes
+
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebug.h:
+	* doc/dgd_todo.html:
+	* getopt/Makefile:
+	* test/Makefile:
+		Added space_chars functionality
+
+2002-08-23  dimka
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgOptionFilter.cpp:
+	* dgd/src/dgOptionFilter.h:
+	* getopt/Makefile:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		Added OptionsFilter to simplify options processing
+
+2002-08-22  dimka
+	* config.status:
+	* configure:
+	* configure.ac:
+		added --with-stlport option to make possible build without stlport or
+		stlport in diffrent location
+
+	* Makefile:
+	* dgd/Makefile:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebug.h:
+	* dgd/src/dgDebugExtra.h:
+	* dgd/src/dgDebugOpt.cpp:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* getopt/Makefile:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		New features:
+		More command line options
+		Better channel management
+		Debug::process_options() does now deal with options instead
+		of the constructor.
+		Many fixes.
+
+2002-08-21  dimka
+	* Makefile:
+	* dgd/Makefile:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.h:
+	* dgd/src/dgDebugExtra.h:
+	* dgd/src/dgDebugStd.h:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		Fixed incr/decr balance bug.
+		Added few more macros.
+		Added output operators for some frequently used std types.
+
+	* getopt/Makefile:
+	* getopt/Makefile.in:
+		Forgot to add files
+
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.h:
+	* dgd/src/dgDebugOpt.cpp:
+	* dgd/src/dgDebugOpt.h:
+		Fixed option structure redefinition bug
+
+	* dgd/Makefile:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugExtra.h:
+		Fixed a compatibility issue between different versions of STL.
+		Fixed minor bug in dgDebugExtra.h macros
+
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgChannelManip.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebug.h:
+	* dgd/src/dgDebugExtra.h:
+	* dgd/src/dgDebugOpt.cpp:
+	* dgd/src/dgDebugOpt.h:
+	* test/Makefile:
+	* test/Makefile.in:
+	* test/src/dgTest.cpp:
+		Many fixes. Added dgd_* macros.
+
+2002-08-20  dimka
+	* Makefile:
+	* Makefile.in:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		Passed over simple test.
+
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgChannelManip.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.h:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		Added manipulators on channels
+
+2002-08-19  dimka
+	* Makefile:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebug.h:
+	* test/Makefile:
+	* test/Makefile.in:
+	* test/src/dgTest.cpp:
+		Added test program. Fixed a couple of bugs.
+
+	* Makefile:
+	* Makefile.in:
+	* aclocal.m4:
+	* config.guess:
+	* config.status:
+	* config.sub:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgConfig.h.in:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebug.h:
+	* dgd/src/dgDebugOpt.cpp:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgStream.h:
+	* doc/DGDSpec.html:
+	* examples/dgExample.cpp:
+	* getopt/src/alloca.c:
+	* getopt/src/getopt.c:
+	* getopt/src/getopt.h:
+	* getopt/src/getopt1.c:
+	* install-sh:
+	* reconf:
+		First compiled version of DGD
+
+2002-08-15  dimka
+	* doc/DGDSpec.html:
+		Very first import of Depression Glass library
+

@@ -26,6 +26,12 @@
 #ifndef _dgChannelBuf_h_
 #define _dgChannelBuf_h_
 
+/**
+ * @file dgChannelBuf.h
+ *
+ * Declaration of DGD::channelbuf
+ */
+
 #include <iostream>
 #include <list>
 #include <string>
@@ -34,6 +40,37 @@
 
 namespace DGD {
 
+/**
+ * Simple formatting std::streambuf. This is a core class of DGD. Here
+ * actual output formatting takes place. Please refer to DGD::channel
+ * for general explanation on the channel formatting
+ * capabilities. Later discussion here is focused on technical aspects
+ * of the formatting.
+ *
+ * DGD::channelbuf has it's own memory buffer which can be controlled
+ * by channelbuf::setbuf(char_type*,std::streamsize) method. All
+ * channel input (see DGD::channel for the terminology) formatted by
+ * std::ostream operators is put into this buffer. DGD::channelbuf
+ * scans this buffer (see channelbuf::overflow(int_type)) and makes
+ * additional formatting.
+ *
+ * DGD::channelbuf acts as stream multiplexor. It maintains a list of
+ * DGD::stream objects which are "associated" with this channel (see
+ * channelbuf::assoc(const stream&)) buffer. If the list is empty no
+ * output is produced. All objects on the list will get the same
+ * channelbuf output when it is ready.
+ * 
+ * DGD::stream object can be associated with DGD::channelbuf by
+ * calling channelbuf::assoc(const stream&) method, but it is more
+ * appropriate to use DGD::assoc(stream,channel&) or 
+ * assoc(stream,const std::string&) functions. 
+ *
+ * Since channelbuf usually can't figure out whether its input
+ * contains a complete line or only part of it, channelbuf does not
+ * flush the entire buffer, but only part of it. To keep track of
+ * current state of the output it has m_line and m_column variables which
+ * can be queried using channelbuf::position() method. 
+ */
 class channelbuf: public std::streambuf {
    public:
       typedef std::streambuf Parent;
@@ -50,16 +87,8 @@ class channelbuf: public std::streambuf {
 
       virtual Parent* setbuf(char_type*, std::streamsize);
 
-      /** 
-       * Synchronizes (i.e. flushes) the buffer.  All subclasses are
-       * expected to override this virtual member function.
-       */
       virtual int sync();
 
-      /**
-       * Called when there is no write position.  All subclasses are
-       * expected to override this virtual member function.
-       */
       virtual int_type overflow(int_type = traits_type::eof());
       /*@}*/
 

@@ -26,6 +26,11 @@
 #include <vector>
 #include <algorithm>
 
+/**
+ * @file dgOptionFilter.cpp
+ * Implementation of DGD::option_filter
+ */
+
 #include <regular_expression.h>
 
 #include "dgOptionFilter.h"

@@ -26,6 +26,12 @@
 #ifndef _dgChannel_h_
 #define _dgChannel_h_
 
+/**
+ * @file dgChannel.h
+ *
+ * Declaration of DGD::channel 
+ */
+
 #include <iostream>
 #include <string>
 

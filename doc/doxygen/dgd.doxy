@@ -23,7 +23,7 @@ PROJECT_NAME           = "Depression Glass Debug Library"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = "dgd-0.13 Thu Sep 12 02:36:25  2002"
+PROJECT_NUMBER         = "dgd-0.14 Thu Sep 12 02:41:38  2002"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 

@@ -22,6 +22,12 @@
 // dgChannel.cpp -- implementation for dgChannel.h
 //
 
+/**
+ * @file dgChannel.cpp
+ *
+ * implementation of DGD::channel
+ */
+
 #include <ctime>
 
 #include "dgDebug.h"
@@ -110,6 +116,7 @@ channelbuf& channel::rdbuf() {
 /**
  * Change indentation step. @note This method does not affect the
  * indentation level itself.
+ * @see channelbuf::indent_step(unsigned int)
  */
 void channel::indent_step( unsigned int step ) {
    m_buffer.indent_step( step );
@@ -117,6 +124,7 @@ void channel::indent_step( unsigned int step ) {
 
 /**
  * Return indentation step.
+ * @see channelbuf::indent_step() const
  */
 unsigned int channel::indent_step() const {
    return m_buffer.indent_step();
@@ -124,6 +132,7 @@ unsigned int channel::indent_step() const {
 
 /**
  * Increment indentation level by indentation step.
+ * @see channelbuf::incr_indent()
  */
 void channel::incr_indent() {
    m_buffer.incr_indent();
@@ -131,6 +140,7 @@ void channel::incr_indent() {
 
 /**
  * Decrement indentation level by indentation step.
+ * @see channelbuf::decr_indent()
  */
 void channel::decr_indent() {
    m_buffer.decr_indent();
@@ -139,6 +149,7 @@ void channel::decr_indent() {
 /**
  * Change indentation level. @note The parameter need not to be
  * multiple of the indentation level.
+ * @see channelbuf::indent(unsigned int)
  */
 void channel::indent( unsigned int val ) {
    m_buffer.indent( val );
@@ -146,6 +157,7 @@ void channel::indent( unsigned int val ) {
 
 /**
  * Return indentation level.
+ * @see channelbuf::indent() const
  */
 unsigned int channel::indent() const {
    return m_buffer.indent();
@@ -157,6 +169,7 @@ unsigned int channel::indent() const {
  * @verbatim
  * elevel = min( indentation level, max_width()-min_width() );
  * @endverbatim
+ * @see channelbuf::min_width(unsigned int)
  */
 void channel::min_width( unsigned int width ) {
    m_buffer.min_width( width );
@@ -164,6 +177,7 @@ void channel::min_width( unsigned int width ) {
 
 /**
  * Return minimum line width.
+ * @see channelbuf::min_width() const
  */
 unsigned int channel::min_width() const {
    return m_buffer.min_width();
@@ -171,6 +185,7 @@ unsigned int channel::min_width() const {
 
 /**
  * Change maximum line width. 
+ * @see channelbuf::max_width(unsigned int)
  */
 void channel::max_width( unsigned int width ) {
    m_buffer.max_width( width );
@@ -178,6 +193,7 @@ void channel::max_width( unsigned int width ) {
 
 /**
  * Return maximum line width.
+ * @see channelbuf::max_width() const
  */
 unsigned int channel::max_width() const {
    return m_buffer.max_width();
@@ -185,6 +201,7 @@ unsigned int channel::max_width() const {
 
 /**
  * Disable or enable character wrapping.
+ * @see channelbuf::wrap(bool)
  */
 void channel::wrap( bool allow ) {
    m_buffer.wrap( allow );
@@ -192,6 +209,7 @@ void channel::wrap( bool allow ) {
 
 /**
  * Return character wrapping flag.
+ * @see channelbuf::wrap() const
  */
 bool channel::wrap() const {
    return m_buffer.wrap();
@@ -199,6 +217,7 @@ bool channel::wrap() const {
 
 /**
  * Disable or enable word wrapping.
+ * @see channelbuf::word_wrap(bool)
  */
 void channel::word_wrap( bool allow ) {
    m_buffer.word_wrap( allow );
@@ -206,6 +225,7 @@ void channel::word_wrap( bool allow ) {
 
 /**
  * Return character wrapping flag.
+ * @see channelbuf::word_wrap() const
  */
 bool channel::word_wrap() const {
    return m_buffer.word_wrap();
@@ -216,6 +236,7 @@ bool channel::word_wrap() const {
  * Change space characters. This method accepts a null-terminated
  * character string. Each character in the string will be considering
  * like a space between words during word wrapping.
+ * @see channelbuf::space_chars(const char*)
  */
 void channel::space_chars(const char* spc ) {
    m_buffer.space_chars( spc );
@@ -223,6 +244,7 @@ void channel::space_chars(const char* spc ) {
 
 /**
  * Return space characters.
+ * @see channelbuf::space_chars() const
  */
 std::string channel::space_chars() const {
    return m_buffer.space_chars();
@@ -249,6 +271,8 @@ void channel::header() {
 /**
  * Associate physical stream with a channel. See DGD::channel
  * documentation for more information.
+ * @see DGD::channelbuf
+ * @see channelbuf::assoc(const stream&)
  */
 void assoc( stream s, channel& channel ) {
    if( s.get() != NULL ) {
@@ -263,6 +287,8 @@ void assoc( stream s, channel& channel ) {
  * void assoc(stream,channel&), but takes name of the channel
  * instead. The DGD::Debug factory is searched for the channel with
  * the given name. See DGD::channel documentation for more information.
+ * @see DGD::channelbuf
+ * @see channelbuf::assoc(const stream&)
  */
 void assoc( stream s, const std::string& name ) {
    Debug* factory = Debug::factory();

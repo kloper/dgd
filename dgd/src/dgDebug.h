@@ -26,6 +26,11 @@
 #ifndef _dgDebug_h_
 #define _dgDebug_h_
 
+/**
+ * @file dgDebug.h
+ * Declaration of DGD::Debug.
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -40,8 +45,51 @@
 #include "dgDebugStd.h"
 #include "dgDebugOpt.h"
 
+/**
+ * Depression Glass namespace
+ */
 namespace DGD {
 
+/**
+ * DGD channel factory. 
+ *
+ * The factory is used to create channels and streams those
+ * channels can be associated with. Currently only file streams are
+ * supported. Use Debug::create_file(const std::string&) to create a
+ * file stream and Debug::create_channel(const std::string&) to create
+ * a channel. The channels can be accessed by name using
+ * Debug::operator[].
+ *
+ * There must be a single object of this class during the
+ * application lifetime. The best way to allocate this object is by
+ * calling static method Debug::create_factory(int,char**). The best
+ * way to get a pointer to the object is by calling static method
+ * Debug::factory(). You can also use static variable
+ * Debug::debug_factory, but this is less preferred way.
+ *
+ * The factory is initialized with a channel called "main" it is not
+ * associated with any file by default. The main channel is opened by
+ * the factory.  The factory creates no default file, but it can be
+ * created by specifying "--debug-main-file" option, see below. If the
+ * option has been specified, the main file stream will be
+ * created. Use Debug::main_file() to access that stream.
+ *
+ * You can use notion of current channel to use the DGD::Debug object
+ * as a regular channel. By default main channel is a current channel,
+ * you can use Debug::current(const std::string&) method to select the
+ * current channel, and Debug::current() method to explicitly query
+ * pointer to the current channel. Except that DGD::Debug can be
+ * casted to reference to channel, for example:
+ * @code
+ * DGD::channel& chnl = (DGD::channel&)(*Debug::factory());
+ * chnl << "Hello World" << std::endl;
+ * @endcode
+ *
+ * DGD::Debug can be controlled by command line options. Use
+ * Debug::process_options(int,char**) method to pass the options as
+ * received by main() function or use DGD::option_filter to create
+ * custom option sets. 
+ */
 class Debug {
    public:
       typedef channel& channel_ref;

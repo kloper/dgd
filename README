@@ -1,0 +1,87 @@
+Depression Glass Debug Library README
+=====================================
+
+Copyright (c) 2002. Dimitry Kloper <kloper@users.sourceforge.net>
+
+Available from <http://sourceforge.net/projects/dgd>
+
+About
+=====
+
+Depression Glass Debug (DGD) is a simple, easy to use C++ ostream
+extension for debug output. DGD is created with a goal to produce 
+nice, readable and easy to understand trace logs.
+
+Current release is implemented on and for Win32, but it is designed
+with portability in mind. 
+
+Features list:
+
+* Provides simple extension for std::ostream which allows
+post-formatting of the output stream. The output stream is treated as
+text log with optional maximum and minimum line width, indentation,
+character and word wrapping, etc...
+
+* Provides custom channels and channel factory.
+
+* Provides simple, yet powerful mechanism for synchronizing all streams
+upon application exit or crash.
+
+* Provides output operators for many STL types, memory references and
+memory blocks.
+
+* Provides a set of useful macros allowing simplified use of DGD
+channels and ability to "compile out" DGD tracing code using a single
+-D option of the compiler.
+
+* Provides a mechanism for automatic command line options parsing.
+
+* DGD is NOT thread safe! This does not mean that DGD can't be used in
+multi-threaded applications. This does mean that it must be used with care.
+
+
+License terms
+=============
+
+See COPYING file in the DGD root directory.
+
+Required libraries
+==================
+
+* DGD makes extensive use of C++ boost <http://www.boost.org>. You
+need boost 1.25.0 or later to compile DGD.
+
+* STLPort 4.5 <http://www.stlport.com> was used during DGD
+developing. It is recommended but not required. In fact DGD works well
+with the native VC++ version of STL.
+
+Required build tools
+====================
+
+DGD comes with precompiled .lib file and set of headers. 
+
+If you want to build DGD by yourself you need cygwin build tools and
+VC++ 6.0 installed. Refer to INSTALL file for more information.
+
+Installation
+============
+
+Please refer to installation instructions in INSTALL file in DGD root
+directory. 
+
+Bug reports
+===========
+
+Please report bugs at
+<http://sourceforge.net/tracker/?group_id=62230&atid=499876>
+
+Mailing lists
+=============
+
+No mailing lists are opened for DGD. This is due to increased level of
+spam messages. For discussions, suggestions, bug reports,
+etc... please refer sourceforge.net DGD home page
+<http://sourceforge.net/projects/dgd>.
+
+
+
