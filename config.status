@@ -285,8 +285,8 @@ s,@target_cpu@,i686,;t t
 s,@target_vendor@,pc,;t t
 s,@target_os@,cygwin,;t t
 s,@CVS@,cvs.exe,;t t
-s,@DGD_VERSION@,dgd-0.22 Wed Apr  9 01:58:25  2003,;t t
-s,@DGD_SHORT_VERSION@,0.22,;t t
+s,@DGD_VERSION@,dgd-0.23 Wed Apr  9 02:40:22  2003,;t t
+s,@DGD_SHORT_VERSION@,0.23,;t t
 s,@LD@,link,;t t
 s,@CXX@,cl,;t t
 s,@CXXFLAGS@, -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE),;t t

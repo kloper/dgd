@@ -1,7 +1,7 @@
 <webmake>
 
 <{!--
-   --  $Id: dgd\\doc\\html\\Attic\\dgd.wmk,v 1.9 2003/04/09 00:33:37 dimka Exp $
+   --  $Id: dgd\\doc\\html\\Attic\\dgd.wmk,v 1.10 2003/04/09 00:41:14 dimka Exp $
    -- 
    --  This program is free software; you can redistribute it and/or modify
    --  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@
 <media src="style" name="*.css"  namesubst="s/\.css//" />
 
 <template name="dgd_version" format="text/html">
-0.22
+0.23
 </template>
 
 <template name="sfhome" format="text/html">

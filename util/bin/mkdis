@@ -13,7 +13,7 @@ my $filelist = "$datadir/filelist.log";
 my $cvs  = "cvs.exe";
 my $tar  = "tar";
 my $gzip = "gzip";
-my $target = "d:/dgd-0.22";
+my $target = "d:/dgd-0.23";
 
 chdir $root or die "can't change directory to $root: $!";
 
