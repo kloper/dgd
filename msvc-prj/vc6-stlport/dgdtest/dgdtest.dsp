@@ -73,8 +73,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib dgd.lib getopt.lib regex.lib /nologo /subsystem:console /verbose /debug /machine:I386 /pdbtype:sept /libpath:"../../../../STLPort-4.5/lib" /libpath:"../dgd/Debug" /libpath:"../getopt/Debug" /libpath:"../regex/Debug"
-# SUBTRACT LINK32 /nodefaultlib
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib dgd.lib getopt.lib regex.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"../../../../STLPort-4.5/lib" /libpath:"../dgd/Debug" /libpath:"../getopt/Debug" /libpath:"../regex/Debug"
+# SUBTRACT LINK32 /verbose /nodefaultlib
 
 !ENDIF 
 

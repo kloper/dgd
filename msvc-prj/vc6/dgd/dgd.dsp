@@ -101,6 +101,14 @@ SOURCE=..\..\..\dgd\src\dgDebugOpt.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\dgd\src\dgFunnel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\dgd\src\dgMultifileLog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\dgd\src\dgOptionFilter.cpp
 # End Source File
 # End Group
@@ -138,6 +146,14 @@ SOURCE=..\..\..\dgd\src\dgDebugOpt.h
 # Begin Source File
 
 SOURCE=..\..\..\dgd\src\dgDebugStd.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\dgd\src\dgFunnel.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\dgd\src\dgMultifileLog.h
 # End Source File
 # Begin Source File
 
