@@ -24,6 +24,7 @@
  */
 
 #include <stdio.h>
+#include <ctype.h>
 
 #include "dgd_config.h"
 #include "dgd_format_eval.h"
@@ -61,9 +62,6 @@ char *build_format( call_attr_t *attr, char format ) {
 	 case sizeof(dgd_long_t):
 	    *curr++ = 'l';
 	    break;
-	 case sizeof(dgd_longlong_t):
-	    *curr++ = 'll';
-	    break;
       }
    }
 
@@ -81,6 +79,7 @@ int dgd_generic_callback_dec( dgd_action_t *action,
    } persistent_t;
 
    persistent_t *p;
+   unsigned int size;
 
    if( action->data_size < sizeof(persistent_t) || action->data == NULL ) 
       return EVAL_RES_ERROR;
@@ -89,7 +88,7 @@ int dgd_generic_callback_dec( dgd_action_t *action,
 
    if( action->state == EVAL_STATE_NORMAL ) {
       p->curr = p->buf;
-      sprintf( p->buf, build_format( &(action->attr) ), *(int*)argv );
+      sprintf( p->buf, build_format( &(action->attr), 'd' ), *(int*)argv );
    }
 
    size = min( strlen( p->curr ), str->high_bound - str->end );
@@ -100,7 +99,7 @@ int dgd_generic_callback_dec( dgd_action_t *action,
       p->curr += size;
    }
 
-   if( *p->curr != '\0'; ) {
+   if( *p->curr != '\0' ) {
       return EVAL_RES_RANGE;
    } 
    

@@ -19,43 +19,43 @@
 #
 # Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
-# Makefile.in -- template for a parser test library Makefile 
+# Makefile.in -- template for a eval test library Makefile 
 #
 
 SHELL = /bin/sh
+@SET_MAKE@
 
-
-srcdir     = .
-top_srcdir = ../..
-BUILDDIR   = $(srcdir)/Debug
+srcdir     = @srcdir@
+top_srcdir = @top_srcdir@
+BUILDDIR   = $(srcdir)/@BUILDDIR@
 
 VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
-RM  = rm -f
-MKDIR = mkdir -p
-CC = gcc
-LD  = ld
-AR  = ar
-RANLIB = ranlib
-MAKEDEPEND = makedepend
+RM  = @RM@
+MKDIR = @MKDIR@
+CC = @CC@
+LD  = @LD@
+AR  = @AR@
+RANLIB = @RANLIB@
+MAKEDEPEND = @MAKEDEPEND@
 
-CFLAGS =  -Wall -g
-LDFLAGS  =  -g
-LDOUTOPT = -o
-COUTOPT  = -o
+CFLAGS = @CFLAGS@
+LDFLAGS  = @LDFLAGS@
+LDOUTOPT = @LDOUTOPT@
+COUTOPT  = @COUTOPT@
 
 INCLUDES = -I. -I.. -I$(top_srcdir) -I../src -I../devel/src
 
-EXEEXT = 
-OBJEXT = o
+EXEEXT = @EXEEXT@
+OBJEXT = @OBJEXT@
 
 SUBDIRS =
-TARGETS = parser$(EXEEXT)
-PDBFILE = parser.pdb
-PCHFILE = parser.pch
+TARGETS = fmteval$(EXEEXT)
+PDBFILE = fmteval.pdb
+PCHFILE = fmteval.pch
 
 HEADERS = 
-CFILES  = parser.c
+CFILES  = fmteval.c
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs

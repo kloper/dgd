@@ -45,10 +45,6 @@
 #define EVAL_ERR_CONT_ARGS 4
 #define EVAL_ERR_CALLBACK  5
 
-#define EVAL_T_INT         20
-#define EVAL_T_DOUBLE      21
-#define EVAL_T_PTR         22
-
 #define EVAL_FLAG_CACHE_CALLS 0x00000001
 #define EVAL_FLAG_CACHE_STDS  0x00000002
 #define EVAL_ESTIMATE         0x00000004
@@ -110,9 +106,6 @@ void dgd_eval_init( dgd_eval_t   *eval,
 int dgd_format_eval( dgd_eval_t *eval, 
 		     str_bounded_range_t *str, 
 		     va_list arg );
-
-cache_item_t* dgd_format_settle_args( cache_t *cache, 
-				      cache_item_t *parse_ring );
 
 #endif /* _dgd_format_eval_h_ */
 

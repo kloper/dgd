@@ -124,5 +124,10 @@ void dgd_call_attr_assign( call_attr_t *dst, call_attr_t *src ) {
       dst->byte_count = src->byte_count;
    }
 
+   if( src->valid_mask & CALL_ATTR_ABSPOS ) {
+      dst->position = src->position;
+   }
+
+
    dst->valid_mask |= src->valid_mask;
 }

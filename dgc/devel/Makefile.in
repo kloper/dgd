@@ -61,7 +61,8 @@ PCHFILE = dgc-devel.pch
 HEADERS = \
 dgd_dgc_debug.h 
 CFILES  = \
-dgd_dgc_debug.c 
+dgd_dgc_debug.c \
+dgd_format_generic.c
 
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 

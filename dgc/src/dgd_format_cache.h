@@ -52,9 +52,6 @@ typedef struct _cache_item_t {
 		  struct _cache_item_t *ring;
 	    } lru;
 	    struct {
-		  unsigned int          num;
-	    } set_arg;
-	    struct {
 		  struct _cache_item_t *arg;
 	    } next_arg;
 	    struct {

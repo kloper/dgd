@@ -114,20 +114,12 @@ static cache_item_t   *start_ring;
 cmdbegin: 
           LEX_PERCENT 
                      {
-                       $$.ring = NULL;
+                       $$.attr.valid_mask = 0;
                      }
           | LEX_PERCENT LEX_REFERENCE 
                      { 
-                       cache_item_t *ring = dgd_cache_alloc( cache, 1 );
-
-                       if( ring == NULL ) YYERROR;
-
-                       dgd_ring_push_back( &start_ring, ring );
-
-                       ring->type              = PARS_T_SET_ARG;
-                       ring->value.set_arg.num = $2.lex.value.num;
-
-                       $$.ring = ring;                       
+                       $$.attr.position = $2.lex.value.num;
+                       $$.attr.valid_mask = CALL_ATTR_ABSPOS;
                      }
 ;
 
@@ -654,11 +646,9 @@ cmd:
 
                        dgd_call_attr_assign( &($3.ring->value.call.attr),
                                              &($2.attr) );
-                       if( $1.ring != NULL ) 
-                          $$.ring = $1.ring;
-                       else
-                          $$.ring = $3.ring;
-
+		       dgd_call_attr_assign( &($3.ring->value.call.attr),
+                                             &($1.attr) );
+		       $$.ring = $3.ring;
                        start_ring = NULL;
 	               yylexreset();
 	             }
@@ -781,10 +771,161 @@ cache_item_t *dgd_format_parse( char* format_string ) {
    init_lexer_state( &lexer_state );	
    yyparse();
 
-
-   result = dgd_cache_new( cache, format_string, yyval.ring );
+   result = dgd_format_settle_args( cache, yyval.ring );
    if( result == NULL ) {
       dgd_cache_free( cache, &(yyval.ring), -1 );
+      return NULL;
    }
+
+   result = dgd_cache_new( cache, format_string, result );
+   if( result == NULL ) {
+      dgd_cache_free( cache, &result, -1 );
+      return NULL;
+   }
+
    return result;
+}
+
+static
+void dgd_ring_push_and_sort( cache_item_t **ring, cache_item_t *item ) {
+   cache_item_t *prev;
+
+   if( *ring == NULL ) {
+      dgd_ring_push_back( ring, item );
+      return;
+   }
+
+   prev = (*ring)->prev;   
+
+   do {
+      if( prev->value.argload.index <= item->value.argload.index )
+	 break;
+      prev = prev->prev;
+   } while( prev != *ring );
+	
+   if( prev == *ring && 
+       prev->value.argload.index > item->value.argload.index ) {
+      dgd_ring_push_front( ring, item );
+   } else {
+      // this is actually push after
+      dgd_ring_forward( prev );
+      dgd_ring_push_back( &prev, item );
+   }
+}
+
+cache_item_t*
+dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
+   cache_item_t *eval_item;
+   cache_item_t *parse_prefix = NULL;
+   cache_item_t *ring = NULL;
+   unsigned argn = 0;
+
+   eval_item = parse_ring;
+
+   do {
+      switch( eval_item->type ) {
+	 case PARS_T_NEXT_ARG:
+	    if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+	       goto error;
+	    
+	    ring->type = EVAL_T_PTR;
+	    ring->value.argload.index = argn++;
+	    ring->value.argload.attr.valid_mask = 0;
+
+	    dgd_ring_push_and_sort( &parse_prefix, ring );
+	    
+	    eval_item->value.next_arg.arg = ring;
+	    break;
+	 case PARS_T_DEC:
+	 case PARS_T_OCT:
+	 case PARS_T_UNSIGNED:
+	 case PARS_T_HEX:
+	 case PARS_T_CHAR:
+
+	 case PARS_T_SCI:
+	 case PARS_T_FLOAT:
+	 case PARS_T_SCIORFLOAT:
+	 case PARS_T_SCIHEX:
+
+	 case PARS_T_STR:
+	 case PARS_T_PTR:
+	 case PARS_T_REP:
+	    if( (eval_item->value.call.attr.valid_mask & CALL_ATTR_WIDTH) &&
+		eval_item->value.call.attr.width <= 0 ) {
+	       if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+		  goto error;
+	       
+	       ring->type = EVAL_T_INT;
+	       if( eval_item->value.call.attr.width < 0 ) 
+		  argn = -eval_item->value.call.attr.width;
+	       ring->value.argload.index = argn++;
+	       ring->value.argload.attr.valid_mask = 0;
+
+	       dgd_ring_push_and_sort( &parse_prefix, ring );
+	       
+	       eval_item->value.call.width = ring;	       
+	    }
+
+	    if( (eval_item->value.call.attr.valid_mask & 
+		 CALL_ATTR_PRECISION) &&
+		eval_item->value.call.attr.precision <= 0 ) {
+	       if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+		  goto error;
+	       
+	       ring->type = EVAL_T_INT;
+	       if( eval_item->value.call.attr.precision < 0 ) 
+		  argn = -eval_item->value.call.attr.precision;
+	       ring->value.argload.index = argn++;
+	       ring->value.argload.attr.valid_mask = 0;
+
+	       dgd_ring_push_and_sort( &parse_prefix, ring );
+	       
+	       eval_item->value.call.precision = ring;	       
+	    }	       
+
+	    if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+	       goto error;
+	    
+	    switch( eval_item->type ) {
+	       	 case PARS_T_SCI:
+	       case PARS_T_FLOAT:
+	       case PARS_T_SCIORFLOAT:
+	       case PARS_T_SCIHEX:
+		  ring->type = EVAL_T_DOUBLE;
+		  break;
+	       case PARS_T_STR:
+	       case PARS_T_PTR:
+	       case PARS_T_REP:
+		  ring->type = EVAL_T_PTR;
+		  break;
+	       default:
+		  ring->type = EVAL_T_INT;
+		  break;
+	    }
+
+	    if( eval_item->value.call.attr.valid_mask & CALL_ATTR_ABSPOS ) 
+	       argn = eval_item->value.call.attr.position;
+	    ring->value.argload.index = argn++;
+	    dgd_call_attr_assign( &(ring->value.argload.attr),
+				  &(eval_item->value.call.attr) );
+
+	    dgd_ring_push_and_sort( &parse_prefix, ring );
+	    
+	    eval_item->value.call.arg = ring;
+
+	    break;
+	 default:
+	    break;
+      }
+
+      dgd_ring_forward(eval_item);
+   } while( eval_item != parse_ring );
+
+  finish:
+   dgd_ring_push_front( &parse_ring, parse_prefix );
+   return parse_ring;
+
+  error:
+   dgd_cache_free( cache, &parse_prefix, -1 );
+   return NULL;
 }

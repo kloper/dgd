@@ -31,7 +31,6 @@
 #define PARS_T_ERROR        0
 #define PARS_T_PAIR         1
 #define PARS_T_NEXT_ARG     2
-#define PARS_T_SET_ARG      3
 #define PARS_T_LEXEME       4
 #define PARS_T_CALL_BY_NAME 5
 #define PARS_T_DEC          6
@@ -49,11 +48,11 @@
 #define PARS_T_WORD         18
 #define PARS_T_BACKSLASH    19
 
-/* content of y.tab.h goes here */
-#ifndef YYERRCODE
-#define YYERRCODE 256
-#endif
+#define EVAL_T_INT          20
+#define EVAL_T_DOUBLE       21
+#define EVAL_T_PTR          22
 
+/* content of y.tab.h goes here */
 #define LEX_EOF 257
 #define LEX_ZERO 258
 #define LEX_MINUS 259
@@ -102,6 +101,8 @@
 
 cache_item_t *dgd_format_parse( char* format_string );
 cache_t      *dgd_format_parser_cache();
+cache_item_t* dgd_format_settle_args( cache_t *cache, 
+				      cache_item_t *parse_ring );
 
 #endif /* _dgd_format_parser_h_ */
 

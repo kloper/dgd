@@ -19,7 +19,7 @@
 #
 # Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
-# Makefile.in -- template for a parser test library Makefile 
+# Makefile.in -- template for a eval test library Makefile 
 #
 
 SHELL = /bin/sh
@@ -50,12 +50,12 @@ EXEEXT =
 OBJEXT = o
 
 SUBDIRS =
-TARGETS = parser$(EXEEXT)
-PDBFILE = parser.pdb
-PCHFILE = parser.pch
+TARGETS = fmteval$(EXEEXT)
+PDBFILE = fmteval.pdb
+PCHFILE = fmteval.pch
 
 HEADERS = 
-CFILES  = parser.c
+CFILES  = fmteval.c
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs

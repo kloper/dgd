@@ -35,6 +35,7 @@
 #define CALL_ATTR_WIDTH       0x00000040
 #define CALL_ATTR_PRECISION   0x00000080
 #define CALL_ATTR_BYTECOUNT   0x00000100
+#define CALL_ATTR_ABSPOS      0x00000200
 
 typedef struct _call_attr_t {
       unsigned int valid_mask;
@@ -47,6 +48,7 @@ typedef struct _call_attr_t {
                int width;
                int precision;
       unsigned int byte_count;
+      unsigned int position;
 } call_attr_t;
 
 

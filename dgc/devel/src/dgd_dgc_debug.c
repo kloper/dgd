@@ -58,6 +58,8 @@ void attrib( FILE *stream, call_attr_t *attr, unsigned int nesting_level ) {
    fprintf( stream, "precision    %d\n", attr->precision  );
    indent( stream, nesting_level+2 ); 
    fprintf( stream, "byte_count:  %u\n", attr->byte_count );
+   indent( stream, nesting_level+2 ); 
+   fprintf( stream, "position:  %u\n", attr->position );
    indent( stream, nesting_level ); 
    fprintf( stream, "}\n" );
 }
@@ -77,86 +79,153 @@ void dgd_dump_parser_bytecode( FILE *stream,
       indent( stream, nesting_level+2 ); 
 
       switch( next->type ) {
+	 case EVAL_T_INT:
+	    fprintf( stream, "%x->load integer:\n", (unsigned int)next );
+	    attrib( stream, &(next->value.argload.attr), nesting_level+2 );
+	    break;
+	 case EVAL_T_DOUBLE:
+	    fprintf( stream, "%x->load double:\n", (unsigned int)next );
+	    attrib( stream, &(next->value.argload.attr), nesting_level+2 );
+	    break;
+	 case EVAL_T_PTR:
+	    fprintf( stream, "%x->load pointer:\n", (unsigned int)next );
+	    attrib( stream, &(next->value.argload.attr), nesting_level+2 );
+	    break;
          case PARS_T_ERROR:
-            fprintf( stream, "error:\n" );
+            fprintf( stream, "%x->error:\n", (unsigned int)next );
             break;
 	 case PARS_T_PAIR:
-	    fprintf( stream, "pair:\n" );
+	    fprintf( stream, "%x->pair:\n", (unsigned int)next );
 	    break;
 	 case PARS_T_NEXT_ARG:
-	    fprintf( stream, "next arg\n" );
-	    break;
-	 case PARS_T_SET_ARG:
-	    fprintf( stream, "set argument: %u\n", next->value.set_arg.num );
+	    fprintf( stream, "%x->next arg [%x]\n", 
+		     (unsigned int)next,
+		     (unsigned int)next->value.next_arg.arg );
+	    
 	    break;
 	 case PARS_T_LEXEME:
-	    fprintf( stream, "lexeme: %.*s\n", 
+	    fprintf( stream, "%x->lexeme: %.*s\n", (unsigned int)next,
 		     next->value.lexeme.lexeme.end - 
 		     next->value.lexeme.lexeme.begin,
 		     next->value.lexeme.lexeme.begin );
 	    break;
 	 case PARS_T_CALL_BY_NAME:
-	    fprintf( stream, "call by name: %.*s\n", 
+	    fprintf( stream, "%x->call by name: %.*s\n", 
+		     (unsigned int)next,
 		     next->value.call.name.end - next->value.call.name.begin,
 		     next->value.call.name.begin );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_DEC:
-	    fprintf( stream, "decimal:\n" );
+	    fprintf( stream, "%x->decimal:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );	    
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_OCT:
-	    fprintf( stream, "octal:\n" );
+	    fprintf( stream, "%x->octal:\n" , (unsigned int)next);
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_UNSIGNED:
-	    fprintf( stream, "unsigned:\n" );
+	    fprintf( stream, "%x->unsigned:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_HEX:
-	    fprintf( stream, "hex:\n" );
+	    fprintf( stream, "%x->hex:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_REP:
-	    fprintf( stream, "write report:\n" );
+	    fprintf( stream, "%x->write report:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_SCI:
-	    fprintf( stream, "scientific:\n" );
+	    fprintf( stream, "%x->scientific:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_FLOAT:
-	    fprintf( stream, "float:\n" );
+	    fprintf( stream, "%x->float:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_SCIORFLOAT:
-	    fprintf( stream, "scientific or float:\n" );
+	    fprintf( stream, "%x->scientific or float:\n", 
+		     (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_SCIHEX:
-	    fprintf( stream, "scientific hex:\n" );
+	    fprintf( stream, "%x->scientific hex:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_CHAR:
-	    fprintf( stream, "char:\n" );
+	    fprintf( stream, "%x->char:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_STR:
-	    fprintf( stream, "string:\n" );
+	    fprintf( stream, "%x->string:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_PTR:
-	    fprintf( stream, "pointer:\n" );
+	    fprintf( stream, "%x->pointer:\n", (unsigned int)next );
+	    fprintf( stream, "   [%x] [%x] [%x]\n",
+		      (unsigned int)next->value.call.arg,
+		      (unsigned int)next->value.call.width,
+		      (unsigned int)next->value.call.precision );
 	    attrib( stream, &(next->value.call.attr), nesting_level+2 );
 	    break;
 	 case PARS_T_WORD:
-	    fprintf( stream, "word: %.*s\n", 
+	    fprintf( stream, "%x->word: %.*s\n", (unsigned int)next, 
 		     next->value.word.lexeme.end - 
 		     next->value.word.lexeme.begin,
 		     next->value.word.lexeme.begin );
 	    break;
 	 case PARS_T_BACKSLASH:
-	    fprintf( stream, "backslash: %c\n", next->value.backslash.ch );
+	    fprintf( stream, "%x->backslash: %c\n", (unsigned int)next, 
+		     next->value.backslash.ch );
 	    break;
 	 default:
 	    break;
