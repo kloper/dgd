@@ -19,7 +19,7 @@
 #
 # Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
-# Makefile.in -- template for a parser test library Makefile 
+# Makefile.in -- template for a dgc library Makefile 
 #
 
 SHELL = /bin/sh
@@ -29,33 +29,40 @@ srcdir     = .
 top_srcdir = ../..
 BUILDDIR   = $(srcdir)/Debug
 
-VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
+VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
+GPATH += :$(srcdir)/src
 
 RM  = rm -f
 MKDIR = mkdir -p
 CC = cl
 LD  = link
 AR  = ar
+SED = sed
+CAT = cat
 RANLIB = ranlib
+YACC = byacc
 MAKEDEPEND = makedepend
 
-CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  =  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1 
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
 LDOUTOPT = /out:
 COUTOPT  = -Fo
+INCLUDES = -I. -I.. -I../src -I$(top_srcdir)
 
-INCLUDES = -I. -I.. -I$(top_srcdir) -I../src -I../devel/src
-
-EXEEXT = .exe
+LIBPREFIX = 
+LIBEXT = lib
 OBJEXT = obj
 
 SUBDIRS =
-TARGETS = parser$(EXEEXT)
-PDBFILE = parser.pdb
-PCHFILE = parser.pch
+TARGETS = $(LIBPREFIX)dgc-devel.$(LIBEXT) $
+PDBFILE = dgc-devel.pdb
+PCHFILE = dgc-devel.pch
 
-HEADERS = 
-CFILES  = parser.c
+HEADERS = \
+dgd_dgc_debug.h 
+CFILES  = \
+dgd_dgc_debug.c 
+
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs
@@ -83,14 +90,20 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 	cd $(top_srcdir) && $(MAKE) config.status
 
 $(TARGETS): $(OBJECTS)
-ifeq ($(EXEEXT),.exe)
-	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) -libpath:../$(BUILDDIR) dgc.lib -libpath:../devel/$(BUILDDIR) dgc-devel.lib ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
 else
-	$(CC) $(LDFLAGS) -o $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} -L../$(BUILDDIR) -ldgc -L../devel/$(BUILDDIR) -ldgc-devel
+	$(AR) cr $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}
+	$(RANLIB) $(BUILDDIR)/$@
 endif
 
 %.$(OBJEXT): %.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $(COUTOPT)$(BUILDDIR)/$@ $<
 
+depend: .depend $(SUBDIRS)
 
+.depend:${patsubst %.c, src/%.c, $(CFILES)}
+	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src/%%' > $@ 
+
+include .depend
 

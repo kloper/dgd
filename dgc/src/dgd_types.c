@@ -99,28 +99,28 @@ void dgd_call_attr_assign( call_attr_t *dst, call_attr_t *src ) {
    if( src->valid_mask & CALL_ATTR_ALTERNATE ) {
       dst->alternate = src->alternate;
    }
-   if( src->zero_pad & CALL_ATTR_ZERO_PAD ) {
+   if( src->valid_mask & CALL_ATTR_ZERO_PAD ) {
       dst->zero_pad = src->zero_pad;
    }
-   if( src->left_adjust & CALL_ATTR_LEFT_ADJUST ) {
+   if( src->valid_mask & CALL_ATTR_LEFT_ADJUST ) {
       dst->left_adjust = src->left_adjust;
    }
-   if( src->blank & CALL_ATTR_BLANK ) {
+   if( src->valid_mask & CALL_ATTR_BLANK ) {
       dst->blank = src->blank;
    }
-   if( src->sign & CALL_ATTR_SIGN ) {
+   if( src->valid_mask & CALL_ATTR_SIGN ) {
       dst->sign = src->sign;
    }
-   if( src->capital & CALL_ATTR_CAPITAL ) {
+   if( src->valid_mask & CALL_ATTR_CAPITAL ) {
       dst->capital = src->capital;
    }
-   if( src->width & CALL_ATTR_WIDTH ) {
+   if( src->valid_mask & CALL_ATTR_WIDTH ) {
       dst->width = src->width;
    }
-   if( src->precision & CALL_ATTR_PRECISION ) {
+   if( src->valid_mask & CALL_ATTR_PRECISION ) {
       dst->precision = src->precision;
    }
-   if( src->byte_count & CALL_ATTR_BYTECOUNT ) {
+   if( src->valid_mask & CALL_ATTR_BYTECOUNT ) {
       dst->byte_count = src->byte_count;
    }
 

@@ -37,11 +37,14 @@ CC = @CC@
 LD  = @LD@
 AR  = @AR@
 RANLIB = @RANLIB@
+MAKEDEPEND = @MAKEDEPEND@
+
 CFLAGS = @CFLAGS@
 LDFLAGS  = @LDFLAGS@
 LDOUTOPT = @LDOUTOPT@
 COUTOPT  = @COUTOPT@
-INCLUDES = -I. -I.. -I$(top_srcdir) -I../src
+
+INCLUDES = -I. -I.. -I$(top_srcdir) -I../src -I../devel/src
 
 EXEEXT = @EXEEXT@
 OBJEXT = @OBJEXT@
@@ -81,9 +84,9 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 
 $(TARGETS): $(OBJECTS)
 ifeq ($(EXEEXT),.exe)
-	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) -libpath:../$(BUILDDIR) dgc.lib ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) -libpath:../$(BUILDDIR) dgc.lib -libpath:../devel/$(BUILDDIR) dgc-devel.lib ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
 else
-	$(CC) $(LDFLAGS) -o $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} -L../$(BUILDDIR) -ldgc 
+	$(CC) $(LDFLAGS) -o $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} -L../$(BUILDDIR) -ldgc -L../devel/$(BUILDDIR) -ldgc-devel
 endif
 
 %.$(OBJEXT): %.c

@@ -47,7 +47,7 @@ typedef union _yy_stype_t {
 static int yylex();
 static void yylexreset();
 static void yyerror( char* reason );
-
+extern cache_item_t *dgd_format_parser_result();
 %}
 
 
@@ -159,16 +159,7 @@ subcmd:
 subcmdparams:
 	  identifier 
                      { 
-                       cache_item_t *key_ring   = $1.ring;
-                       cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
-
-                       if( ring == NULL ) {
-                         yyerror("Unknown");
-                       }
-
-                       ring->value.ring = key_ring;
-
-                       $$.ring = ring;  
+                       $$.ring = $1.ring;  
                      }
           | pair     {
                        $$.ring = $1.ring;  
@@ -221,7 +212,7 @@ pair:
                          yyerror("Unknown");
                        }
 
-                       ring->type         = PARS_T_PARAM;
+                       ring->type         = PARS_T_PAIR;
                        dgd_ring_push_back( &key_ring, value_ring );
                        ring->value.ring = key_ring;
 
@@ -238,7 +229,7 @@ intformat:
                          yyerror("Unknown");
                        }
 
-                       ring->type         = PARS_T_READ_DEC;
+                       ring->type               = PARS_T_READ_DEC;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -502,7 +493,10 @@ intmodifier:
                        $$.attr.byte_count = sizeof(dgd_ptrdiff_t);
                        $$.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
-          |
+          | 
+                     {
+                       dgd_call_attr_set_default( &($$.attr) );
+                     }
 ;
 
 doublemodifier:
@@ -512,7 +506,9 @@ doublemodifier:
                        $$.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
           |
-
+                     {
+                       dgd_call_attr_set_default( &($$.attr) );
+                     }
 ;
 
 modintformat:
@@ -741,4 +737,8 @@ void yylexreset() {
 static
 void yyerror( char* reason ) {
    fprintf( stderr, "%s\n", reason );
+}
+
+cache_item_t *dgd_format_parser_result() {
+   return yyval.ring;
 }

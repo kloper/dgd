@@ -20,44 +20,24 @@
 //
 // Copyright (c) 2003. Dimitry Kloper <dimka@cs.technion.ac.il> . 
 //
-// dgd_format_parser.h -- declarations for format parser
+// dgd_dgc_debug.h -- declaration for dgd_dgc_debug.c
 //
 
-#ifndef _dgd_format_parser_h_
-#define _dgd_format_parser_h_
+#ifndef _dgd_dgc_debug_h_
+#define _dgd_dgc_debug_h_
 
-#include "dgd_compile_cache.h" /* need here because YYSTYPE will be there */
+#include <stdio.h>
+#include "dgd_compile_cache.h"
 
-#define PARS_T_PAIR 1
-#define PARS_T_NEXT_ARG 2
-#define PARS_T_SET_ARG 3
-#define PARS_T_LEXEME 4
-#define PARS_T_CALL_BY_NAME 5
-#define PARS_T_READ_DEC 6
-#define PARS_T_READ_OCT 7
-#define PARS_T_READ_UNSIGNED 8
-#define PARS_T_READ_HEX 9
-#define PARS_T_WRITE_REP 10
-#define PARS_T_READ_SCI 11
-#define PARS_T_READ_FLOAT 12
-#define PARS_T_READ_SCIORFLOAT 13
-#define PARS_T_READ_SCIHEX 14
-#define PARS_T_READ_CHAR 15
-#define PARS_T_READ_STR 16
-#define PARS_T_READ_PTR 17
-#define PARS_T_WORD     18
-#define PARS_T_CHAR     19
+void dgd_dump_parser_bytecode( FILE *stream, 
+			       cache_item_t *ring, 
+			       unsigned int nesting_level );
 
-/* content of y.tab.h goes here */
-@Y_TAB_H@
-
-cache_item_t *dgd_format_parser_result();
-
-#endif /* _dgd_format_parser_h_ */
+#endif /* _dgd_dgc_debug_h_ */
 
 /* 
  * Local Variables:
- * compile-command: "make dgd_format_parser.obj"
+ * compile-command: "make dgd_dgc_debug.obj"
  * End:
  */
 

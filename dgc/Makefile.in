@@ -41,6 +41,7 @@ SED = @SED@
 CAT = @CAT@
 RANLIB = @RANLIB@
 YACC = @YACC@
+MAKEDEPEND = @MAKEDEPEND@
 
 CFLAGS = @CFLAGS@ @DEFS@
 LDFLAGS  = @LD_STATIC_FLAGS@ @LDFLAGS@
@@ -53,7 +54,7 @@ LIBEXT = @LIBEXT@
 OBJEXT = @OBJEXT@
 
 SUBDIRS =
-TARGETS = $(LIBPREFIX)dgc.$(LIBEXT)
+TARGETS = $(LIBPREFIX)dgc.$(LIBEXT) $
 PDBFILE = dgc.pdb
 PCHFILE = dgc.pch
 
@@ -84,8 +85,6 @@ subdirs: $(SUBDIRS)
 clean: $(SUBDIRS)
 	-$(RM) -r $(BUILDDIR)
 
-depend: $(SUBDIRS)
-
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status
 
@@ -111,3 +110,9 @@ endif
 	 $(SED) -f - $(basename $<).h.in > $(basename $<).h
 	$(RM) y.tab.*
 
+depend: .depend $(SUBDIRS)
+
+.depend:${patsubst %.c, src/%.c, $(CFILES)}
+	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src/%%' > $@ 
+
+include .depend

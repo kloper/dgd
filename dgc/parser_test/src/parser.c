@@ -23,19 +23,23 @@
  *
  */
 
-#include <stdio.h>
+#include <dgd_format_parser.h>
+#include <dgd_dgc_debug.h>
 
 extern char* dgd_format_string;
 extern void yyparse();
 
 int main( int argc, char** argv ) {
    int i;
+   cache_item_t *result;
 
    for( i = 1; i < argc; i++ ) {
       printf( "> %s\n", argv[i] );
       dgd_format_string = argv[1];
       yyparse();
-
+      result = dgd_format_parser_result();
+      if( result != NULL )
+	 dgd_dump_parser_bytecode( stdout, result, 0 );
    }
 
    return 0;

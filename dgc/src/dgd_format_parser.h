@@ -28,7 +28,7 @@
 
 #include "dgd_compile_cache.h" /* need here because YYSTYPE will be there */
 
-#define PARS_T_PARAM 1
+#define PARS_T_PAIR 1
 #define PARS_T_NEXT_ARG 2
 #define PARS_T_SET_ARG 3
 #define PARS_T_LEXEME 4
@@ -99,6 +99,7 @@
 #define LEX_T_PTR 300
 #define LEX_T_REPORT 301
 
+cache_item_t *dgd_format_parser_result();
 
 #endif /* _dgd_format_parser_h_ */
 

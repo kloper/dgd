@@ -41,6 +41,7 @@ SED = sed
 CAT = cat
 RANLIB = ranlib
 YACC = byacc
+MAKEDEPEND = makedepend
 
 CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1 
 LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
@@ -53,7 +54,7 @@ LIBEXT = lib
 OBJEXT = obj
 
 SUBDIRS =
-TARGETS = $(LIBPREFIX)dgc.$(LIBEXT)
+TARGETS = $(LIBPREFIX)dgc.$(LIBEXT) $
 PDBFILE = dgc.pdb
 PCHFILE = dgc.pch
 
@@ -84,8 +85,6 @@ subdirs: $(SUBDIRS)
 clean: $(SUBDIRS)
 	-$(RM) -r $(BUILDDIR)
 
-depend: $(SUBDIRS)
-
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status
 
@@ -111,3 +110,9 @@ endif
 	 $(SED) -f - $(basename $<).h.in > $(basename $<).h
 	$(RM) y.tab.*
 
+depend: .depend $(SUBDIRS)
+
+.depend:${patsubst %.c, src/%.c, $(CFILES)}
+	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src/%%' > $@ 
+
+include .depend
