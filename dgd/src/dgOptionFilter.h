@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// $Id$
+// 
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -66,8 +66,8 @@ class option_filter {
 	    
 	    void allocate( int n ) {
 	       argc = n;
-	       argv = new char*[ argc ];
-	       std::fill( argv, argv + argc, (char*)NULL );
+	       argv = new char*[ argc + 1 ];
+	       std::fill( argv, argv + argc + 1, (char*)NULL );
 	    }
 
 	    ~option_set_type() {
