@@ -28,12 +28,8 @@
 #include "dgd_format_eval.h"
 #include "dgd_format_parser.h"
 
-int dgd_error_callback( dgd_action_t *action, 
-			str_bounded_range_t *str,
-			void* argv );
-
 dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE] = {
-   { "error",    dgd_error_callback, { 0, 0, 0, 0 } },
+   { "error",    NULL, { 0, 0, 0, 0 } },
    { "dec",      NULL, { 0, 0, 0, 0 } },
    { "oct",      NULL, { 0, 0, 0, 0 } },
    { "hex",      NULL, { 0, 0, 0, 0 } },
@@ -48,13 +44,6 @@ dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE] = {
    { "ptr",      NULL, { 0, 0, 0, 0 } },
    { NULL,       NULL, { 0, 0, 0, 0 } }
 };
-
-static
-int dgd_error_callback( dgd_action_t *action, 
-			str_bounded_range_t *str,
-			void* argv ) {
-   
-}
 
 static
 dgd_action_callback_t lookup( char* name ) {
@@ -103,7 +92,6 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
       eval->error = EVAL_ERR_BAD_ARG;
       return EVAL_RES_ERROR;
    }
-
 
    eval_item = eval->next_item;
 

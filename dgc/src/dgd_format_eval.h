@@ -41,9 +41,9 @@
 #define EVAL_ERR_UNKNOWN   0
 #define EVAL_ERR_BAD_ARG   1
 #define EVAL_ERR_BAD_CACHE 2
-#define EVAL_ERR_BAD_CALL  3
-#define EVAL_ERR_CONT_ARGS 4
-#define EVAL_ERR_CALLBACK  5
+#define EVAL_ERR_CONT_ARGS 3
+#define EVAL_ERR_CALLBACK  4
+#define EVAL_ERR_SMALLDATA 5
 
 #define EVAL_FLAG_CACHE_CALLS 0x00000001
 #define EVAL_FLAG_CACHE_STDS  0x00000002
@@ -98,6 +98,11 @@ typedef struct _dgd_eval_t {
       void         *user_data;
       char          data[EVAL_DATA_SIZE];      
 } dgd_eval_t;
+
+typedef struct _dgd_error_arg_t {
+      unsigned int error;
+      str_range_t  token;
+} dgd_error_arg_t;
 
 void dgd_eval_init( dgd_eval_t   *eval,       
 		    unsigned int  flags,

@@ -81,8 +81,10 @@ int dgd_generic_callback_dec( dgd_action_t *action,
    persistent_t *p;
    unsigned int size;
 
-   if( action->data_size < sizeof(persistent_t) || action->data == NULL ) 
+   if( action->data_size < sizeof(persistent_t) || action->data == NULL ) {
+      action->error = EVAL_ERR_SMALLDATA;
       return EVAL_RES_ERROR;
+   }
    
    p = (persistent_t*)action->data;
 
@@ -106,9 +108,81 @@ int dgd_generic_callback_dec( dgd_action_t *action,
    return EVAL_RES_DONE;
 }
 
+static
+int dgd_generic_callback_error( dgd_action_t *action, 
+				str_bounded_range_t *str,
+				void* argv ) {
+   typedef struct {
+	 char *curr;
+	 char  buf[100];
+   } persistent_t;
+
+   dgd_error_arg_t *err = (dgd_error_arg_t*)argv;
+   char *str = "unknown error";
+   persistent_t *p;
+   unsigned int size;
+
+   if( action->data_size < sizeof(persistent_t) || action->data == NULL ) {
+      action->error = EVAL_ERR_SMALLDATA;
+      return EVAL_RES_ERROR;
+   }
+   
+   p = (persistent_t*)action->data;
+
+   switch( err->error ) {
+      case EVAL_ERR_BAD_ARG:
+	 str = "bad argument";
+	 break;
+      case EVAL_ERR_BAD_CACHE:
+	 str = "internal error";
+	 break;
+      case EVAL_ERR_CONT_ARGS:
+	 str = "argument gap";
+	 break;
+      case EVAL_ERR_CALLBACK:
+	 str = "callback error";
+	 break;
+      case EVAL_ERR_SMALLDATA:
+	 str = "data too small";
+	 break;
+   }
+
+   if( action->state == EVAL_STATE_NORMAL ) {
+      p->curr = p->buf;
+      *p->buf = '\0';
+
+      strcat( p->buf, "<" );
+      strcat( p->buf, str );
+      if( err->token.begin != NULL ) {
+	 strcat( p->buf, ": " );
+	 size = min( sizeof( p->buf ) - strlen( p->buf ) - 2,
+		     (err->token.end == NULL)? 
+		     (err->token.end - err->token.begin) :
+		     strlen( err->token.begin ) );
+	 strncat( p->buf, err->token.begin, size );	 
+      }
+      strcat( p->buf, ">" );
+   }
+   
+   size = min( strlen( p->curr ), str->high_bound - str->end );
+   
+   if(size > 0 ) {
+      memcpy( (char*)str->end, p->curr, size );
+      str->end += size;
+      p->curr += size;
+   }
+
+   if( *p->curr != '\0' ) {
+      return EVAL_RES_RANGE;
+   } 
+   
+   return EVAL_RES_DONE;
+}
+
 void 
 dgd_generic_callback_init( dgd_action_lookup_t* lookup) {
-   lookup[EVAL_ACTION_DEC].callback = dgd_generic_callback_dec;
+   lookup[EVAL_ACTION_DEC].callback   = dgd_generic_callback_dec;
+   lookup[EVAL_ACTION_ERROR].callback = dgd_generic_callback_error;
 }
 
 /* 
