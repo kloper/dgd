@@ -143,9 +143,67 @@ regular expressions on channel names. For example:</p>
 <p>myapp --enable-debug=debug.log --debug-channels='(kern.*| main)'</p>
 <p>This will create main log file called debug.log and enable all channels 
 beginning with kern and main channel</p>
+<h1>DGD for C</h1>
+<p>Recently some need aroused for C API similar to the C++ DGD. Here is a 
+beginning of the design. The fieatures of the C library must be same ones as 
+with the C++:</p>
+<ul>
+  <li>Channels</li>
+  <li>Formatting as with printf() and more. Possibility to define extra %c for 
+  our version of printf.</li>
+  <li>Indentation</li>
+  <li>Limited line width</li>
+  <li>Char and word wrap</li>
+  <li>Dynamic channels</li>
+</ul>
+<h2>Differences with C++ version.</h2>
+<p>The main difference is that we can't rely on libc stdio functions, nor on 
+sprintf(). The former because stdio FILE mechanism has no overflow() callback, 
+the later is because it is very system dependent. </p>
+<p>So main difficulty with C implementation is:</p>
+<ul>
+  <li>Need to reimplement sprintf()</li>
+  <li>Need to reimplement buffered io</li>
+</ul>
+<p>The fact that the io library is not compatible with stdio means that users 
+will need to rewrite their debug routines in order to migrate to DGD.</p>
+<h2>Thoughts on design of the C API.</h2>
+<p>Here is an example of how C DGD can be used:</p>
+<p>
+<pre>typedef struct _Linked_list_node {
+    unsigned magic_number;
+    int data;
+    struct _Linked_list_node *next;
+} Linked_list_node;
+
+dgd_channel *dgd_list_node( dgd_channel *channel, void *node ) {
+    Linked_list_node *ll_node = (Linked_list_node*)node;
+
+    if( ll_node-&gt;magic_number != LINKED_LIST_NODE_MAGIC ) {
+        dgd_printf( channel, &quot;Node %p, magic number %u is bad\n&quot;, node, ll_node-&gt;magic_number );
+        return channel;
+    }
+    
+    dgd_printf( channel, &quot;[%d]&quot;, ll_node-&gt;data );
+
+    return channel;
+}</pre>
+<pre>dgd_channel *dgd_list( dgd_channel *channel, void *head ) {
+    Linked_list_node *ll_node = (Linked_list_node*)head;
+
+    dgd_printf( channel, &quot;%p {\n&quot;, head );
+    while( ll_node != NULL ) {
+         dgd_printf( channel, &quot;%{linked_list_node} &quot;, ll_node );
+         ll_node = ll_node-&gt;next;
+    }
+    dgd_printf( channel, &quot;}\n&quot; );
+    return channel;
+}
+</pre>
+</p>
 <hr>
 <p>Last edited:
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d-%m-%y %I:%M:%S %p %Z" startspan -->16-08-02 02:18:50 AM +0200<!--webbot bot="Timestamp" endspan i-checksum="38885" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d-%m-%y %I:%M:%S %p %Z" startspan -->06-07-03 04:45:04 PM +0200<!--webbot bot="Timestamp" endspan i-checksum="38380" --></p>
 
 </body>
 

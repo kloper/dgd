@@ -1,5 +1,5 @@
 /* 
- * $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.c,v 1.1 2003/08/05 20:12:31 dimka Exp $
+ * $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.c,v 1.2 2003/08/06 19:10:40 dimka Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

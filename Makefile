@@ -29,7 +29,7 @@ srcdir = .
 top_srcdir = .
 
 RM= rm -f
-ETAGS = echo
+ETAGS = etags
 
 SUBDIRS = getopt regex dgd test
 

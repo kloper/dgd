@@ -123,11 +123,11 @@ else
 	$(CXX) $(LDFLAGS) $(BUILDDIR)/mult_assoc.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
-lofl$(EXEEXT): list_of_lists.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
+thesaurus$(EXEEXT): thesaurus.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
-	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/list_of_lists.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/thesaurus.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
 else
-	$(CXX) $(LDFLAGS) $(BUILDDIR)/list_of_lists.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
+	$(CXX) $(LDFLAGS) $(BUILDDIR)/thesaurus.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
 %.$(OBJEXT): %.cpp

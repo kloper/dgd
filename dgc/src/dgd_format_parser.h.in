@@ -26,6 +26,8 @@
 #ifndef _dgd_format_parser_h_
 #define _dgd_format_parser_h_
 
+#include "dgd_compile_cache.h" /* need here because YYSTYPE will be there */
+
 #define PARS_T_PARAM 1
 #define PARS_T_NEXT_ARG 2
 #define PARS_T_SET_ARG 3
@@ -43,6 +45,8 @@
 #define PARS_T_READ_CHAR 15
 #define PARS_T_READ_STR 16
 #define PARS_T_READ_PTR 17
+#define PARS_T_WORD     18
+#define PARS_T_CHAR     19
 
 /* content of y.tab.h goes here */
 @Y_TAB_H@

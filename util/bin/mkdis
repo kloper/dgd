@@ -1,4 +1,4 @@
-#!perl -w -- -*- perl -*-
+#!/d/perl/bin/perl.exe -w -- -*- perl -*-
 
 use strict;
 use File::Basename;
@@ -13,7 +13,7 @@ my $filelist = "$datadir/filelist.log";
 my $cvs  = "cvs.exe";
 my $tar  = "tar";
 my $gzip = "gzip";
-my $target = "d:/dgd-";
+my $target = "d:/dgd-0.25";
 
 chdir $root or die "can't change directory to $root: $!";
 
