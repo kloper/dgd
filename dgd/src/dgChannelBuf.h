@@ -56,14 +56,14 @@ namespace DGD {
  *
  * DGD::channelbuf acts as a stream multiplexor. It maintains a list of
  * DGD::stream objects which are "associated" with this channel  buffer 
- * (see channelbuf::assoc(const stream&)). If the list is empty no
+ * (see channelbuf::assoc(std::ostream*)). If the list is empty no
  * output is produced. The channelbuf output is copied to all objects 
  * on the list when it is ready.
  * 
- * DGD::stream object can be associated with DGD::channelbuf by
- * calling channelbuf::assoc(const stream&) method, but it is more
- * appropriate to use DGD::assoc(stream,channel&) or 
- * assoc(stream,const std::string&) functions. 
+ * std::ostream object can be associated with DGD::channelbuf by
+ * calling channelbuf::assoc(std::ostream*) method, but it is more
+ * appropriate to use DGD::assoc(std::ostream*,channel&) or 
+ * assoc(std::ostream*,const std::string&) functions. 
  *
  * Since channelbuf usually can't figure out whether its input
  * contains a complete line or only part of it, channelbuf does not
@@ -95,7 +95,7 @@ class channelbuf: public std::streambuf {
 #endif
 
    protected:
-      typedef std::list< stream > Assoc_list;
+      typedef std::list< std::ostream* > Assoc_list;
 
    protected:
       /*@{*/
@@ -127,7 +127,7 @@ class channelbuf: public std::streambuf {
       channelbuf();
       ~channelbuf();
 
-      void         assoc( const stream& );
+      void         assoc( std::ostream* );
       unsigned int line() const;
       unsigned int column() const;
 

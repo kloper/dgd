@@ -180,7 +180,7 @@ void Debug::process_options( int argc, char** argv ) {
 
    if( m_args_info.debug_main_file_given ) {
       m_main_file = create_file( m_args_info.debug_main_file_arg );
-      assoc( m_main_file, **m_current_channel );
+      assoc( m_main_file.get(), **m_current_channel );
    }
 
    // apply options on existing channels

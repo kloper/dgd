@@ -272,10 +272,10 @@ void channel::header() {
  * Associate physical stream with a channel. See DGD::channel
  * documentation for more information.
  * @see DGD::channelbuf
- * @see channelbuf::assoc(const stream&)
+ * @see channelbuf::assoc(std::ostream*)
  */
-void assoc( stream s, channel& channel ) {
-   if( s.get() != NULL ) {
+void assoc( std::ostream* s, channel& channel ) {
+   if( s != NULL ) {
       channelbuf& buf = channel.rdbuf();
       buf.assoc( s );
       channel.header();
@@ -284,17 +284,17 @@ void assoc( stream s, channel& channel ) {
 
 /**
  * Associate physical stream with a channel. This function acts as
- * void assoc(stream,channel&), but takes name of the channel
+ * void assoc(std::ostream*,channel&), but takes name of the channel
  * instead. The DGD::Debug factory is searched for the channel with
  * the given name. See DGD::channel documentation for more information.
  * @see DGD::channelbuf
- * @see channelbuf::assoc(const stream&)
+ * @see channelbuf::assoc(std::ostream*)
  */
-void assoc( stream s, const std::string& name ) {
+void assoc( std::ostream* s, const std::string& name ) {
    Debug* factory = Debug::factory();
    if( factory != NULL ) {
       Debug::channel_ptr c = factory->operator[]( name );
-      if( c.get() != NULL && s.get() != NULL ) {
+      if( c.get() != NULL && s != NULL ) {
 	 channelbuf& buf = c->rdbuf();
 	 buf.assoc( s );	 
 	 c->header();

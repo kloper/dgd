@@ -132,7 +132,7 @@ namespace DGD {
  *
  * By default channel acts as a simple memory buffer. To make the
  * channel act as a multiplexor for any number of std::ostream you
- * will need to call assoc(stream ,channel&) function. In other words
+ * will need to call assoc(std::ostream* ,channel&) function. In other words
  * you can associate the channel with any number of files or other
  * std::ostream derivatives. The output from the channel will be
  * copied to all the associated files.
@@ -179,8 +179,8 @@ class channel: public std::ostream {
       channelbuf m_buffer;
 };
 
-void assoc( stream s, channel& channel );
-void assoc( stream s, const std::string& name );
+void assoc( std::ostream* s, channel& channel );
+void assoc( std::ostream* s, const std::string& name );
 
 }; // end of namespace DGD
 

@@ -279,7 +279,7 @@ channelbuf::~channelbuf() {
  * Append the given stream to the association list.
  * @see DGD::channel
  */
-void channelbuf::assoc( const stream& dgs ) {
+void channelbuf::assoc( std::ostream* dgs ) {
    m_assoc.push_back( dgs );
 }
 
@@ -489,6 +489,164 @@ bool channelbuf::is_dos_eol( const char_type* p ) const {
       return true;
    return false;
 }
+
+/**
+ * @page tutor_channelbuf DGD Basics - channelbuf
+ *
+ * DGD::channelbuf is a basic class in the library. In fact, DGD is
+ * started from the single class. Channelbuf can be used as
+ * stand-alone std::streambuf for formatting output. Lets consider the
+ * example:
+ * @include stand_alone_channelbuf.cpp
+ * For this example the formatter is declared as a local variable. In
+ * practice this is usually not so good idea because std::streambuf is
+ * usually registered in some std::ostream. The channelbuf constructor
+ * does not allocate any memory. So line
+ * @skipline pubsetbuf
+ * allocates buffer of 100 bytes in size. The first NULL parameter
+ * will cause internal memory allocation, while non-NULL first
+ * parameter will be treated as a pointer to the already allocated
+ * buffer.
+ * 
+ * Note that formatter makes no \c physical output, it just makes
+ * formatting. To achieve the physical output we must associate
+ * channelbuf with physical stream, for example std::cout:
+ * @skipline assoc
+ *
+ * Now, when the formatter is defined and associated with standard
+ * output we can make some output. But channelbuf can't do output
+ * itself. So we need an output stream:
+ * @skipline ostream
+ * The next line will produce the following:
+ * @code
+ * Hello! This is actally very very very very very very very very very very
+ * very very very very very very very very long line!
+ * @endcode
+ *
+ * Note how the formatter split the line in two. By default it has
+ * word wrapping turned on and maximum line length 79. You can easily
+ * change the defaults. Read the next chapter to learn that.
+ */
+
+/**
+ * @page tutor_formatting DGD Basics - Formatting
+ * 
+ * Channelbuf makes no physical output. Instead, it makes some
+ * formatting on what it gets and then pipes already formatted output
+ * to the associated physical stream. In this chapter we will learn
+ * how the formatting is done. Consider the following example:
+ * @include formatting.cpp
+ * Note that in this example DGD::channel is used instead of directly
+ * using DGD::channelbuf. DGD::channel is a output stream which hides
+ * complexities of using channelbuf and encapsulates all of its
+ * functionality.
+ * Note also that DGD::channel always has name and must be explicitly
+ * opened and associated with physical stream:
+ * @skipline assoc
+ * @line open
+ *
+ *
+ * @section wrapping Wrapping
+ *
+ * The very basic feature of the DGD formatting is a maximum line
+ * length and wrapping. By default word wrapping is turned on and
+ * maximum line length is 79, so the following line:
+ * @skip formatter
+ * @until endl
+ * will produce the following output:
+ * @code
+ * Hello! This is actally very very very very very very very very ver very very
+ * very very very very very very very long line!longer then 79!
+ * @endcode
+ * The maximum line width can be easily changed. For example the line:
+ * @skipline max_width
+ * and same output will produce the following:
+ * @code
+ * Hello! This is another very very very
+ * very very very very very very very very
+ * very very very very very very very
+ * long line!longer then 40!
+ * @endcode
+ * Note how DGD breaks the line. The line is split at spaces between
+ * words, not at the exact 40x positions. This is called word
+ * wrapping. The word wrapping can be turned off:
+ * @skipline word_wrap
+ * The output will look like this:
+ * @code
+ * Hello! This is another very very very ve
+ * ry very very very very very very very ve
+ * ry very very very very very very long li
+ * ne!longer then 40!
+ * @endcode
+ * If you don't want the lines being wrapped you can turn the wrapping
+ * off by using DGD::channel::wrap(bool) method. 
+ *
+ * You can tell DGD what characters are considered white spaces to
+ * change word wrapping behavior:
+ * @skip space_chars
+ * @until endl
+ * The DGD::space_chars() method receives a string containing a set of
+ * characters which will be considered as white spaces. The output
+ * will look like this:
+ * @code
+ * a;b
+ * ;c;
+ * d;e
+ * ;f;
+ * g;h
+ * @endcode
+ * Note that here word wrapping is enabled and maximum width is
+ * defined to 4, but there are only 3 characters in a line. This is
+ * because the '\\n' in the end of each line is considered as a
+ * separate character.
+ *
+ * @section indentation Indentation 
+ *
+ * DGD output can be indented. This means that you can define amount
+ * of blanks filled before any actual line of output. Consider the
+ * following code:
+ * @skip max_width
+ * @until }
+ * @skipline }
+ * The following output will be produced:
+ * @code
+ * word word word word word word word word word word word word
+ * word word word word
+ *        word word word word word word word word word word
+ *        word word word word word
+ *                word word word word word word word word
+ *                word word word word word word word
+ *        word word word word word word word word word word
+ *        word word word word word
+ * word word word word word word word word word word word word
+ *  word word word
+ * @endcode
+ * Note that the filled blanks are considered as part of the line so
+ * overall line width does not exceed the 60 characters limit. 
+ * 
+ * This code demonstrates indentation level
+ * mechanism. DGD::channel::incr_indent() and
+ * DGD::channel::decr_indent() methods increment/decrement the
+ * current indentation level. The actual number of filled blanks is
+ * calculated at the beginning of each line (thus, the incr_indent() and
+ * decr_indent() take no effect until beginning of the next line). The
+ * indentation level value is multiplied by indentation step value and
+ * the calculated amount of blanks is filled to the output. The
+ * indentation step can be controlled by
+ * DGD::channel::indent_step(unsigned) method. The default indentation
+ * step value is 8.
+ * 
+ * You can set the exact amount of indentation spaces using
+ * DGD::channel::indent(unsigned) method.
+ *
+ * Note that theoretically the indentation level could exceed the
+ * maximum line width. In this case DGD considers minimum line width
+ * property of the DGD::channel or DGD::channelbuf. Minimum line width
+ * tells DGD to skip indentation and keep the actual output line at least
+ * "min_width" characters wide. Minimum width is controlled by
+ * DGD::channel::min_width(unsigned) method. The default value for
+ * minimum width is 20.
+ */
 
 }; // end of namespace DGD
 

@@ -206,9 +206,9 @@ int main( int argc, char** argv ) {
 
    stream s = dout->create_file( "dimka.log" );
 
-   assoc( s, dout->create_channel( "dimka" ) );
-   assoc( s, dout->create_channel( "pimka" ) );
-   assoc( dout->main_file(), "dimka" );
+   assoc( s.get(), dout->create_channel( "dimka" ) );
+   assoc( s.get(), dout->create_channel( "pimka" ) );
+   assoc( dout->main_file().get(), "dimka" );
 
    single_channel_test( *dgd_channel(main) );
    manip_test( *dgd_channel(main) );
