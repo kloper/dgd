@@ -19,7 +19,7 @@ extern "C" {
 #define VERSION ""
 #endif
 
-struct gengetopt_args_info {
+struct dgd_gengetopt_args_info {
   char * debug_file_arg;	/* Debug output file.  */
   int debug_min_width_arg;	/* Default minimum output width.  */
   int debug_max_width_arg;	/* Default maximum output width.  */
@@ -39,7 +39,7 @@ struct gengetopt_args_info {
   int debug_space_characters_given ;	/* Whether debug-space-characters was given.  */
 } ;
 
-int dgd_cmdline_parser (int argc, char * const *argv, struct gengetopt_args_info *args_info);
+int dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info *args_info);
 
 void dgd_cmdline_parser_print_help(void);
 void dgd_cmdline_parser_print_version(void);

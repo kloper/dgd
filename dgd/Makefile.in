@@ -42,6 +42,7 @@ VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
 RM  = @RM@
 MV  = @MV@
+CAT = @CAT@
 SED = @SED@
 MKDIR = @MKDIR@
 CXX = @CXX@
@@ -87,8 +88,10 @@ all:  builddir $(TARGET) subdirs
 
 %.cpp: %.gge
 	$(GENGETOPT) --no-handle-help --no-handle-version --no-handle-error --file-name=${basename $@} --func-name=dgd_cmdline_parser < $<
-	$(MV) ${basename $@}.c ./src/$@
-	$(MV) ${basename $@}.h ./src/	
+	$(CAT) ${basename $@}.c | $(SED) 's/gengetopt_args_info/dgd_gengetopt_args_info/' | $(SED) 's%src/%%g' > tmp.c
+	$(MV) tmp.c $@
+	$(CAT) ${basename $@}.h | $(SED) 's/gengetopt_args_info/dgd_gengetopt_args_info/' | $(SED) 's%src/%%g' > tmp.h
+	$(MV) tmp.h ${basename $@}.h
 
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)

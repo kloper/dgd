@@ -68,7 +68,7 @@ gengetopt_strdup (char * s)
 
 
 int
-dgd_cmdline_parser (int argc, char * const *argv, struct gengetopt_args_info *args_info)
+dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info *args_info)
 {
   int c;	/* Character of the parsed option.  */
   int missing_required_options = 0;	

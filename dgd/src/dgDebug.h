@@ -73,7 +73,7 @@ class Debug {
       Channel_iterator m_current_channel;
       File_list        m_files;
 
-      gengetopt_args_info m_args_info;    
+      dgd_gengetopt_args_info m_args_info;    
 };
 
 }; // end of namespace DGD
