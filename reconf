@@ -1,0 +1,6 @@
+#!/bin/sh
+
+unset QTDIR
+
+autoconf
+./configure --with-msvc --without-pch --enable-debug --with-cvs="cvs.exe"

@@ -98,12 +98,54 @@ you are rarely interested in its debug output. So, you want to be able either:</
 <h2>Thoughts on design of channels.</h2>
 <p>Every channel must have a name. The name is hardcoded, it is user 
 responsibility to choose right channel names.</p>
-<p>There must be an object called file which can do following:</p>
-<p>File file;</p>
-<p>file.add( Channel(&quot;a&quot;) );</p>
-<p>file.add( Channel(&quot;b&quot;) );</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p>Thre must to be a channel factory, creating and managing all channels. There 
+must be a current channel in the factory. There must to be default destination 
+which is memory buffer.</p>
+<p>Ok, here is the picture of code:</p>
+<code>
+Debug dout;<br>
+File *file1 = dout.create_file(&quot;out1.log&quot;), <br>
+&nbsp;&nbsp;&nbsp;&nbsp; *file2 = dout.create_file(&quot;out2.log&quot;);<br>
+Mem_buffer *memory = dout.create_memory_buffer();<br>
+<br>
+Text_channel *a = dout.create_text_channel(&quot;a&quot;);<br>
+Html_channel *b = dout.create_html_channel(&quot;b&quot;);<br>
+Html_channel *c = dout.create_html_channel(&quot;c&quot;);<br>
+<br>
+file1.add( a );<br>
+file1.add( b ); <br>
+<br>
+file2.add( b );<br>
+file2.add( c );</code><p><code>memory.add( a );<br>
+<br>
+</code>
+Now, somewhere in the middle of the algorithm:</p>
+
+<code>DGD( dout[&quot;a&quot;], &quot;Hello world&quot; &lt;&lt; endl );<br>
+DGD( dout[&quot;b&quot;], 123 &lt;&lt; &quot;some string&quot; &lt;&lt; endl );<br>
+DGD( dout, 333.033 &lt;&lt; endl ); // This will go into current channel<br>
+<br>
+// The file out1.log will contain:<br>
+// Hello world<br>
+// 123some string<br>
+<br>
+// The file out2.log<br>
+// 123some string<br>
+<br>
+// memory buffer will contain<br>
+// Hello world<br>
+<br>
+// default memory buffer will contain<br>
+// 333.03</code>
+<p>Note that it is upon application to define channels and files, their amount 
+and logic. Simple mechanism for selecting channels will be used, based on 
+regular expressions on channel names. For example:</p>
+<p>myapp --enable-debug=debug.log --debug-channels='(kern.*| main)'</p>
+<p>This will create main log file called debug.log and enable all channels 
+beginning with kern and main channel</p>
+<hr>
+<p>Last edited:
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d-%m-%y %I:%M:%S %p %Z" startspan -->16-08-02 02:18:50 AM +0200<!--webbot bot="Timestamp" endspan i-checksum="38885" --></p>
 
 </body>
 
