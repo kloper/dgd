@@ -90,7 +90,7 @@ clean: $(SUBDIRS)
 depend: .depend $(SUBDIRS)
 
 .depend: ${patsubst %.cpp, src/%.cpp, $(CPPFILES)}
-	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src%$(BUILDDIR)%' > $@ 
+	$(MAKEDEPEND) $(LOCALINCLUDES) $(DGDINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src/%%' > $@ 
 
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status
@@ -102,7 +102,7 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 
 $(TARGET): $(OBJECTS) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
-	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}  $(LDOUTOPT)$(BUILDDIR)/$@
+	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}  $(LDOUTOPT)$(BUILDDIR)/$@
 else
 	$(CXX) $(LDFLAGS)  ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif

@@ -72,9 +72,11 @@ HEADERS =
 CPPFILES = \
 dgChannel.cpp \
 dgChannelBuf.cpp \
+dgFunnel.cpp \
 dgDebug.cpp \
 dgDebugOpt.cpp \
-dgOptionFilter.cpp
+dgOptionFilter.cpp \
+dgMultifileLog.cpp
 
 GGEFILES = \
 dgDebugOpt.gge
@@ -110,7 +112,7 @@ clean: $(SUBDIRS)
 depend: .depend $(SUBDIRS)
 
 .depend:${patsubst %.cpp, src/%.cpp, $(CPPFILES)}
-	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src%$(BUILDDIR)%' > $@ 
+	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.$(OBJEXT) -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src/%%' > $@ 
 
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status

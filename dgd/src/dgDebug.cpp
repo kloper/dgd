@@ -287,6 +287,21 @@ stream Debug::create_file( const std::string& name ) {
 }
 
 /**
+ * Append a file stream to the stream list. This one is used when the
+ * application must create the stream by itself. Note that the stream
+ * will be deallocated by the smart pointer.
+ */
+stream Debug::append_file( const stream& file ) {
+   if( file.get() == NULL ) {
+      return file;
+   }
+
+   m_files.push_back( file );
+   return file;
+}
+
+
+/**
  * Return main file stream
  */
 stream Debug::main_file() const {

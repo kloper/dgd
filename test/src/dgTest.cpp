@@ -27,6 +27,7 @@
 #include <dgDebug.h>
 #include <dgDebugStd.h>
 #include <dgOptionFilter.h>
+#include <dgMultifileLog.h>
 
 using namespace std;
 using namespace DGD;
@@ -168,15 +169,34 @@ void empty_test( channel& debug ) {
 void tie_test( Debug::debug_factory_ref& dout) {
    stream s = dout->create_file( "tie_test.log" );
 
-   DGD::channel& base_channel = dout->create_channel( "base_channel" );
-   DGD::channel& tie_channel = dout->create_channel( "tie_channel" );
+   stream funnel( new DGD::funnel( *s ) );
+   dout->append_file( funnel );
 
-   assoc( s.get(), base_channel );
-   assoc( &base_channel, tie_channel );
+   DGD::channel& a_channel = dout->create_channel( "a_channel" );
+   DGD::channel& b_channel = dout->create_channel( "b_channel" ); 
 
-   manip_test( base_channel );
-   base_channel << incr << incr;
-   manip_test( tie_channel );
+   assoc( funnel.get(), a_channel );
+   assoc( funnel.get(), b_channel );
+
+   manip_test( a_channel );
+   a_channel << incr << incr << "hello hello world " ;
+   a_channel.flush();
+   manip_test( b_channel );
+}
+
+DGD::multifile_log::Split_by_size skip_by_size( 3000 );
+DGD::multifile_log::Split_by_lines skip_by_lines( 10 );
+
+void multifile_log_test( Debug::debug_factory_ref& dout) {   
+   stream file = 
+      dout->append_file( stream( new DGD::multifile_log( "multifile.log", 
+							 &skip_by_lines ) ) );
+
+   DGD::channel& m_channel = dout->create_channel( "m_channel" );
+
+   assoc( file.get(), m_channel );
+
+   manip_test( m_channel );
 }
 
 class My_class {
@@ -231,6 +251,7 @@ int main( int argc, char** argv ) {
    overload_test( *dgd_channel(main) );
    pointers_test( *dgd_channel(main) );
    tie_test( dout );
+   multifile_log_test( dout );
 
    return 0;
 }

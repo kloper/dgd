@@ -178,7 +178,7 @@ struct dgd_reference {
  */
 template <class T> 
 inline dgd_reference<T> mem_ref( const T* const p,
-				 const bool use_as_void = false,
+				 const bool use_as_void = true,
 				 const unsigned int size = 0 ) {
    return dgd_reference<T>(p, use_as_void, size);
 }
@@ -192,7 +192,7 @@ inline dgd_reference<T> mem_ref( const T* const p,
 template <class T> 
 inline dgd_reference<T> mem( const T* const p,
 			     const unsigned int size = sizeof(T),
-			     const bool use_as_void = false ) {
+			     const bool use_as_void = true ) {
    return dgd_reference<T>(p, use_as_void, size);
 }
 

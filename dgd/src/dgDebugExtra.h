@@ -66,7 +66,7 @@
 #define dgd_trace(name, arg) \
 if(DGD::Debug::debug_factory) { \
   DGD::Debug::channel_ptr __cnl = dgd_channel(name); \
-  __cnl.get() && __cnl->is_open() && ((*__cnl) << arg ); \
+  (void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << arg ) ); \
 }
 #else 
 #define dgd_trace(name, arg)
@@ -86,7 +86,7 @@ if(DGD::Debug::debug_factory) { \
 #define dgd_start_scope(c, text) \
 DGD::Debug::channel_ptr __cnl(NULL); \
 if(DGD::Debug::debug_factory) __cnl = dgd_channel(c); \
-__cnl.get() && __cnl->is_open() && ((*__cnl) << text << " {" << std::endl << DGD::incr)
+(void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << text << " {" << std::endl << DGD::incr) )
 #else
 #define dgd_start_scope(c, text) 
 #endif
@@ -99,7 +99,7 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << text << " {" << std::endl << DGD
  */
 #if defined(_TRACE)
 #define dgd_scope(c, text) \
-__cnl.get() && __cnl->is_open() && ((*__cnl) << text <<  " {" << std::endl << DGD::incr)
+(void) (__cnl.get() && __cnl->is_open() && ((*__cnl) << text <<  " {" << std::endl << DGD::incr) )
 #else
 #define dgd_scope(c, text)
 #endif
@@ -113,7 +113,7 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << text <<  " {" << std::endl << DG
  */
 #if defined(_TRACE) 
 #define dgd_echo( text ) \
-__cnl.get() && __cnl->is_open() && ((*__cnl) << text)
+(void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << text) )
 #else
 #define dgd_echo( text )
 #endif
@@ -123,7 +123,7 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << text)
  */
 #if defined(_TRACE)
 #define dgd_end_scope(c) \
-__cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr << "}" << std::endl)
+(void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr << "}" << std::endl) )
 #else 
 #define dgd_end_scope(c)
 #endif
@@ -133,7 +133,7 @@ __cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr << "}" << std::endl)
  */
 #if defined(_TRACE)
 #define dgd_end_scope_text(c, text) \
-__cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr<< text << "}" << std::endl)
+(void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << DGD::decr<< text << "}" << std::endl) )
 #else 
 #define dgd_end_scope_text(c, text)
 #endif

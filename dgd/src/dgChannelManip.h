@@ -190,13 +190,13 @@ const channel_manip_void decr = channel_manip_void( &channel::decr_indent );
  * actually call std::ostream's operator instead DGD::channel's one:
  * @code
  * Int a(0xFF);
- * channel debug;
+ * channel debug(...);
  * debug << "a = " << a << ednl; // This will print 256 instead of FF
  * @endcode
  * You are invited to guess why does this happen.
  * Here comes DGD::dgd. 
  * @code
- * debug << "a = " << DGD::dgd << a << ednl; // works well!
+ * debug << "a = " << DGD::dgd << a << endl; // works well!
  * @endcode
  * It does not affect the stream, but explicitly returns reference to
  * DGD::channel, thus ensuring the right operator call.

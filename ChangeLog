@@ -1,4 +1,144 @@
+2002-12-09  dimka
+	* INSTALL:
+	* Makefile:
+	* NEWS:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgChannelManip.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebug.h:
+	* dgd/src/dgDebugExtra.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgDebugStd.h:
+	* dgd/src/dgFunnel.cpp:
+	* dgd/src/dgFunnel.h:
+	* dgd/src/dgMultifileLog.cpp:
+	* dgd/src/dgMultifileLog.h:
+	* doc/Makefile:
+	* doc/dgd_todo.html:
+	* doc/doxygen/dgd.doxy:
+	* doc/html/dgd.wmk:
+	* doc/html/doxygen_html.wmk:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* samples/Makefile:
+	* test/Makefile:
+	* test/Makefile.in:
+	* test/src/dgTest.cpp:
+		More documentation.
+		Minor interface changes/additions.
+		Funnels and multifile logs.
+		Fixed build depenency generation.
+
+2002-11-30  dimka
+	* test/src/dgTest.cpp:
+		Test of tieing of two channels
+
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/Makefile:
+	* doc/doxygen/dgd.doxy:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+	* util/bin/mkdis:
+		Added documentation, samples.
+		Added another assoc().
+		Tested possibility of tieing channels.
+
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+		New assoc() function.
+		More documentation.
+
+	* samples/Makefile:
+	* samples/Makefile.in:
+	* samples/src/mult_assoc.cpp:
+		Example of assoc()
+
+	* doc/html/dgd.wmk:
+	* doc/html/dgd.wmk.in:
+	* doc/html/doxygen_html.wmk:
+		Tutorial started
+
+2002-11-24  dimka
+	* samples/Makefile:
+	* samples/Makefile.in:
+	* samples/src/formatting.cpp:
+	* samples/src/stand_alone_channelbuf.cpp:
+		Added samples subdir for tutorial samples
+
+	* Makefile:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* doc/Makefile:
+	* getopt/Makefile:
+	* reconf:
+	* regex/Makefile:
+	* test/Makefile:
+		Fixed release build
+
+	* doc/doxygen/dgd.doxy:
+	* doc/doxygen/dgd.doxy.in:
+	* doc/html/dgd.wmk:
+		Nothing important
+
+	* INSTALL:
+	* NEWS:
+		Updated documentation
+
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* test/src/dgTest.cpp:
+		Changed interface of assoc functions.
+		More documentation
+
+	* doc/dgd_faq.html:
+	* doc/dgd_todo.html:
+	* doc/html/doxygen_html.wmk:
+		Updated documentation.
+
 2002-11-01  dimka
+	* Makefile:
+	* NEWS:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/Makefile:
+	* doc/doxygen/dgd.doxy:
+	* doc/html/dgd.wmk:
+	* doc/html/doxygen_html.wmk:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+	* util/bin/mkdis:
+		reconf
+
+	* NEWS:
+	* doc/html/doxygen_html.wmk:
+		Updated documentation
+
 	* INSTALL:
 	* Makefile:
 	* NEWS:

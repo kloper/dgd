@@ -31,13 +31,15 @@ directory and run it with the appropriate option. If configure does not work,
 emitting strange errors - use util/bin/unixify script to get rid of windoze
 EOLs.
 
-On Windows building process is different then building usual Win32 libraries. 
-DGD uses GNU build tools and VC++. You need to install cygwin package
-(http://www.cygwin.com) and Visual Studio. 
+On Windows the primary building process is different then building
+usual Win32 libraries. DGD uses GNU build tools and VC++. You need to
+install cygwin package (http://www.cygwin.com) and Visual Studio. 
+There are Visual Studio project files in 'msvc-prj' directory, but
+they will be updated only for stable versions.
 
 The following steps are required to build DGD:
 
- 1. Download and open C++ boost and STLPort libraries.
+ 1. Download and build C++ boost and (optionally) STLPort libraries.
  2. Download DGD distribution (dgd-XXX.tar.gz from
     http://sourceforge.net/projects/dgd, here XXX refers to the package
     version). 

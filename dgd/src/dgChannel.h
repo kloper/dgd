@@ -177,6 +177,7 @@ class channel: public std::ostream {
       bool m_is_open;
       std::string m_name;
       channelbuf m_buffer;
+      channelbuf m_tmp_buffer;
 };
 
 void assoc( std::ostream* s, channel& channel );

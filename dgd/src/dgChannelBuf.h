@@ -115,6 +115,8 @@ class channelbuf: public std::streambuf {
       virtual void propagate( const char_type ch,
 			      std::streamsize size );
 
+      virtual void post_process();
+
    public:
       enum DefaultValues { 
 	 DefaultBufferSize = 100,
@@ -128,6 +130,9 @@ class channelbuf: public std::streambuf {
       ~channelbuf();
 
       void         assoc( std::ostream* );
+      bool         dassoc( std::ostream* );
+      void         dassoc( );
+
       unsigned int line() const;
       unsigned int column() const;
 
@@ -152,6 +157,7 @@ class channelbuf: public std::streambuf {
       std::string  space_chars() const;
 
       position_type position() const;
+      unsigned long bytes_written() const;
 
 #if defined(_CYGWIN) && !defined(_STLPORT)
       Parent* pubsetbuf(char_type* b, std::streamsize s) {
@@ -176,6 +182,7 @@ class channelbuf: public std::streambuf {
       bool         m_word_wrap;
       const char_type* m_word_pos;
       std::string  m_spaces;
+      unsigned long m_bytes;
 };
 
 };

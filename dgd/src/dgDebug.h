@@ -40,6 +40,7 @@
 
 #include "dgConfig.h"
 #include "dgChannel.h"
+#include "dgFunnel.h"
 #include "dgChannelManip.h"
 #include "dgDebugExtra.h"
 #include "dgDebugStd.h"
@@ -101,7 +102,8 @@ class Debug {
       ~Debug();
 
       void process_options( int argc, char** argv );
-      stream create_file( const std::string& name );
+      stream create_file ( const std::string& name );
+      stream append_file ( const stream& file );
       stream main_file() const;
       channel& create_channel( const std::string& name );
       operator channel_ref () const;

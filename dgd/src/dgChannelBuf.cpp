@@ -75,7 +75,10 @@ int channelbuf::sync() {
       propagate( pbase(), pptr() );
       setp( pbase(), epptr() );
       m_word_pos = pbase();
+      m_column += pptr()-pbase();
    }
+
+   post_process();
 
    return 0;
 }
@@ -223,6 +226,8 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 
    } while( run_flag );
 
+   post_process();
+
    return 0;
 }
  
@@ -233,8 +238,10 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
  * character after the end!)
  */
 void channelbuf::propagate( const char_type* begin, const char_type* end ) {
+   unsigned long length = end-begin;
+   m_bytes += length;
    for( Assoc_list::iterator i = m_assoc.begin(); i != m_assoc.end(); ++i ) {
-      (*i)->write( begin, end-begin );
+      (*i)->write( begin, length );
    }
 }
 
@@ -244,12 +251,24 @@ void channelbuf::propagate( const char_type* begin, const char_type* end ) {
  * @param size - number of duplications.
  */
 void channelbuf::propagate( const char_type ch, std::streamsize size ) {
+   m_bytes += size;
    for( Assoc_list::iterator i = m_assoc.begin(); i != m_assoc.end(); ++i ) {
       for( int x = 0; x < size; ++x )
 	 (*i)->write( &ch, 1 );
    }
 }
 
+/**
+ * This is a virtual callback. This function is called every time overflow() or
+ * sync() finished their work, so the channelbuf is in consistent state. 
+ * Subclasses can overload this function in order to add functionality.
+ *
+ * @see overflow()
+ * @see sync()
+ */
+void channelbuf::post_process() {
+}
+ 
 /**
  * Default constructor 
  */
@@ -264,7 +283,8 @@ channelbuf::channelbuf() :
    m_wrap( true ),
    m_word_wrap( true ),
    m_word_pos(NULL),
-   m_spaces( " \t" ) {
+   m_spaces( " \t" ),
+   m_bytes(0) {
 }
 
 /**
@@ -281,6 +301,34 @@ channelbuf::~channelbuf() {
  */
 void channelbuf::assoc( std::ostream* dgs ) {
    m_assoc.push_back( dgs );
+}
+
+/**
+ * Remove the specified stream from the association list. If there is a number 
+ * of same pointers on the list dassoc(std::ostream*) must be called again.
+ *
+ * @see assoc(std::ostream*)
+ * @see dassoc()
+ */
+bool channelbuf::dassoc( std::ostream* dgs ) {
+   Assoc_list::iterator stream_iter = std::find( m_assoc.begin(), 
+						 m_assoc.end(),
+						 dgs );
+   if( stream_iter != m_assoc.end() ) {      
+      m_assoc.erase( stream_iter );
+      return true;
+   }
+   return false;
+}
+
+/**
+ * Clean the association list.
+ *
+ * @see assoc(std::ostream*)
+ * @see dassoc(std::ostream*)
+ */
+void channelbuf::dassoc() {
+   m_assoc.clear();
 }
 
 /**
@@ -460,6 +508,13 @@ std::string channelbuf::space_chars() const {
  */
 channelbuf::position_type channelbuf::position() const {
    return position_type( m_line, m_column );
+}
+
+/**
+ * Return amount of bytes written to the output stream
+ */
+unsigned long channelbuf::bytes_written() const {
+   return m_bytes;
 }
 
 /**

@@ -45,8 +45,9 @@ channel::channel( const std::string& name ) :
    Parent( NULL ),
    m_is_open(false),
    m_name( name ) {
-   init( NULL );
+   init( &m_tmp_buffer );
    m_buffer.pubsetbuf( NULL, 100 );
+   m_tmp_buffer.pubsetbuf( NULL, 100 );
 }
 
 /**
@@ -57,7 +58,7 @@ channel::channel( const std::string& name ) :
  */
 void channel::open() {
    m_is_open = true;
-   init( &m_buffer );   
+   init( &m_buffer );
 }
 
 /**
@@ -65,7 +66,7 @@ void channel::open() {
  */
 void channel::close() {
    m_is_open = false;
-   init( NULL );
+   init( &m_tmp_buffer );
 }
 
 /**
@@ -329,6 +330,34 @@ void assoc( std::ostream* s, const std::string& name ) {
       }
    }
 }
+
+/**
+ * @page tutor_channel DGD Channels - Things you need to know
+ *
+ * DGD::channelbuf can't be used to make output. After all, it is
+ * derived from std::streambuf which is a kind of memory buffer. There
+ * must be a stream. The DGD::channel is such a stream.
+ *
+ * Everything which @ref tutor_formatting "was told about formatting" is
+ * also true for DGD::channel. If fact, it has all formatting-related
+ * methods as DGD::channelbuf has.
+ *
+ * There is a number of things which differ DGD::channel from
+ * std::ostream:
+ * <ul>
+ * <li> Channels are named. There is no default constructor. You must
+ * pass a name of the channel when creating it. 
+ * <li> Channels can be opened and closed. Closed channel makes no
+ * output. By default it is closed. Use DGD::channel::open() method to
+ * open the channel. There is also DGD::channel::is_open() and
+ * DGD::channel::operator bool() which return the status of the
+ * channel.
+ * <li> DGD::channel makes no physical output, just formatting. To
+ * achieve the output it must be associated with a physical stream
+ * such as std::cout. Use DGD::assoc() functions to 
+ * @ref tutor_assoc "make the association".
+ * </ul>
+ */
 
 /**
  * @page tutor_assoc DGD Channels - Ensuring real output

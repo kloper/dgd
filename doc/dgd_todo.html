@@ -103,8 +103,8 @@
       <td width="13%">Debug</td>
       <td width="12%">20/09/2002</td>
       <td width="50%">dgd_echo() and may be some other macros does not check the 
-      debug factory existence.</td>
-      <td width="10%">Open</td>
+      debug factory existence. <b><font color="#0000FF">Not Replicable</font></b></td>
+      <td width="10%">Closed</td>
     </tr>
     <tr>
       <td width="3%">3</td>
@@ -114,8 +114,11 @@
       <td width="50%">Writing from two channelbufs into the same file can 
       produce wrong results. This is because line/column info is kept in each 
       channelbuf separately. Need to turn stream into &lt;line,column&gt; pair keeper 
-      and update channelbuf value every overflow().</td>
-      <td width="10%">Open</td>
+      and update channelbuf value every overflow().<p><b><font color="#0000FF">
+      This problem is resolved by associating DGD channels with other ones. It 
+      it still possible to associate two channels with one stream, but it will 
+      produce incorrect results and is not recommended.</font></b></td>
+      <td width="10%">Closed</td>
     </tr>
     <tr>
       <td width="3%">4</td>
@@ -123,8 +126,19 @@
       <td width="13%">extra</td>
       <td width="12%">04/11/2002</td>
       <td width="50%">gcc -Wall prints warning on every dgd_* macro, need to get 
-      rid of this.</td>
-      <td width="10%">Open</td>
+      rid of this. <b><font color="#0000FF">Fixed</font></b></td>
+      <td width="10%">Closed</td>
+    </tr>
+    <tr>
+      <td width="3%">5</td>
+      <td width="11%">10</td>
+      <td width="13%">channel</td>
+      <td width="12%">08/12/2002</td>
+      <td width="50%">cygwin port failed when specified --debug-enable without 
+      turning on all channels.<p><font color="#0000FF"><b>The problem was in 
+      NULL channelbuf in DGD::channel. Fixed that to point to a temporary 
+      channelbuf.</b></font></td>
+      <td width="10%">Closed</td>
     </tr>
   </table>
   </center>
