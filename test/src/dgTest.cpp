@@ -133,6 +133,8 @@ void two_channels_test() {
    dgd_scope( dimka, "p = " );
    dgd_echo( p << endl );
    dgd_end_scope( dimka );
+   dgd_trace( pimka, "Hey ! I am Pimka !" << endl );
+   dgd_trace( pimka, "Hit me !" << endl );
    dgd_end_scope( dimka );
 }
 
@@ -143,16 +145,19 @@ int main( int argc, char** argv ) {
 //   Debug dout( argc, argv );
    Debug::debug_factory_ref dout = Debug::create_factory( argc, argv );
       
-   assoc( dout->create_file( "dimka.log" ),    
-	  dout->create_channel( "dimka" ) );
+   if( dout.get() == NULL )
+      return 1;
 
-   single_channel_test( dgd_channel(main) );
-   manip_test( dgd_channel(main) );
-   empty_test( dgd_channel(main) );
+   stream s = dout->create_file( "dimka.log" );
+
+   assoc( s, dout->create_channel( "dimka" ) );
+   assoc( s, dout->create_channel( "pimka" ) );
+   assoc( dout->main_file(), "dimka" );
+
+   single_channel_test( *dgd_channel(main) );
+   manip_test( *dgd_channel(main) );
+   empty_test( *dgd_channel(main) );
    two_channels_test();
-
-   int* x = NULL;
-   x[10] = 22;
 
    return 0;
 }

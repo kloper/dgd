@@ -46,25 +46,28 @@ class Debug {
    public:
       typedef channel& channel_ref;
       typedef boost::shared_ptr<Debug> debug_factory_ref;
+      typedef boost::shared_ptr<channel> channel_ptr;
 
    public:
-      Debug( int argc, char** argv );
+      Debug();
       ~Debug();
 
+      void process_options( int argc, char** argv );
       stream create_file( const std::string& name );
+      stream main_file() const;
       channel& create_channel( const std::string& name );
       operator channel_ref () const;
-      channel& operator[] ( const std::string& name );
+      channel_ptr operator[] ( const std::string& name );
       void current( const std::string& name );
-      channel& current() const;
+      channel_ptr current() const;
 
    public:
       static Debug* debug_factory;
+      static Debug* factory();
       static debug_factory_ref create_factory( int argc, char** argv );
 
    protected:
-      typedef boost::shared_ptr<channel> Channel_ptr;
-      typedef std::list< Channel_ptr > Channel_list;
+      typedef std::list< channel_ptr > Channel_list;
       typedef Channel_list::iterator Channel_iterator;
       typedef std::list< stream > File_list;
 
@@ -72,6 +75,7 @@ class Debug {
       Channel_list     m_channels;
       Channel_iterator m_current_channel;
       File_list        m_files;
+      stream           m_main_file;
 
       dgd_gengetopt_args_info m_args_info;    
 };

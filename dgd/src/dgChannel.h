@@ -45,6 +45,7 @@ class channel: public std::ostream {
       operator           bool () const;
       const std::string& name() const;
       channelbuf*      rdbuf() const;
+      channelbuf&      rdbuf();
       
       void         indent_step( unsigned int step );
       unsigned int indent_step() const;
@@ -73,6 +74,7 @@ class channel: public std::ostream {
 };
 
 void assoc( stream s, channel& channel );
+void assoc( stream s, const std::string& name );
 
 }; // end of namespace DGD
 

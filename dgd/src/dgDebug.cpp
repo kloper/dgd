@@ -22,6 +22,7 @@
 // dgDebug.cpp -- implementation for dgDebug.h
 //
 
+#include <boost/regex.hpp>
 
 #include "dgDebug.h"
 
@@ -30,27 +31,50 @@ namespace DGD {
 Debug* Debug::debug_factory = NULL;
 
 class bad_params: std::exception {
+      const char *m_what;
    public:
+
+      bad_params() : m_what( "bad command line argument" ) {}
+      bad_params( const char* s ) : m_what( s ) {}
+
       const char* what() const {
-	 return "bad command line argument";
+	 return m_what;
       }
 };
 
-Debug::Debug( int argc, char** argv ) {
+class debug_disabled: public std::exception {
+   public:
+      const char* what() const {
+	 return "debug is being disabled";
+      }
+};
+
+Debug::Debug() :
+   m_main_file( NULL ) 
+{
+   std::fill( (char*)&m_args_info, 
+	      (char*)&m_args_info + sizeof(m_args_info), 
+	      0 );
+
+   channel& main_channel = create_channel( "main" );
+   main_channel.open();   
+   m_current_channel = m_channels.begin();
+}
+
+void Debug::process_options( int argc, char** argv ) {
    if (dgd_cmdline_parser (argc, argv, &m_args_info) != 0) {
       throw bad_params();
    }
 
-   channel& main_channel = create_channel( "main" );
-   main_channel.open();
-
-   if( m_args_info.debug_file_given ) {
-      stream main_file = create_file( m_args_info.debug_file_arg );
-      assoc( main_file, main_channel );
+   if( m_args_info.debug_main_file_given ) {
+      m_main_file = create_file( m_args_info.debug_main_file_arg );
+      assoc( m_main_file, **m_current_channel );
    }
-   
-   m_current_channel = m_channels.begin();
+
+   if( !m_args_info.debug_enable_flag )
+      throw debug_disabled();
 }
+
 
 Debug::~Debug() {
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i ) 
@@ -60,7 +84,7 @@ Debug::~Debug() {
 }
 
 channel& Debug::create_channel( const std::string& name ) {
-   Channel_ptr chnl;
+   channel_ptr chnl;
 
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i ) 
       if( (*i)->name() == name )
@@ -84,6 +108,31 @@ channel& Debug::create_channel( const std::string& name ) {
    if( m_args_info.debug_space_characters_given ) 
       chnl->space_chars( m_args_info.debug_space_characters_arg );
 
+   if( m_args_info.debug_turn_on_given ) {
+      try {
+	 boost::regex e( m_args_info.debug_turn_on_arg );
+	 if( boost::regex_match( name, e ) ) {
+	    chnl->open();
+	 }
+      } catch( boost::bad_expression& ) {
+	 throw bad_params( "bad regular expression" );
+      }
+   }
+
+   if( m_args_info.debug_turn_off_given ) {
+      try {
+	 boost::regex e( m_args_info.debug_turn_off_arg );
+	 if( boost::regex_match( name, e ) ) {
+	    chnl->close();
+	 }
+      } catch( boost::bad_expression& ) {
+	 throw bad_params( "bad regular expression" );
+      }
+   }
+
+   if( m_args_info.debug_space_characters_given ) 
+      chnl->space_chars( m_args_info.debug_space_characters_arg );
+
    m_channels.push_back( chnl );
 
    return *chnl;
@@ -100,15 +149,19 @@ stream Debug::create_file( const std::string& name ) {
    return new_file;
 }
 
+stream Debug::main_file() const {
+   return m_main_file;
+}
+
 Debug::operator Debug::channel_ref () const {
    return **m_current_channel;
 }
 
-channel& Debug::operator[] ( const std::string& name ) {
+Debug::channel_ptr Debug::operator[] ( const std::string& name ) {
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i )
       if( (*i)->name() == name )
-	 return **i;
-   return **m_current_channel;
+	 return *i;
+   return channel_ptr();
 }
 
 void Debug::current( const std::string& name ) {
@@ -117,8 +170,8 @@ void Debug::current( const std::string& name ) {
 	 m_current_channel = i;
 }
 
-channel& Debug::current() const {
-   return **m_current_channel;
+Debug::channel_ptr Debug::current() const {
+   return *m_current_channel;
 }
 
 Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
@@ -127,9 +180,13 @@ Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
    
    debug_factory_ref df;
    try {
-      debug_factory = new Debug( argc, argv );
+      debug_factory = new Debug();
       df.reset( debug_factory );
+      df->process_options( argc, argv );
    } catch( bad_params& ) {
+      debug_factory = NULL;
+      df.reset( NULL );
+   } catch( debug_disabled& ) {
       debug_factory = NULL;
       df.reset( NULL );
    }
@@ -137,6 +194,9 @@ Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
    return df;
 }
 
+Debug* Debug::factory() {
+   return Debug::debug_factory;
+}
 
 }; // end of namespace DGD
 

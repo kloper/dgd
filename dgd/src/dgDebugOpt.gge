@@ -1,9 +1,12 @@
 #opt   long name    short  help                                 type   required
 #---   ---------    -----  ------                               ----   --------
-option "debug-file" d           "Debug output file"                   string no
-option "debug-min-width"  m     "Default minimum output width"        int    no
-option "debug-max-width"  M     "Default maximum output width"        int    no
-option "debug-indent-step" s    "Default indent step"                 int    no
-option "debug-allow-wrap" w     "Allow character wrap by default"     flag   on
-option "debug-allow-word-wrap" W "Allow word wrap by default"         flag   on
+option "debug-enable" -         "Enable debug"                        flag  off
+option "debug-main-file" -      "Primary debug output file"           string no
+option "debug-min-width"  -     "Default minimum output width"        int    no
+option "debug-max-width"  -     "Default maximum output width"        int    no
+option "debug-indent-step" -    "Default indent step"                 int    no
+option "debug-allow-wrap" -     "Allow character wrap by default"     flag   on
+option "debug-allow-word-wrap" - "Allow word wrap by default"         flag   on
 option "debug-space-characters" - "Characters separating words"       string no
+option "debug-turn-on" -        "Regexp on channels to turn on"       string no
+option "debug-turn-off" -        "Regexp on channels to turn off"     string no

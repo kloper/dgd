@@ -22,6 +22,7 @@
 // dgChannel.cpp -- implementation for dgChannel.h
 //
 
+#include "dgDebug.h"
 #include "dgChannel.h"
 
 namespace DGD {
@@ -58,6 +59,10 @@ const std::string& channel::name() const {
 
 channelbuf* channel::rdbuf() const {
    return (m_is_open? (channelbuf*)&m_buffer : NULL );
+}
+
+channelbuf& channel::rdbuf() {
+   return m_buffer;
 }
 
 void channel::indent_step( unsigned int step ) {
@@ -126,10 +131,21 @@ std::string channel::space_chars() const {
 }
 
 void assoc( stream s, channel& channel ) {
-   channel.open();
+   if( s.get() != NULL ) {
+      channelbuf& buf = channel.rdbuf();
+      buf.assoc( s );
+   }
+}
 
-   channelbuf *buf = channel.rdbuf();
-   buf->assoc( s );
+void assoc( stream s, const std::string& name ) {
+   Debug* factory = Debug::factory();
+   if( factory != NULL ) {
+      Debug::channel_ptr c = factory->operator[]( name );
+      if( c.get() != NULL && s.get() != NULL ) {
+	 channelbuf& buf = c->rdbuf();
+	 buf.assoc( s );
+      }
+   }
 }
 
 }; // end of namespace DGD
