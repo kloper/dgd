@@ -43,7 +43,42 @@
  *
  * @param s any expression
  */
-#define dgd_expand(s) #s " = " << dgd << (s)
+#define dgd_expand(s) #s " = " << DGD::dgd << (s)
+
+/**
+ * Expands into expression which is able to dump a sequence denoted 
+ * by iterators b and e. All elements of the dumped sequence are separated by
+ * spaces. 
+ * Iterators b and e must be of same type and the value type of the sequence
+ * must have operator << ().
+ */
+#define dgd_for(b,e) DGD::dgd << DGD::dgd_make_sequence((b),(e))
+
+/**
+ * Expands into expression which is able to dump a sequence denoted 
+ * by iterators b and e. All elements of the dumped sequence are separated by
+ * string s. 
+ * Iterators b and e must be of same type and the value type of the sequence
+ * must have operator << ().
+ */
+#define dgd_fors(b,e,s) DGD::dgd << DGD::dgd_make_sequence((b),(e),(s))
+
+/**
+ * Expands into expression which is able to dump a circle denoted 
+ * by circulator b. All elements of the dumped circle are separated by
+ * spaces. 
+ * The value type of the circle must have operator << ().
+ */
+#define dgd_do(b) DGD::dgd << DGD::dgd_make_circle((b))
+
+/**
+ * Expands into expression which is able to dump a circle denoted 
+ * by circulator b. All elements of the dumped circle are separated by
+ * s. 
+ * The value type of the circle must have operator << ().
+ */
+#define dgd_dos(b,s) DGD::dgd << DGD::dgd_make_circle((b),(s))
+   
 
 /**
  * Expands into channel pointer given channel name.

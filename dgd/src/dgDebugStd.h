@@ -37,6 +37,7 @@
 #include <typeinfo>
 
 #include "dgConfig.h"
+#include "dgBoost.h"
 #include "dgDebug.h"
 
 namespace DGD {
@@ -136,6 +137,122 @@ inline channel& operator << ( channel& cnl,
    }
    cnl << decr << "}";
    return cnl;
+}
+
+/**
+ * Copy a sequence denoted by begin and end iterators into
+ * DGD::channel. This function is similar to std::copy() but accepts
+ * DGD::channel as the output parameter.  It is important that begin
+ * and end iterators are set to the same sequence and their value_type
+ * has operator<<() compatible with DGD::channel.
+ *
+ * @param begin sequence starting iterator
+ * @param end sequence end iterator 
+ * @param ch destination channel
+ * @param sep separator string
+ * @return reference to the output DGD::channel
+ */
+template <class InputIter>
+channel &dgd_copy( InputIter begin, InputIter end,  
+		   channel &ch, const char* sep = NULL ) {
+   typedef boost::pointee<InputIter>::type value_type;
+   std::copy( begin, end, 
+	      std::ostream_iterator<value_type>( ch, (sep ? sep : " ") ) );
+   return ch;
+}
+
+/**
+ * Copy a sequence denoted by begin circulator into DGD::channel.
+ * This function assumes that circulator returns to the self value after 
+ * finite number of steps. It is important that its value_type has operator<<()
+ * compatible with DGD::channel.
+ *
+ * @param begin circulator
+ * @param ch destination channel
+ * @param sep separator string
+ * @return reference to the output DGD::channel
+ */
+template <class Circulator>
+channel &dgd_copy( Circulator begin,  channel &ch, const char* sep = NULL ) {
+   Circulator circ = begin;
+   do {
+      ch << *circ++ << (sep ? sep : " ");
+   } while( begin != circ );
+   return ch;
+}
+
+/** 
+ * Sequence denoted by begin and end iterators. This class is used to print
+ * sequences such as arrays and lists easily, using a single dgd_echo() 
+ * statement.
+ */
+template <class Iterator>
+struct dgd_sequence {
+      Iterator    m_begin;
+      Iterator    m_end;
+      const char* m_separator;
+
+      dgd_sequence( const Iterator& begin, 
+		    const Iterator& end,
+		    const char* separator = " " ) : 
+	 m_begin(begin), m_end(end), m_separator(separator) {}
+      dgd_sequence( const dgd_sequence<Iterator>& peer ) :
+	 m_begin(peer.m_begin), m_end(peer.m_end), 
+	 m_separator(peer.m_separator) {}
+};
+
+/** 
+ * Circle denoted by circulator. This class is used to print
+ * subsequences which are referenced by circulators, using a single dgd_echo() 
+ * statement.
+ */
+template <class Circulator>
+struct dgd_circle {
+      Circulator    m_begin;
+      const char* m_separator;
+
+      dgd_circle( const Circulator& begin, 
+		  const char* separator = " " ) : 
+	 m_begin(begin), m_separator(separator) {}
+      dgd_circle( const dgd_circle<Circulator>& peer ) :
+	 m_begin(peer.m_begin), m_separator(peer.m_separator) {}
+};
+
+/** 
+ * Factory for creating dgd_sequence() objects
+ */
+template <class Iterator>
+dgd_sequence<Iterator> dgd_make_sequence( const Iterator& begin, 
+					  const Iterator& end,
+					  const char* separator = " " ) {
+   return dgd_sequence<Iterator>( begin, end, separator );
+}
+
+/** 
+ * Factory for creating dgd_circle() objects
+ */
+template <class Circulator>
+dgd_circle<Circulator> dgd_make_circle( const Circulator& begin, 
+					  const char* separator = " " ) {
+   return dgd_circle<Circulator>( begin, separator );
+}
+
+/**
+ * Output operator for DGD::dgd_sequence.
+ */
+template <class Iterator>
+inline channel& operator << ( channel& cnl, 
+			      const dgd_sequence<Iterator>& seq ) {
+   return dgd_copy( seq.m_begin, seq.m_end, cnl, seq.m_separator );
+}
+
+/**
+ * Output operator for DGD::dgd_circle.
+ */
+template <class Circulator>
+inline channel& operator << ( channel& cnl, 
+			      const dgd_circle<Circulator>& circle ) {
+   return dgd_copy( circle.m_begin, cnl, circle.m_separator );
 }
 
 /**
@@ -252,6 +369,7 @@ inline std::ostream& operator << ( std::ostream& cnl,
    cnl.flags( flags );
    return cnl;
 }
+
 }; // end of namespace DGD
 
 #endif /* _dgDebugStd_h_ */

@@ -36,7 +36,7 @@
 #if defined(HAVE_GNU_REGEXP)
 #include <regular_expression.h>
 #else 
-#include <boost/regex.hpp>
+#include "dgBoost.h"
 #endif
 
 #include "dgOptionFilter.h"
