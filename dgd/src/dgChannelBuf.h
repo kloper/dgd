@@ -36,8 +36,6 @@
 #include <list>
 #include <string>
 
-#include "dgStream.h"
-
 namespace DGD {
 
 /**

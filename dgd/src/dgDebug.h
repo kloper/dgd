@@ -39,6 +39,7 @@
 #include <boost/smart_ptr.hpp>
 
 #include "dgConfig.h"
+#include "dgStream.h"
 #include "dgChannel.h"
 #include "dgFunnel.h"
 #include "dgChannelManip.h"

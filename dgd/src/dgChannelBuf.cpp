@@ -28,6 +28,8 @@
  * implementation of DGD::channelbuf
  */
 
+#include <algorithm>
+
 #include "dgConfig.h"
 
 #include "dgChannelBuf.h"
