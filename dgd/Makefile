@@ -17,7 +17,7 @@
 #
 # This file is part of Depression Glass library.
 #
-# Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
+# Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
 # Makefile.in -- template for a DGPhrase Makefile 
 #
@@ -27,8 +27,8 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/./../STLport-4.5
-BOOSTDIR   = $(top_srcdir)/./../boost
+STLDIR     = $(top_srcdir)/.
+BOOSTDIR   = $(top_srcdir)/./../boost_1_26_0
 BUILDDIR   = $(srcdir)/Debug
 
 VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
@@ -38,17 +38,17 @@ MV  = mv
 CAT = cat
 SED = sed
 MKDIR = mkdir -p
-CXX = cl
-LD  = link
+CXX = g++
+LD  = ld
 AR  = ar
 RANLIB = ranlib
 MAKEDEPEND = makedepend
 GENGETOPT  = gengetopt
 
-CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-LDOUTOPT = /out:
-COUTOPT  = -Fo
+CXXFLAGS =  -Wall -g
+LDFLAGS  =   -g
+LDOUTOPT = -o
+COUTOPT  = -o
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) $(BOOSTINCLUDES) \
 $(GETOPTINCLUDES) $(REGEXINCLUDES)
 LOCALINCLUDES = -I. -I.. -I$(top_srcdir) 
@@ -56,11 +56,11 @@ STLINCLUDES   = -I $(STLDIR)/stlport
 BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I$(top_srcdir)/getopt/src
 REGEXINCLUDES = -I$(top_srcdir)/regex/src
-DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
+DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
 BOOSTDEFINES =
 
-LIBEXT = lib
-OBJEXT = obj
+LIBEXT = a
+OBJEXT = o
 
 SUBDIRS = 
 TARGET = dgd.$(LIBEXT)

@@ -17,7 +17,7 @@
 //
 // This file is part of Depression Glass library.
 //
-// Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il> . 
+// Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net> . 
 //
 // vmcConfig.h -- config stuff for DGD
 //
@@ -32,7 +32,7 @@
  * dgConfig.h.in 
  */
 
-#define DG_VERSION_STRING "dgd-0.25 Tue Apr 22 01:04:31  2003"
+#define DG_VERSION_STRING "dgd-0.25 Sun Jun 29 00:13:38 IDT 2003"
 
 #endif /* _dgConfig_h_ */
 

@@ -18,7 +18,7 @@
 //
 // This file is part of Depression Glass library.
 //
-// Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il> . 
+// Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net> . 
 //
 // dgOptionFilter.h -- simple class which can separate command line 
 //                     options into sets

@@ -17,7 +17,7 @@
 #
 # This file is part of Depression Glass library.
 #
-# Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
+# Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
 # Makefile.in -- template for a root Makefile 
 #
@@ -29,7 +29,7 @@ srcdir = .
 top_srcdir = .
 
 RM= rm -f
-ETAGS = etags
+ETAGS = echo
 
 SUBDIRS = getopt regex dgd test
 

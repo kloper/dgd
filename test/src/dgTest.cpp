@@ -17,7 +17,7 @@
 //
 // This file is part of Depression Glass library.
 //
-// Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il> . 
+// Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net> . 
 //
 // dgTest.cpp -- test for DGD
 //
@@ -260,7 +260,7 @@ int main( int argc, char** argv ) {
    pointers_test( *dgd_channel(main) );
    tie_test( dout );
    multifile_log_test( dout );
-   bad_stream_test( cout );
+//   bad_stream_test( cout );
    bad_stream_test( *dgd_channel(main) );
 
    return 0;

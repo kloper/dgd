@@ -1,6 +1,6 @@
 // This file is part of Depression Glass library.
 //
-// Copyright (c) 2003. Dimitry Kloper <dimka@cs.technion.ac.il> . 
+// Copyright (c) 2003. Dimitry Kloper <kloper@users.sf.net> . 
 //
 // list_of_lists.cpp -- simple example of DGD usage
 //

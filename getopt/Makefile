@@ -17,7 +17,7 @@
 #
 # This file is part of Depression Glass library.
 #
-# Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
+# Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
 # Makefile.in -- template for a getopt library Makefile 
 #
@@ -33,18 +33,18 @@ VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = cl
-LD  = link
+CC = gcc
+LD  = ld
 AR  = ar
 RANLIB = ranlib
-CFLAGS =  -nologo -W3 -GR -GX -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-LDOUTOPT = /out:
-COUTOPT  = -Fo
+CFLAGS =  -Wall
+LDFLAGS  =   -g
+LDOUTOPT = -o
+COUTOPT  = -o
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
-LIBEXT = lib
-OBJEXT = obj
+LIBEXT = a
+OBJEXT = o
 
 SUBDIRS =
 TARGETS = getopt.$(LIBEXT)

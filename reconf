@@ -14,7 +14,7 @@ case "$1" in
 *cyg* | *CYG*) 
 ./configure $debug --without-stlport --with-cvs="cvs.exe" PERL="/d/perl/bin/perl.exe" DOXYGEN="/c/Progra~1/doxygen/bin/doxygen.exe" ;;
 *unix* | *UNIX* | *linux* | *LINUX*)
-./configure $debug --without-stlport --with-cvs="cvs" ;;
+./configure $debug --without-stlport --without-msvc --with-cvs="cvs" ;;
 *)
 ./configure --with-msvc --without-pch $debug --with-cvs="cvs.exe" PERL="/d/perl/bin/perl.exe" DOXYGEN="/c/Progra~1/doxygen/bin/doxygen.exe" ;;
 esac

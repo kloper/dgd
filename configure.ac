@@ -18,12 +18,12 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl This file is part of Depression Glass library. 
 dnl
-dnl Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
+dnl Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 dnl
 dnl configure.ac -- templeate for configure script for autoconf
 dnl
 
-AC_INIT(dgd, 1.0, dimka@cs.technion.ac.il)
+AC_INIT()
 AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR(dgd/src/dgConfig.h.in)
 
@@ -74,7 +74,15 @@ fi
 if test $win32 = 1; then 
   AC_ARG_WITH(msvc, 
               AC_HELP_STRING([--with-msvc],
-                             [use MS VC++ as compiler/linker]),,)
+                             [use MS VC++ as compiler/linker]),
+if test "X$with_msvc" != "Xno"; then
+   if test "X$withval" != "X"; then
+      with_msvc=$withval
+   fi
+fi
+,
+with_msvc=yes
+)
 
   if test "x$with_msvc" = "xyes"; then 
      AC_ARG_WITH(pch, 

@@ -17,7 +17,7 @@
 #
 # This file is part of Depression Glass library.
 
-# Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
+# Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
 # Makefile.in -- template for a VMC comand line Makefile 
 #
@@ -27,24 +27,24 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/./../STLport-4.5
-BOOSTDIR   = $(top_srcdir)/./../boost
+STLDIR     = $(top_srcdir)/.
+BOOSTDIR   = $(top_srcdir)/./../boost_1_26_0
 BUILDDIR   = $(srcdir)/Debug
 
 RM = rm -f
 MV = mv
 MKDIR = mkdir -p
-CXX = cl
-LD  = link
+CXX = g++
+LD  = ld
 MAKEDEPEND = makedepend
 SED = sed
 
-CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
-EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
-LDLIBS = getopt.lib regex.lib dgd.lib
-LDOUTOPT = /out:
-COUTOPT  = -Fo
+CXXFLAGS =   -Wall -g
+LDFLAGS  =   -g
+EXTRA_LDFLAGS =  
+LDLIBS = ../dgd/$(BUILDDIR)/dgd.a ../getopt/$(BUILDDIR)/getopt.a ../regex/$(BUILDDIR)/regex.a
+LDOUTOPT = -o
+COUTOPT  = -o
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) \
 $(BOOSTINCLUDES) $(GETOPTINCLUDES) $(DGDINCLUDES)
 LOCALINCLUDES = -I. -I.. -I../.. -I$(top_srcdir) 
@@ -53,11 +53,11 @@ BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I $(top_srcdir)/getopt/src
 DGDINCLUDES    = -I $(top_srcdir)/dgd/src
 
-DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_TRACE $(BOOSTDEFINES)
+DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1  -D_TRACE $(BOOSTDEFINES)
 
-LIBEXT = lib
-OBJEXT = obj
-EXEEXT = .exe
+LIBEXT = a
+OBJEXT = o
+EXEEXT = 
 
 BOOSTDEFINES =
 

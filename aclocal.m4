@@ -42,12 +42,12 @@ AC_MSG_CHECKING([package version in CVS...])
 DGD_VERSION="Unknown"
 if test "X$CVS" != "X"; then
    changequote((, ))
-   out=`$CVS log configure.ac 2>&1 | grep -m1 'dgd_[0-9_-]\+[a-zA-Z]*'`
-   v=`$CVS log configure.ac 2>&1 | grep -m1 'dgd_[0-9_-]\+[a-zA-Z]*' | sed 's/:.*$//'`
+   v=`$CVS log configure.ac 2>&1 | \
+	sed -n '/dgd_[0-9_-]\+[a-zA-Z]*/{s/:.*$//;p;q;}'`
    echo "retrieved tag: $v" >&AS_MESSAGE_LOG_FD
    if test "X$v" != "X"; then
-      DGD_VERSION="`echo $v | sed 's/_/-/' | sed 's/_/./g'` `date`"
-      DGD_SHORT_VERSION=`echo $v | sed 's/dgd_//' | sed 's/_/./g'`
+      DGD_VERSION="`echo $v | sed 's/_/-/;s/_/./g'` `date`"
+      DGD_SHORT_VERSION=`echo $v | sed 's/dgd_//;s/_/./g'`
       echo "version=$DGD_VERSION" >&AS_MESSAGE_LOG_FD
    fi
    changequote([, ])
@@ -57,6 +57,7 @@ AC_SUBST(DGD_VERSION)
 AC_SUBST(DGD_SHORT_VERSION)
 AC_MSG_RESULT($DGD_VERSION)
 ])
+
 
 
 

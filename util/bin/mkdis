@@ -1,4 +1,4 @@
-#!/d/perl/bin/perl.exe -w -- -*- perl -*-
+#!perl -w -- -*- perl -*-
 
 use strict;
 use File::Basename;
