@@ -32,7 +32,6 @@
 
 #include <ctime>
 
-#include "dgDebug.h"
 #include "dgChannel.h"
 
 namespace DGD {
@@ -333,6 +332,8 @@ void assoc( std::ostream& s, channel& cnl, const Assoc_type action ) {
    assoc( &s, cnl, action );
 }
 
+#ifndef DGD_WITHOUT_BOOST
+
 /**
  * Associate physical stream with a channel. This function acts as
  * void assoc(std::ostream*,channel&), but takes name of the channel
@@ -383,6 +384,7 @@ void assoc( std::ostream* s,
    }
 }
 
+#endif // DGD_WITHOUT_BOOST
 
 }; // end of namespace DGD
 

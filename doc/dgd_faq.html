@@ -47,8 +47,7 @@ thread to separate file/channel.</p>
 <p>Q: Is boost library absolutely needed? </p>
 
 <p>A: No. If you want just a stream formatting solution - import files 
-dgChannel.[h|cpp] and dgChannelBuf.[h|cpp] into your project. Those files have 
-no boost dependencies.<br>
+dgChannel.[h|cpp] and dgChannelBuf.[h|cpp] into your project. Compile with -DDGD_WITHOUT_BOOST.<br>
 Alternatively, you can leave the whole DGD as is, but import parts of boost. You 
 will need boost/smart_ptr.hpp and all its included files (directly and 
 indirectly). No boost libraries must be compiled.</p>

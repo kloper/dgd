@@ -191,8 +191,11 @@ void assoc( std::ostream* s, channel& channel,
 	    const Assoc_type action = Assoc_Append );
 void assoc( std::ostream& s, channel& channel, 
 	    const Assoc_type action = Assoc_Append );
+
+#ifndef DGD_WITHOUT_BOOST
 void assoc( std::ostream* s, const std::string& name, 
 	    const Assoc_type action = Assoc_Append );
+#endif // DGD_WITHOUT_BOOST
 
 }; // end of namespace DGD
 
