@@ -24,15 +24,25 @@ glass. For some, it was a reminder of hard times and it symbolized being poor.
 Because so much glass was discarded, what's left behind has become very 
 collectible. </i></cite></p>
 <p>Q: Anyway, what is DGD good for?</p>
-<p>A: DGD is a library for debugging algorithms. Usually, implementation of any 
+<p>A: DGD is a library for algorithm debugging. Usually, implementation of any 
 algorithm with complexity above  trivial&nbsp; (implementation complexity, 
 not the algorithm complexity!)&nbsp; requires some tracing being included in the 
 code. Most of the time this tracing is a form of printf() statements or similar. DGD 
 is supposed to be easily extended C++ ostream (or so) wrapper, with a handy set 
 of tools allowing readable and precise output.</p>
 <p>Q: What platforms DGD supports?</p>
-<p>A: Currently DGD runs on Windows only. I am planning
-<a href="http://www.cygwin.com">cygwin</a> and then Linux port.</p>
+<p>A: I am intended to keep DGD as portable as possible, while developing on and 
+for Windows. There is
+<a href="http://www.cygwin.com">cygwin</a> and Linux port which will be 
+maintained for stable DGD releases.</p>
+
+<p>Q: Is DGD multi-thread safe? </p>
+
+<p>A: No. DGD is as multithread safe as std::ostream is. If two threads write 
+into same DGD::channel it is good chance that the output will be me messed. But 
+nothing will fail and no deadlocks will. So, DGD certainly <b>can be used</b> in 
+multi-threaded applications, but it is good practice to write output of each 
+thread to separate file/channel.</p>
 
 </body>
 
