@@ -37,7 +37,7 @@ top_srcdir = @top_srcdir@
 RM= @RM@
 ETAGS = @ETAGS@
 
-SUBDIRS = getopt dgd test
+SUBDIRS = getopt regex dgd test
 
 all: subdirs
 
