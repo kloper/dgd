@@ -27,7 +27,9 @@ developing. It is recommended but not required. In fact DGD works well
 with the native VC++ version of STL.
 
 On Cygwin or Unix machines just examine 'reconf' script in the root
-directory and run it with the appropriate option.
+directory and run it with the appropriate option. If configure does not work,
+emitting strange errors - use util/bin/unixify script to get rid of windoze
+EOLs.
 
 On Windows building process is different then building usual Win32 libraries. 
 DGD uses GNU build tools and VC++. You need to install cygwin package

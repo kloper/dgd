@@ -2,6 +2,14 @@
 Depression Glass Debug Library NEWS
 ===================================
 
+21/11/2002:	Added two tutorial articles about channelbuf and formatting.
+Look in [[related pages in code documentation [tutorial]].
+
+04/11/2002:	Released version 0.20 on freshmeat.net. It is important to me 
+to know whether DGD is useful. Right now, I am getting no feedback from people.
+Please, visit [[the DGD Forum [forum]] and let me know what do you think about 
+DGD.
+
 01/11/2002:	Ported DGD to Cygwin and Linux. Using gcc 2.95. I am not 
 distributing binaries for those right now. If you need 
 ones [[please contact me [mail]].
@@ -20,3 +28,7 @@ output and webmake generated site.
 [basic_feedback]: http://sourceforge.net/survey/survey.php?group_id=62230&survey_id=13594
 
 [mail]:	mailto:kloper@users.sourceforge.net
+
+[forum]:	http://sourceforge.net/forum/forum.php?forum_id=209774
+
+[tutorial]:	doxygen_html_pages.html
