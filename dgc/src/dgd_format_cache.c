@@ -1,5 +1,5 @@
 /* 
- * $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.c,v 1.3 2003/08/09 23:05:11 dimka Exp $
+ * $Id$
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
  *
  * Copyright (c) 2003. Dimitry Kloper <dimka@cs.technion.ac.il> . 
  *
- * dgd_compile_cache.c -- bytecode for dgd_format
+ * dgd_format_cache.c -- bytecode for dgd_format
  *
  */
 
-#include "dgd_compile_cache.h"
+#include "dgd_format_cache.h"
 
 unsigned int dgd_ring_size( cache_item_t *ring ) {
    cache_item_t* next;

@@ -28,6 +28,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #if !defined(bool_t)
 #define bool_t int
@@ -37,6 +38,13 @@
 #endif
 #if !defined(TRUE)
 #define TRUE 1
+#endif
+
+#if !defined(min)
+#define min(a,b) (((a)<(b))?(a):(b))
+#endif
+#if !defined(max)
+#define max(a,b) (((a)<(b))?(b):(a))
 #endif
 
 #define DGD_CACHE_SIZE 128

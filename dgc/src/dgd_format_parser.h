@@ -1,4 +1,4 @@
-// -*- c++ -*-
+// -*- c -*-
 //
 // $Id$
 //
@@ -26,7 +26,7 @@
 #ifndef _dgd_format_parser_h_
 #define _dgd_format_parser_h_
 
-#include "dgd_compile_cache.h" /* need here because YYSTYPE will be there */
+#include "dgd_format_cache.h" /* need here because YYSTYPE will be there */
 
 #define PARS_T_ERROR 0
 #define PARS_T_PAIR 1

@@ -1,4 +1,4 @@
-// -*- c++ -*-
+// -*- c -*-
 //
 // $Id$
 //
@@ -49,10 +49,26 @@ typedef struct _call_attr_t {
       unsigned int byte_count;
 } call_attr_t;
 
+
+typedef struct _str_bounded_range_t {
+      char   *begin;
+      char   *end;
+      char   *low_bound;
+      char   *high_bound;
+} str_bounded_range_t;
+
 typedef struct _str_range_t {
       char   *begin;
       char   *end;
 } str_range_t;
+
+#define dgd_out_of_range(r) (((r)==NULL)||\
+                         ((r)->low_bound>(r)->high_bound)||\
+                         ((r)->begin<(r)->low_bound)||\
+                         ((r)->begin>(r)->high_bound)||\
+                         ((r)->end<(r)->low_bound)||\
+                         ((r)->end>(r)->high_bound)||\
+                         ((r)->end<(r)->begin))
 
 void dgd_call_attr_set_default( call_attr_t *attr );
 void dgd_call_attr_assign( call_attr_t *dst, call_attr_t *src );

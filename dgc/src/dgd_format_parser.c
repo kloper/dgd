@@ -40,7 +40,7 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 
 #include "dgd_types.h"
 #include "dgd_format_lexer.h"
-#include "dgd_compile_cache.h"
+#include "dgd_format_cache.h"
    
 #define YYDEBUG 1
 

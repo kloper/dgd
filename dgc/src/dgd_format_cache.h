@@ -1,6 +1,6 @@
 // -*- c -*-
 //
-// $Id: dgd\\dgc\\src\\Attic\\dgd_compile_cache.h,v 1.3 2003/08/09 23:05:11 dimka Exp $
+// $Id$
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,15 +20,17 @@
 //
 // Copyright (c) 2003. Dimitry Kloper <dimka@cs.technion.ac.il> . 
 //
-// dgd_compile_cache.h -- bytecode for dgd_format
+// dgd_format_cache.h -- bytecode for dgd_format
 //
 
-#ifndef _dgd_compile_cache_h_
-#define _dgd_compile_cache_h_
+#ifndef _dgd_format_cache_h_
+#define _dgd_format_cache_h_
 
 #include "dgd_config.h"
 
 #include "dgd_types.h"
+
+#define CACHE_ITEM_CSIZE 3
 
 typedef struct _cache_item_t {
       unsigned int type;
@@ -55,6 +57,12 @@ typedef struct _cache_item_t {
 		  struct _cache_item_t *lru;
 	    } hash;
       } value;
+
+      struct {
+	    unsigned int flags;
+	    unsigned int argn[CACHE_ITEM_CSIZE];
+	    va_list      argp[CACHE_ITEM_CSIZE];
+      } cache;
 
       struct _cache_item_t *next;
       struct _cache_item_t *prev;
@@ -96,11 +104,11 @@ void dgd_cache_delete( cache_t *cache, char *str );
 
 #define dgd_cache_free_list
 
-#endif /* _dgd_compile_cache_h_ */
+#endif /* _dgd_format_cache_h_ */
 
 /* 
  * Local Variables:
- * compile-command: "make dgd_compile_cache.obj"
+ * compile-command: "make dgd_format_cache.obj"
  * End:
  */
 
