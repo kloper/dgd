@@ -1,6 +1,10 @@
 
 Depression Glass Debug Library NEWS
 ===================================
+06/10/2003:	I am working on C clone of DGD (it will be called DGC) and will
+feature special implementations of printf(3) family of functions and 
+stdio-like streams with formatting functionality.
+
 23/04/2003:	Fixed Doxygen to generate right inner class names in HTML 
 documentation. The DGD documentation is updated.
 

@@ -1,5 +1,5 @@
 
-Depression Glass Debug Library README
+DGD Library README
 =====================================
 
 Copyright (c) 2002. Dimitry Kloper <kloper@users.sourceforge.net>
@@ -9,12 +9,12 @@ Available from http://sourceforge.net/projects/dgd
 About
 =====
 
-Depression Glass Debug (DGD) is simple, easy to use C++ ostream
-extension for debugging output. DGD is created with a goal to produce 
-nice, readable and easy to understand trace logs.
+DGD (Depression Glass Debug) is simple, easy to use C++ ostream
+extension created with a goal to produce nice, readable and easy to 
+understand trace logs.
 
-DGD is developed for Win32, but every stable release is ported to Cygwin 
-and Linux.
+DGD is tested on Linux (gcc-2.96 to gcc-3.2) and Win32 platforms (VC++
+6.0, cygwin with gcc-2.96 and gcc-3.3).
 
 Features list:
 
@@ -27,13 +27,16 @@ Features list:
  * DGD channels can be turned on/off on the fly. Groups of channels
    can be selected by their names using regular expressions.
 
- * Provides multifile logs a-la Unix /var/log
+ * Provides output to files which can be automatically split by size
+   or number of lines.
 
  * Provides simple, yet powerful mechanism for synchronizing all streams
    upon application exit or crash.
 
  * Provides output operators for many STL types, memory references and
    memory blocks.
+
+ * Provides output operators for xxd(1)-like memory dumps.
 
  * Provides a set of useful macros allowing simplified use of DGD
    channels and ability to ''compile out'' DGD tracing code using a single
@@ -44,6 +47,19 @@ Features list:
  * DGD is **NOT** thread safe! This does not mean that DGD can't be used in
    multi-threaded applications. This does mean that it must be used with care.
 
+Differences between DGD and other similar libraries:
+
+ * DGD is not focused on specific type of output (e.g. syslog), nor on
+   precedence of messages (e.g. NOTICE, WARNING, ERROR,
+   etc...). Instead, DGD provides a flexible framework which allows
+   easy implementation of the log streams, trace streams, xxd(1)-like 
+   dumps, etc...
+
+ * DGD has no facilities for memory allocation debugging. There are
+   good and reliable tools targeting this problem and there is no reason
+   to create another one.
+
+ * DGD tries to be as STL-compatible as possible.
 
 License terms
 =============
@@ -59,14 +75,6 @@ Required libraries
  * STLPort 4.5 (http://www.stlport.com) was used during DGD
    developing. It is recommended but not required. 
 
-Required build tools
-====================
-
-DGD comes with precompiled libraries and set of headers. 
-
-If you want to build DGD by yourself please refer to INSTALL file for 
-more information.
-
 Installation
 ============
 
@@ -81,6 +89,10 @@ support library for C++ developers. This is a good library, but
 unfortunately it has no Windows port. Right now DGD has the same set
 of features for debug tracing. 
 
+log4cpp (http://log4cpp.sourceforge.net) --  Log4cpp is library of C++ 
+classes for flexible logging to files, syslog, IDSA and other
+destinations. Good library for syslog-like logging. 
+
 Bug reports
 ===========
 
@@ -91,9 +103,8 @@ Mailing lists
 =============
 
 No mailing lists are opened for DGD. This is due to increased level of
-spam messages. For discussions, suggestions, bug reports,
-etc... please refer sourceforge.net DGD home page
-http://sourceforge.net/projects/dgd.
+spam messages. For discussions, suggestions, bug reports, etc... 
+please refer sourceforge.net DGD home page http://sourceforge.net/projects/dgd.
 
 
 

@@ -1,26 +1,16 @@
 
-Depression Glass Debug Library INSTALL
+DGD Library INSTALL
 ======================================
 
 Copyright (c) 2002. Dimitry Kloper <kloper@users.sourceforge.net>
 
 Available from http://sourceforge.net/projects/dgd
 
-Precompiled version
-===================
-
-DGD comes with precompiled .lib file (compiled with MS VC++ 6.0, debug
-support and multi-threaded runtime ) and set of headers. 
-
-To use the precompiled version just add to your compile include path
-dgd-XXX/dgd/src where dgd-XXX is a root DGD directory, add to the
-library path dgd-XXX/lib and to the libraries list add dgd.lib.
-
 Building DGD
 ============
 
 DGD makes extensive use of C++ boost (http://www.boost.org). You
-need boost 1.25.0 or later to compile DGD.
+need boost 1.25.0 or later to compile DGD. 
 
 STLPort 4.5 (http://www.stlport.com) was used during DGD
 developing. It is recommended but not required. In fact DGD works well
@@ -34,6 +24,7 @@ EOLs.
 On Windows the primary building process is different then building
 usual Win32 libraries. DGD uses GNU build tools and VC++. You need to
 install cygwin package (http://www.cygwin.com) and Visual Studio. 
+
 There are Visual Studio project files in 'msvc-prj' directory, but
 they will be updated only for stable versions.
 

@@ -18,7 +18,7 @@ $config
 % use POSIX;
 % my $date = scalar( localtime() );
 % $date =~ s/\s+/&nbsp;/g;
-    Version:&nbsp;<%$config->{"version"}%>&nbsp|&nbsp;Updated:&nbsp;<% $date %>
+    Version:&nbsp;<%$config->{"version"}%>&nbsp;|&nbsp;Updated:&nbsp;<% $date %>
     </div>
   </td>
 </tr>
