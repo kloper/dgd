@@ -148,6 +148,25 @@
       <td width="50%">Must make dynamic cast instead static in operator &lt;&lt; ()</td>
       <td width="10%">Closed</td>
     </tr>
+    <tr>
+      <td width="3%">7</td>
+      <td width="11%">10</td>
+      <td width="13%">channelbuf</td>
+      <td width="12%">19/04/2003</td>
+      <td width="50%">Wrong output when wrapping very long lines without spaces 
+      in them.<p><font color="#0000FF"><b>The problem was in overflow() method. 
+      The next position was calculated using m_column which was already reset.</b></font></td>
+      <td width="10%">Closed</td>
+    </tr>
+    <tr>
+      <td width="3%">8</td>
+      <td width="11%">10</td>
+      <td width="13%">std</td>
+      <td width="12%">22/04/2003</td>
+      <td width="50%">Compilation errors in std output operators.<p><font color="#0000FF"><b>
+      Missed some dgd manipulators in the output.</b></font></td>
+      <td width="10%">Closed</td>
+    </tr>
   </table>
   </center>
 </div>

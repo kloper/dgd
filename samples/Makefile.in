@@ -64,7 +64,8 @@ BOOSTDEFINES =
 CPPFILES = \
 stand_alone_channelbuf.cpp \
 formatting.cpp \
-mult_assoc.cpp
+mult_assoc.cpp \
+list_of_lists.cpp
 
 OBJECTS = ${patsubst %.cpp, %.$(OBJEXT), $(CPPFILES)}
 
@@ -120,6 +121,13 @@ ifeq ($(LIBEXT),lib)
 	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/mult_assoc.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
 else
 	$(CXX) $(LDFLAGS) $(BUILDDIR)/mult_assoc.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
+endif
+
+lofl$(EXEEXT): list_of_lists.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/list_of_lists.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+else
+	$(CXX) $(LDFLAGS) $(BUILDDIR)/list_of_lists.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
 %.$(OBJEXT): %.cpp

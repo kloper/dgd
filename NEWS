@@ -1,6 +1,8 @@
 
 Depression Glass Debug Library NEWS
 ===================================
+23/04/2003:	Fixed Doxygen to generate right inner class names in HTML 
+documentation. The DGD documentation is updated.
 
 18/04/2003:	Release 0.25. Documentation build system is redesigned. 
 Switched from Webmake to Mason. I have no plans of adding new features to DGD. 
