@@ -65,7 +65,7 @@ dgd_eval_init( dgd_eval_t   *eval,
 	       cache_item_t *chain,
 	       void         *user_data ) {
    memset( (char*)eval, '\0', sizeof( dgd_eval_t ) );
-   eval->state     = EVAL_STATE_INIT;
+   eval->state     = EVAL_STATE_NORMAL;
    eval->flags     = flags;
    eval->chain     = chain;
    eval->next_item = chain->value.chain.ring;
@@ -100,15 +100,15 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 
       switch( eval_item->type ) {
 	 case EVAL_T_INT:
-	    eval_item->value.argload.num = va_arg( arg, int );
+	    eval_item->value.argload.v.num = va_arg( arg, int );
 	    eval->state = EVAL_STATE_NORMAL;
 	    break;
 	 case EVAL_T_DOUBLE:
-	    eval_item->value.argload.dnum = va_arg( arg, double );
+	    eval_item->value.argload.v.dnum = va_arg( arg, double );
 	    eval->state = EVAL_STATE_NORMAL;
 	    break;
 	 case EVAL_T_PTR:
-	    eval_item->value.argload.ptr = va_arg( arg, void* );
+	    eval_item->value.argload.v.ptr = va_arg( arg, void* );
 	    eval->state = EVAL_STATE_NORMAL;
 	    break;
 	 case PARS_T_WORD:
@@ -151,8 +151,86 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	    eval->state = EVAL_STATE_NORMAL;
 
 	    break;
+	 case PARS_T_ERROR:
+	    index = EVAL_ACTION_ERROR;
+	    callback = dgd_action_lookup_table[index].callback;
+	    if( callback != NULL ) {
+	       dgd_action_t *action;
+	       dgd_error_arg_t err_arg;
+
+	       action = &(dgd_action_lookup_table[index].action);
+	       if( eval->state == EVAL_STATE_NORMAL ) {
+		  action->state           = EVAL_STATE_NORMAL;
+		  action->flags           = eval->flags;
+		  action->error           = 0;
+		  action->user_data       = eval->user_data;
+		  action->data            = eval->data;
+		  action->data_size       = sizeof(eval->data);
+		  action->attr.valid_mask = 0;		  
+	       }
+
+	       err_arg.error   = eval_item->value.error.error;
+	       err_arg.num     = eval_item->value.error.num;
+	       err_arg.token   = eval_item->value.error.lexeme;
+	       
+	       rc = callback( action, str, &err_arg );
+
+	       switch( rc ) {
+		  case EVAL_RES_DONE:
+		     action->attr.valid_mask = 0;
+		     eval->state = EVAL_STATE_NORMAL;
+		     break;
+		  case EVAL_RES_ERROR:
+		     action->attr.valid_mask = 0;
+		     if( action->error != 0 ) 
+			eval->error = action->error;
+		     else 
+			eval->error = EVAL_ERR_CALLBACK;
+		     eval->state = EVAL_STATE_NORMAL;
+		     res = rc;
+		     goto finish;
+		  case EVAL_RES_RANGE:
+		     eval->state = EVAL_STATE_RANGED;
+		     res = rc;
+		     goto finish;
+	       }			       
+	    }
+	    break;
+	 case PARS_T_OCT:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_OCT;
+	    /* fall through */
+	 case PARS_T_HEX:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_HEX;
+	    /* fall through */
+	 case PARS_T_UNSIGNED:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_UNSIGNED;
+	    /* fall through */
+	 case PARS_T_SCI:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_SCI;
+	    /* fall through */
+	 case PARS_T_FLOAT:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_FLOAT;
+	    /* fall through */
+	 case PARS_T_SCIORFLOAT:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_SCIFLOAT;
+	    /* fall through */
+	 case PARS_T_SCIHEX:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_SCIHEX;
+	    /* fall through */
+	 case PARS_T_CHAR:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_CHAR;
+	    /* fall through */
 	 case PARS_T_DEC:
-	    index = EVAL_ACTION_DEC;
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_DEC;
 
 	    callback = dgd_action_lookup_table[index].callback;
 	    if( callback != NULL ) {
@@ -173,13 +251,13 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 		      action->attr.width <= 0 && 
 		      eval_item->value.call.width != NULL ) {
 		     action->attr.width = 
-			eval_item->value.call.width->value.argload.num;
+			eval_item->value.call.width->value.argload.v.num;
 		  }
 		  if( (action->attr.valid_mask & CALL_ATTR_PRECISION) &&
 		      action->attr.precision <= 0 && 
 		      eval_item->value.call.precision != NULL ) {
 		     action->attr.precision = 
-			eval_item->value.call.precision->value.argload.num;
+			eval_item->value.call.precision->value.argload.v.num;
 		  }
 	       }
 	       
@@ -188,7 +266,7 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 		  rc = callback( action, str, 
 				 &(eval_item->
 				   value.call.arg->
-				   value.argload.num) );
+				   value.argload.v) );
 	       }
 
 	       switch( rc ) {
@@ -198,7 +276,10 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 		     break;
 		  case EVAL_RES_ERROR:
 		     action->attr.valid_mask = 0;
-		     eval->error = EVAL_ERR_CALLBACK;
+		     if( action->error != 0 ) 
+			eval->error = action->error;
+		     else 
+			eval->error = EVAL_ERR_CALLBACK;
 		     eval->state = EVAL_STATE_NORMAL;
 		     res = rc;
 		     goto finish;

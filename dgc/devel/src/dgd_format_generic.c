@@ -28,6 +28,7 @@
 
 #include "dgd_config.h"
 #include "dgd_format_eval.h"
+#include "dgd_format_parser.h"
 
 static
 char *build_format( call_attr_t *attr, char format ) {
@@ -71,12 +72,13 @@ char *build_format( call_attr_t *attr, char format ) {
    return buffer;
 }
 
-int dgd_generic_callback_dec( dgd_action_t *action, 
-			     str_bounded_range_t *str,
-			     void* argv ) {
+int dgd_generic_callback( dgd_action_t *action, 
+			  str_bounded_range_t *str,
+			  char format,
+			  void* argv ) {
    typedef struct {
 	 char *curr;
-	 char  buf[20];
+	 char  buf[100];
    } persistent_t;
 
    persistent_t *p;
@@ -91,7 +93,20 @@ int dgd_generic_callback_dec( dgd_action_t *action,
 
    if( action->state == EVAL_STATE_NORMAL ) {
       p->curr = p->buf;
-      sprintf( p->buf, build_format( &(action->attr), 'd' ), *(int*)argv );
+      switch( format ) {
+	 case 'd': case 'x': case 'u': case 'o': case 'c': 
+	    sprintf( p->buf, build_format( &(action->attr), format ), 
+		     *(int*)argv );
+	    break;
+	 case 'e': case 'f': case 'a': case 'g':
+	    sprintf( p->buf, build_format( &(action->attr), format ), 
+		     *(double*)argv );
+	    break;
+	 case 's': case 'p': case 'n':
+	    sprintf( p->buf, build_format( &(action->attr), format ), 
+		     argv );
+	    break;
+      }
    }
 
    size = min( strlen( p->curr ), (unsigned)(str->high_bound - str->end) );
@@ -108,6 +123,60 @@ int dgd_generic_callback_dec( dgd_action_t *action,
    } 
    
    return EVAL_RES_DONE;
+}
+
+int dgd_generic_callback_dec( dgd_action_t *action, 
+			      str_bounded_range_t *str,			      
+			      void* argv ) {
+   return dgd_generic_callback( action, str, 'd', argv );
+}
+
+int dgd_generic_callback_oct( dgd_action_t *action, 
+			      str_bounded_range_t *str,			      
+			      void* argv ) {
+   return dgd_generic_callback( action, str, 'o', argv );
+}
+
+int dgd_generic_callback_hex( dgd_action_t *action, 
+			      str_bounded_range_t *str,			      
+			      void* argv ) {
+   return dgd_generic_callback( action, str, 'x', argv );
+}
+
+int dgd_generic_callback_unsigned( dgd_action_t *action, 
+				   str_bounded_range_t *str,
+				   void* argv ) {
+   return dgd_generic_callback( action, str, 'u', argv );
+}
+
+int dgd_generic_callback_char( dgd_action_t *action, 
+				   str_bounded_range_t *str,
+				   void* argv ) {
+   return dgd_generic_callback( action, str, 'c', argv );
+}
+
+int dgd_generic_callback_sci( dgd_action_t *action, 
+			      str_bounded_range_t *str,			      
+			      void* argv ) {
+   return dgd_generic_callback( action, str, 'e', argv );
+}
+
+int dgd_generic_callback_float( dgd_action_t *action, 
+				str_bounded_range_t *str,
+				void* argv ) {
+   return dgd_generic_callback( action, str, 'f', argv );
+}
+
+int dgd_generic_callback_scifloat( dgd_action_t *action, 
+				   str_bounded_range_t *str,
+				   void* argv ) {
+   return dgd_generic_callback( action, str, 'g', argv );
+}
+
+int dgd_generic_callback_scihex( dgd_action_t *action, 
+				 str_bounded_range_t *str,
+				 void* argv ) {
+   return dgd_generic_callback( action, str, 'a', argv );
 }
 
 static
@@ -131,39 +200,26 @@ int dgd_generic_callback_error( dgd_action_t *action,
    
    p = (persistent_t*)action->data;
 
-   switch( err->error ) {
-      case EVAL_ERR_BAD_ARG:
-	 errdescr = "bad argument";
-	 break;
-      case EVAL_ERR_BAD_CACHE:
-	 errdescr = "internal error";
-	 break;
-      case EVAL_ERR_CONT_ARGS:
-	 errdescr = "argument gap";
-	 break;
-      case EVAL_ERR_CALLBACK:
-	 errdescr = "callback error";
-	 break;
-      case EVAL_ERR_SMALLDATA:
-	 errdescr = "data too small";
-	 break;
-   }
-
    if( action->state == EVAL_STATE_NORMAL ) {
       p->curr = p->buf;
-      *p->buf = '\0';
-
-      strcat( p->buf, "<" );
-      strcat( p->buf, errdescr );
-      if( err->token.begin != NULL ) {
-	 strcat( p->buf, ": " );
-	 size = min( sizeof( p->buf ) - strlen( p->buf ) - 2,
-		     (err->token.end == NULL)? 
-		     (err->token.end - err->token.begin) :
-		     strlen( err->token.begin ) );
-	 strncat( p->buf, err->token.begin, size );	 
+      switch( err->error ) {
+	 case PARS_ERR_SYNTAX:
+	    sprintf( p->buf, "<syntax error before: %.10s>",
+		     err->token.begin );
+	    break;
+	 case PARS_ERR_ALLOC: 
+	    sprintf( p->buf, "<alloc error>" );
+	    break;
+	 case PARS_ERR_ARGGAP:
+	    sprintf( p->buf, "<gap in arguments: %d>", err->num );
+	    break;
+	 case PARS_ERR_ARGTYPE:
+	    sprintf( p->buf, "<gap in argument types: %d>", err->num );
+	    break;
+	 default:
+	    sprintf( p->buf, "<unknown error>" );
+	    break;
       }
-      strcat( p->buf, ">" );
    }
    
    size = min( strlen( p->curr ), (unsigned)(str->high_bound - str->end) );
@@ -175,6 +231,7 @@ int dgd_generic_callback_error( dgd_action_t *action,
    }
 
    if( *p->curr != '\0' ) {
+      action->state = EVAL_STATE_RANGED;
       return EVAL_RES_RANGE;
    } 
    
@@ -183,8 +240,16 @@ int dgd_generic_callback_error( dgd_action_t *action,
 
 void 
 dgd_generic_callback_init( dgd_action_lookup_t* lookup) {
-   lookup[EVAL_ACTION_DEC].callback   = dgd_generic_callback_dec;
-   lookup[EVAL_ACTION_ERROR].callback = dgd_generic_callback_error;
+   lookup[EVAL_ACTION_DEC].callback      = dgd_generic_callback_dec;
+   lookup[EVAL_ACTION_OCT].callback      = dgd_generic_callback_oct;
+   lookup[EVAL_ACTION_HEX].callback      = dgd_generic_callback_hex;
+   lookup[EVAL_ACTION_UNSIGNED].callback = dgd_generic_callback_unsigned;
+   lookup[EVAL_ACTION_CHAR].callback     = dgd_generic_callback_char;
+   lookup[EVAL_ACTION_SCI].callback      = dgd_generic_callback_sci;
+   lookup[EVAL_ACTION_FLOAT].callback    = dgd_generic_callback_float;
+   lookup[EVAL_ACTION_SCIFLOAT].callback = dgd_generic_callback_scifloat;
+   lookup[EVAL_ACTION_SCIHEX].callback   = dgd_generic_callback_scihex;
+   lookup[EVAL_ACTION_ERROR].callback    = dgd_generic_callback_error;
 }
 
 /* 

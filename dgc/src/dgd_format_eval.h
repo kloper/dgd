@@ -30,7 +30,6 @@
 #include "dgd_types.h"
 #include "dgd_format_cache.h"
 
-#define EVAL_STATE_INIT   0
 #define EVAL_STATE_NORMAL 1
 #define EVAL_STATE_RANGED 2
 
@@ -101,6 +100,7 @@ typedef struct _dgd_eval_t {
 
 typedef struct _dgd_error_arg_t {
       unsigned int error;
+      unsigned int num;
       str_range_t  token;
 } dgd_error_arg_t;
 

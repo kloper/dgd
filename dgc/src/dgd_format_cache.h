@@ -66,11 +66,13 @@ typedef struct _cache_item_t {
 	    struct {
 		  char                  ch;
 	    } backslash;
-	    struct {
+	    struct {		  
 		  unsigned int          index;
-		  int                   num;
-		  double                dnum;
-		  void                 *ptr;
+		  union {
+			int             num;
+			double          dnum;
+			void           *ptr;
+		  } v;
 	    } argload;
       } value;
 
