@@ -22,6 +22,8 @@
 // dgChannel.cpp -- implementation for dgChannel.h
 //
 
+#include <ctime>
+
 #include "dgDebug.h"
 #include "dgChannel.h"
 
@@ -37,7 +39,7 @@ channel::channel( const std::string& name ) :
 
 void channel::open() {
    m_is_open = true;
-   init( &m_buffer );
+   init( &m_buffer );   
 }
 
 void channel::close() {
@@ -130,10 +132,24 @@ std::string channel::space_chars() const {
    return m_buffer.space_chars();
 }
 
+void channel::header() {
+   channel& self = *this;
+   time_t local_time;
+
+   time( &local_time );
+
+   self << "Content-type: text/plain" << std::endl << std::endl
+	<< "Channel: " << m_name << std::endl
+	<< "Time: " << ctime( &local_time ) << std::endl 
+	<< std::endl;
+   
+}
+
 void assoc( stream s, channel& channel ) {
    if( s.get() != NULL ) {
       channelbuf& buf = channel.rdbuf();
       buf.assoc( s );
+      channel.header();
    }
 }
 
@@ -143,7 +159,8 @@ void assoc( stream s, const std::string& name ) {
       Debug::channel_ptr c = factory->operator[]( name );
       if( c.get() != NULL && s.get() != NULL ) {
 	 channelbuf& buf = c->rdbuf();
-	 buf.assoc( s );
+	 buf.assoc( s );	 
+	 c->header();
       }
    }
 }

@@ -67,6 +67,8 @@ class channel: public std::ostream {
       void         space_chars(const char* spc = " \t");
       std::string  space_chars() const;
 
+      void channel::header();
+
    private:
       bool m_is_open;
       std::string m_name;

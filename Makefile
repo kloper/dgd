@@ -37,7 +37,7 @@ top_srcdir = .
 RM= rm -f
 ETAGS = etags
 
-SUBDIRS = getopt dgd test
+SUBDIRS = getopt regex dgd test
 
 all: subdirs
 

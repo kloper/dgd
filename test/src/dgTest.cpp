@@ -142,19 +142,44 @@ void two_channels_test() {
 void empty_test( channel& debug ) {
 }
 
+class My_class {
+   public:
+      int x;
+      int y;
+};
+
+std::ostream& operator << ( std::ostream& dbg, const My_class& c ) {
+   dbg << c.x << " " << c.y;
+   return dbg;
+}
+
+channel& operator << ( channel& dbg,  const My_class& c ) {
+   dbg << "[" << c.x << " " << c.y << "]";
+   return dbg;
+}
+
+void overload_test( channel& debug ) {
+   My_class c;
+   c.x = 10; c.y = 15;
+   cout << "c = " << c << endl;
+   debug << "c = " << dgd << c << endl;
+}
+
 int main( int argc, char** argv ) {
    option_filter of;
    char* filter[] = { "--debug.*" };
-
+   
    option_filter::option_set_container* option_sets = 
       of( argc, argv, 1, filter );
 
    Debug::debug_factory_ref dout = 
       Debug::create_factory( (*option_sets)[0].argc, 
-			     (*option_sets)[0].argv );
+			     (*option_sets)[0].argv );   
       
    if( dout.get() == NULL )
       return 1;
+   
+   dgd_trace( main, "Created by: " << dgd << make_pair( argc, argv ) << endl );
 
    stream s = dout->create_file( "dimka.log" );
 
@@ -166,6 +191,7 @@ int main( int argc, char** argv ) {
    manip_test( *dgd_channel(main) );
    empty_test( *dgd_channel(main) );
    two_channels_test();
+   overload_test( *dgd_channel(main) );
 
    return 0;
 }

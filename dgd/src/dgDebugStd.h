@@ -41,6 +41,17 @@ inline channel& operator << ( channel& cnl,
    return cnl;
 }
 
+template <>
+inline channel& operator << ( channel& cnl,
+			      const std::pair<int, char**>& params ) {
+   cnl.wrap(false);
+   for( int i = 0; i < params.first; ++i ) {
+      cnl << params.second[i] << " ";
+   }
+   cnl.wrap(true);
+   return cnl;
+}
+
 template <class Item_type>
 inline channel& operator << ( channel& cnl, 
 			      const std::list<Item_type>& l ) {
