@@ -98,11 +98,13 @@ if test $win32 = 1; then
      if test "x$enable_debug" = "xyes"; then 
         AC_DEFINE(_DEBUG)
         CXXFLAGS="$CXXFLAGS -Gm  -Zi -Od"
+	CFLAGS="$CFLAGS -Gm  -Zi -Od"
         LDFLAGS="$LDFLAGS /debugtype:cv"
         BUILDDIR=Debug
      else
         AC_DEFINE(NODEBUG)
         CXXFLAGS="$CXXFLAGS -O2"
+        CFLAGS="$CFLAGS -O2"
         LDFLAGS="$LDFLAGS "
         BUILDDIR=Release
      fi

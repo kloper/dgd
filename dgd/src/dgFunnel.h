@@ -26,16 +26,36 @@
 #ifndef _dgFunnel_h_
 #define _dgFunnel_h_
 
+/**
+ * @file dgFunnel.h
+ * Declaration of DGD::funnel.
+ */ 
+
 #include "dgChannelBuf.h"
 
 namespace DGD {
 
 class funnel;
 
+/**
+ * Channelbuf for funnels DGD::funnelbuf is a special kind of the
+ * channelbuf. It overrides the channelbuf::post_process() method in
+ * order to get current line, column and amount of the written bytes.
+ * The user of this class, namely DGD::funnel, can set callback object
+ * which will handle those values.  
+ * 
+ * Note that funnelbuf hides post_process(), assoc() amd callback()
+ * methods, thus making them accessible by DGD::funnel objects only.
+ * @see DGD::funnel @see DGD::channelbuf
+ */
 class funnelbuf: public channelbuf {
    public:
       friend class funnel;
 
+      /**
+       * Pure virtual interface for a callback which will handle
+       * line, column and written bytes information.
+       */
       class Callback {
 	 public:
 	    virtual void operator () ( unsigned long line, 
@@ -59,6 +79,16 @@ class funnelbuf: public channelbuf {
       Callback*     m_callback;
 };
 
+/**
+ * Best association target. There is a good chance that DGD will
+ * produce incorrect output when there are multiple DGD::channel
+ * objects are associated with the single physical stream. DGD::funnel
+ * is designed to solve the multiple association problem. The main
+ * idea is to associate your channels with single funnel which sits on
+ * top of the physical stream.
+ * 
+ * 
+ */
 class funnel: public std::ostream, public funnelbuf::Callback {
    public:
       typedef std::ostream Parent;

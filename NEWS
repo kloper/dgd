@@ -2,9 +2,12 @@
 Depression Glass Debug Library NEWS
 ===================================
 
-09/12/2002:	Released version 0.22. The main target of this release are 
-funnels - special channel-like objects which can be bound to physical streams
-at first place. Then all other channels can be associated with funnels. 
+09/04/2003:	Version 0.23 is a bug fix release. Fixed two major bugs and 
+added some more documentation on funnels.
+
+09/12/2002:	Released version 0.22. The main target of this release is
+funnel - special channel-like object which can be bound to physical streams
+at first place. Then all other channels can be associated with the funnel. 
 The second target was multi-file logs. There is a special funnel called 
 DGD::multifile_log which can split the log by output size or by number of 
 output lines. There is no documentation for the new code yet.

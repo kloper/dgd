@@ -212,9 +212,9 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	    } else if( m_wrap ) {
 	       propagate( pos, pos + (m_max_width - m_column) );
 	       propagate( '\n', 1 );
+	       pos += m_max_width - m_column;
 	       m_column = 0;
 	       m_line++;
-	       pos += m_max_width - m_column;
 	    } else {
 	       propagate( pos, pos + remaining_len );
 	       m_column += remaining_len;

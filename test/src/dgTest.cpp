@@ -128,6 +128,14 @@ void manip_test( channel& debug ) {
    debug << word_wrap(true) << endl;   
 }
 
+void bad_stream_test( ostream& ostr ) {
+   try {
+      ostr << incr << "Hello world!" << endl << decr;
+   } catch ( std::exception& ex ) {
+      ostr << "bad channel test: " << ex.what() << endl;
+   }
+}
+
 void two_channels_test() {
    dgd_start_scope( dimka, "void two_channels_test()" );
    dgd_echo( "Item 1" << endl );
@@ -252,6 +260,8 @@ int main( int argc, char** argv ) {
    pointers_test( *dgd_channel(main) );
    tie_test( dout );
    multifile_log_test( dout );
+   bad_stream_test( cout );
+   bad_stream_test( *dgd_channel(main) );
 
    return 0;
 }

@@ -107,7 +107,7 @@ typedef channel_manip<unsigned int>  channel_manip_uint;
 inline std::ostream& operator <<( std::ostream& cnl, 
 				  const channel_manip_void& manip ) {
    
-   (static_cast<channel&>(cnl).*(manip.m_method))();
+   (dynamic_cast<channel&>(cnl).*(manip.m_method))();
    return cnl;
 }
 
@@ -116,7 +116,7 @@ inline std::ostream& operator <<( std::ostream& cnl,
  */
 inline std::ostream& operator <<( std::ostream& cnl, 
 				  const channel_manip_bool& manip ) {
-   (static_cast<channel&>(cnl).*(manip.m_method))( manip.m_argument );
+   (dynamic_cast<channel&>(cnl).*(manip.m_method))( manip.m_argument );
    return cnl;
 }
 
@@ -125,7 +125,7 @@ inline std::ostream& operator <<( std::ostream& cnl,
  */
 inline std::ostream& operator <<( std::ostream& cnl, 
 				  const channel_manip_uint& manip ) {
-   (static_cast<channel&>(cnl).*(manip.m_method))( manip.m_argument );
+   (dynamic_cast<channel&>(cnl).*(manip.m_method))( manip.m_argument );
    return cnl;
 }
 
@@ -139,7 +139,7 @@ inline std::ostream& operator <<( std::ostream& cnl,
 inline channel& operator <<( std::ostream& cnl, 
 			     const channel_manip_nop& manip ) {
    
-   return static_cast<channel&>(cnl);
+   return dynamic_cast<channel&>(cnl);
 }
 
 /**
