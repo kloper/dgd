@@ -28,9 +28,9 @@
  * implementation of DGD::channel
  */
 
-#include "dgConfig.h"
-
 #include <ctime>
+
+#include "dgConfig.h"
 
 #ifndef DGD_WITHOUT_BOOST
 #include "dgDebug.h"

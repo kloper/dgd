@@ -22,11 +22,11 @@
 // dgOptionFilter.cpp -- implementation for dgOptionFilter.h
 //
 
-#include "dgConfig.h"
-
 #include <list>
 #include <vector>
 #include <algorithm>
+
+#include "dgConfig.h"
 
 /**
  * @file dgOptionFilter.cpp

@@ -1,7 +1,7 @@
 my $version = {
-'stable' => '0',
-'major' => '0',
+'compile' => '154',
+'timestamp' => '1086133878',
 'build' => '25',
-'timestamp' => '1085576496',
-'compile' => '117',
+'major' => '0',
+'stable' => '0',
 }

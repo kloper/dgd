@@ -24,6 +24,7 @@
 #
 
 use Cons::Template;
+use Cons::Common;
 
 Import qw(BLIB toolset version);
     
@@ -32,7 +33,8 @@ my $ruleset  = $toolset->env();
 die if( !defined( $ruleset ) );
 
 our $BUILD      = $toolset->option( 'build' );
-our $INCLUDE    = [ "..", "%BOOST_INCLUDE", "$BLIB/include" ];
+our $INCLUDE    = [ "..", "%STLPORT_INCLUDE", "%BOOST_INCLUDE", 
+		    "$BLIB/include" ];
 
 Link $BUILD => 'src';
 
@@ -79,18 +81,34 @@ map {
     my $src = "$BUILD/$_";
     my $tgt = $src;
     $tgt =~ s/.in$//i;
-    our $params = { 'version' => \$version, 
-		    'toolset' => \$toolset };
-    Command $buildenv $tgt, $src, 
-      q([perl] Cons::Template->apply( '%>', '%<', $params ); );
+    Command $buildenv $tgt, $src, "$BLIB/config/config-local.dpo",
+      q([perl] template_apply( '%>', qw(%<) ); );
 } qw( dgConfig.h.in );
+
+sub template_apply {
+    my ($tgt, $src, $dpo) = @_;
+
+    my $config = eval( "do '$dpo';" );    
+    if( $@ ) {
+	say( "error: cant load $dpo: $@" );
+	return 0;
+    }
+	
+    our $params = { 'version' => \$version, 
+		    'toolset' => \$toolset,
+		    'config' => \$config };
+    my $rc = Cons::Template->apply( $tgt, $src, $params );
+    return $rc;
+}
+
 
 if( defined($ruleset->{'CLOXXCOM'}) ) {
     Command $buildenv [ "$BUILD/dgDebugOpt.h", 
 			"$BUILD/dgDebugOpt.cpp" ], 
 			  "$BUILD/dgDebugOpt.xml",
 			    qq(#%CLOXXCOM# -Dcxx_header_file=%<:b.h ) .
-			      qq(-Dcxx_namespace=DGD ) . 
-				qq(-Dcxx_source_file=%<:b.cpp -o c++ %<);
+			    qq(-Dcxx_include_files=dgConfig.h ) .
+			    qq(-Dcxx_namespace=DGD ) . 
+			    qq(-Dcxx_source_file=%<:b.cpp -o c++ %<);
 }
 

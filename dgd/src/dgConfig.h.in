@@ -34,9 +34,31 @@
 
 #define DG_VERSION_STRING "(* $version ? $version->string_full() : "Unknown" *)"
 
-#if defined(_STLPORT_VERSION) && _STLPORT_VERSION <= 450
-// This one seems to solve problem with vc7 and boost-1.30
-#include <typeinfo.h> 
+(*
+ 
+ my $res;
+ for my $define (keys %{$config->{'defines'}}) {
+    $res .= "#define $define  $config->{'defines'}->{$define}\n";
+ }
+ $res;
+*)
+
+#if defined(WITHOUT_THROW)
+#define DGD_THROW
+#endif
+#if defined(WITH_THROW)
+#define DGD_THROW throw()
+#endif
+
+#if defined(WITHOUT_TYPENAME)
+#define DGD_TYPENAME 
+#endif
+#if defined(WITH_TYPENAME)
+#define DGD_TYPENAME typename
+#endif
+
+#if defined(WITH_IMPORT_CSTD)
+#define _STLP_DO_IMPORT_CSTD_FUNCTIONS 1
 #endif
 
 #endif /* _dgConfig_h_ */

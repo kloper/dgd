@@ -59,7 +59,7 @@ class bad_params: public std::exception {
       bad_params() : m_what( "bad command line argument" ) {}
       bad_params( const char* s ) : m_what( s ) {}
 
-      const char* what() const {
+      const char* what() const DGD_THROW {
 	 return m_what;
       }
 };
@@ -72,7 +72,7 @@ class bad_params: public std::exception {
  */
 class debug_disabled: public std::exception {
    public:
-      const char* what() const {
+      const char* what() const DGD_THROW {
 	 return "debug is being disabled";
       }
 };
@@ -86,7 +86,7 @@ class debug_disabled: public std::exception {
  */
 class exit_required: public std::exception {
    public:
-      const char* what() const {
+      const char* what() const DGD_THROW {
 	 return "debug required exit";
       }
 };

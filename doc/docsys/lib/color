@@ -44,7 +44,7 @@ my %predefined_base_colors;
 			    "white" => "#ffffff",
 			    "black" => "#000000",
 			    "sky" => "#b6ddff",
-			    "sky-blue" => "#d0d0ff",
+			    "sky-blue" => "#d0c0ff",
 			    "sky-red" => "#ffe0f0",
 			    "grass" => "#ddffb6",
 			    "flame" => "#ffddb6" );

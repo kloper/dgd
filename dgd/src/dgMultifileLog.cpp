@@ -28,10 +28,9 @@
  * implementation of DGD::multifile_log
  */
 
-#include "dgConfig.h"
-
 #include <boost/lexical_cast.hpp>
 
+#include "dgConfig.h"
 #include "dgMultifileLog.h"
 
 namespace DGD {

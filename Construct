@@ -60,12 +60,12 @@ Export qw(BLIB toolset options version);
 
 Default $BLIB;
 
-Build map( "$_/Conscript", qw(regex dgd test samples doc) );
+Build map( "$_/Conscript", qw(cons/config regex dgd test samples doc) );
 
 sub clean {
     my ($root) = @_;
     find( sub {
-	      if( /\.(o|a|so|obj|exe|lib|pdb|idb|pch|ilk)$/i ) {
+	      if( /\.(o|a|so|dpo|obj|exe|lib|pdb|idb|pch|ilk)$/i ) {
 		  print "removing $File::Find::name\n";
 		  unlink;
 	      } 

@@ -28,10 +28,9 @@
  * implementation of DGD::funnel
  */
 
-#include "dgConfig.h"
-
 #include <ctime>
 
+#include "dgConfig.h"
 #include "dgFunnel.h"
 
 namespace DGD {

@@ -49,7 +49,7 @@ class bad_regex: public std::exception {
       bad_regex() : m_what( "bad regular expression" ) {}
       bad_regex( const char* s ) : m_what( s ) {}
 
-      const char* what() const { 
+      const char* what() const DGD_THROW { 
 	 return m_what;
       }
    private:
