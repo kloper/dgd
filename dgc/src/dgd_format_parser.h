@@ -58,11 +58,10 @@
 #define PARS_ERR_ARGGAP     3
 #define PARS_ERR_ARGTYPE    4
 
-/* content of y.tab.h goes here */
-#ifndef YYERRCODE
-#define YYERRCODE 256
-#endif
+#define PARS_FLAG_DEFAULT   0x00000000
+#define PARS_FLAG_NOCHAIN   0x00000001
 
+/* content of y.tab.h goes here */
 #define LEX_EOF 257
 #define LEX_ZERO 258
 #define LEX_MINUS 259
@@ -109,7 +108,7 @@
 #define LEX_T_PTR 300
 #define LEX_T_REPORT 301
 
-cache_item_t *dgd_format_parse( char* format_string );
+cache_item_t *dgd_format_parse( char* format_string, unsigned int flags );
 cache_t      *dgd_format_parser_cache();
 
 #endif /* _dgd_format_parser_h_ */

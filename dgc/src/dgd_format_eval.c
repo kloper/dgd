@@ -28,23 +28,23 @@
 #include "dgd_format_eval.h"
 #include "dgd_format_parser.h"
 
-unsigned int dgd_eval_argc( cache_item_t *eval_item );
+static unsigned int dgd_eval_argc( cache_item_t *eval_item );
 
 dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE] = {
-   { "error",    NULL, { 0, 0, 0, 0 } },
-   { "dec",      NULL, { 0, 0, 0, 0 } },
-   { "oct",      NULL, { 0, 0, 0, 0 } },
-   { "hex",      NULL, { 0, 0, 0, 0 } },
-   { "unsigned", NULL, { 0, 0, 0, 0 } },
-   { "report",   NULL, { 0, 0, 0, 0 } },
-   { "sci",      NULL, { 0, 0, 0, 0 } },
-   { "float",    NULL, { 0, 0, 0, 0 } },
-   { "scifloat", NULL, { 0, 0, 0, 0 } },
-   { "scihex",   NULL, { 0, 0, 0, 0 } },
-   { "char",     NULL, { 0, 0, 0, 0 } },
-   { "str",      NULL, { 0, 0, 0, 0 } },
-   { "ptr",      NULL, { 0, 0, 0, 0 } },
-   { NULL,       NULL, { 0, 0, 0, 0 } }
+   { "error",    NULL },
+   { "dec",      NULL },
+   { "oct",      NULL },
+   { "hex",      NULL },
+   { "unsigned", NULL },
+   { "report",   NULL },
+   { "sci",      NULL },
+   { "float",    NULL },
+   { "scifloat", NULL },
+   { "scihex",   NULL },
+   { "char",     NULL },
+   { "str",      NULL },
+   { "ptr",      NULL },
+   { NULL,       NULL }
 };
 
 static
@@ -182,9 +182,6 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 
 	       switch( rc ) {
 		  case EVAL_RES_DONE:
-		     action->attr.valid_mask = 0;
-		     eval->state = EVAL_STATE_NORMAL;
-		     break;
 		  case EVAL_RES_ERROR:
 		     action->attr.valid_mask = 0;
 		     if( action->error != 0 ) 
@@ -193,7 +190,10 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 			eval->error = EVAL_ERR_CALLBACK;
 		     eval->state = EVAL_STATE_NORMAL;
 		     res = rc;
-		     goto finish;
+		     if( eval->flags & EVAL_FLAG_IGNORE_ERRORS ) 
+			break;
+		     else
+			goto finish;
 		  case EVAL_RES_RANGE:
 		     eval->state = EVAL_STATE_RANGED;
 		     res = rc;
@@ -236,7 +236,11 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 		     eval->error = EVAL_ERR_EXTARG;
 		     res = EVAL_RES_ERROR;
 		     eval->state = EVAL_STATE_NORMAL;
-		     goto finish;
+		     if( eval->flags & EVAL_FLAG_IGNORE_ERRORS ) 
+			break;
+		     else 
+			goto finish;
+		     
 		  }
 	       }
 	    } else {
@@ -342,7 +346,10 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 			eval->error = EVAL_ERR_CALLBACK;
 		     eval->state = EVAL_STATE_NORMAL;
 		     res = rc;
-		     goto finish;
+		     if( eval->flags & EVAL_FLAG_IGNORE_ERRORS ) 
+			break;
+		     else 
+			goto finish;		    
 		  case EVAL_RES_RANGE:
 		     eval->state = EVAL_STATE_RANGED;
 		     res = rc;

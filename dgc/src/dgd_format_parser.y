@@ -42,9 +42,11 @@ typedef union _yy_stype_t {
 #define YYSTYPE yy_stype_t
 
 static int yylex();
+static int yyparse();
 static void yylexreset();
 static void yyerror( char* reason );
 
+static
 cache_item_t* dgd_format_settle_args( cache_t *cache, 
 				      cache_item_t *parse_ring,
 				      cache_item_t *error_item );
@@ -766,7 +768,8 @@ cache_t *dgd_format_parser_cache() {
    return (cache_t*)&parser_cache;
 }
 
-cache_item_t *dgd_format_parse( char* format_string ) {
+cache_item_t *dgd_format_parse( char* format_string,
+				unsigned int flags ) {
    cache_item_t *result, *chain, err_item;
    
    if( !parser_init ) {
@@ -804,6 +807,9 @@ cache_item_t *dgd_format_parse( char* format_string ) {
       }
       result = ring;
    } 
+
+   if( flags & PARS_FLAG_NOCHAIN )
+      return result;
 
    chain = dgd_cache_new( cache, format_string, result );
    if( chain == NULL ) {
@@ -1074,7 +1080,6 @@ dgd_format_settle_args( cache_t *cache,
       dgd_ring_forward(eval_item);
    }
 
-  finish:
    dgd_ring_push_front( &parse_ring, parse_prefix );
    return parse_ring;
 

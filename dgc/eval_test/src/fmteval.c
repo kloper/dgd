@@ -96,6 +96,7 @@ void my_init_callbacks() {
    memset( (char*)curr, '\0', sizeof( *curr ) );
    curr->name = "s";   
    curr->callback = my_string_callback;
+   (curr+1)->name = NULL;
 }
 
 void dgd_printf( char* format, ... ) {
@@ -110,7 +111,7 @@ void dgd_printf( char* format, ... ) {
    va_start( arg, format );
 
    cache = dgd_format_parser_cache();
-   chain = dgd_format_parse( format );
+   chain = dgd_format_parse( format, PARS_FLAG_DEFAULT );
    dgd_init_bounded_range( &str, buffer, sizeof(buffer) );
    
    if( chain == NULL )
@@ -119,7 +120,7 @@ void dgd_printf( char* format, ... ) {
    dgd_dump_parser_bytecode( stderr, chain->value.chain.ring, 0 );
    printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
 
-   dgd_eval_init( &eval, 0, chain, NULL );
+   dgd_eval_init( &eval, EVAL_FLAG_DEFAULT, chain, NULL );
 
    do {
       rc = dgd_format_eval( &eval, &str, arg );
