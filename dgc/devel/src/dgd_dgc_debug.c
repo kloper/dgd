@@ -59,7 +59,7 @@ void attrib( FILE *stream, call_attr_t *attr, unsigned int nesting_level ) {
    indent( stream, nesting_level+2 ); 
    fprintf( stream, "byte_count:  %u\n", attr->byte_count );
    indent( stream, nesting_level+2 ); 
-   fprintf( stream, "position:  %u\n", attr->position );
+   fprintf( stream, "position:    %u\n", attr->position );
    indent( stream, nesting_level ); 
    fprintf( stream, "}\n" );
 }
@@ -80,19 +80,43 @@ void dgd_dump_parser_bytecode( FILE *stream,
 
       switch( next->type ) {
 	 case EVAL_T_INT:
-	    fprintf( stream, "%x->load integer:\n", (unsigned int)next );
-	    attrib( stream, &(next->value.argload.attr), nesting_level+2 );
+	    fprintf( stream, "%x->load integer [%u]\n", 
+		     (unsigned int)next,
+		     next->value.argload.index );
 	    break;
 	 case EVAL_T_DOUBLE:
-	    fprintf( stream, "%x->load double:\n", (unsigned int)next );
-	    attrib( stream, &(next->value.argload.attr), nesting_level+2 );
+	    fprintf( stream, "%x->load double [%u]\n", 
+		     (unsigned int)next,
+		     next->value.argload.index );
 	    break;
 	 case EVAL_T_PTR:
-	    fprintf( stream, "%x->load pointer:\n", (unsigned int)next );
-	    attrib( stream, &(next->value.argload.attr), nesting_level+2 );
+	    fprintf( stream, "%x->load pointer [%u]\n", 
+		     (unsigned int)next,
+		     next->value.argload.index );
 	    break;
          case PARS_T_ERROR:
-            fprintf( stream, "%x->error:\n", (unsigned int)next );
+            fprintf( stream, "%x->error: ", (unsigned int)next );
+	    switch( next->value.error.error ) {
+	       case PARS_ERR_UNKNOWN:
+		  fprintf( stream, "unknown" );
+		  break;
+	       case PARS_ERR_SYNTAX:
+		  fprintf( stream, "syntax %.*s", 
+			   next->value.error.lexeme.end - 
+			   next->value.error.lexeme.begin,
+			   next->value.error.lexeme.begin );
+		  break;
+	       case PARS_ERR_ALLOC:
+		  fprintf( stream, "alloc" );
+		  break;
+	       case PARS_ERR_ARGGAP:
+		  fprintf( stream, "gap in args %d", next->value.error.num );
+		  break;
+	       case PARS_ERR_ARGTYPE:
+		  fprintf( stream, "gap in types %d", next->value.error.num );
+		  break;
+	    }
+	    fprintf( stream, "\n" );
             break;
 	 case PARS_T_PAIR:
 	    fprintf( stream, "%x->pair:\n", (unsigned int)next );

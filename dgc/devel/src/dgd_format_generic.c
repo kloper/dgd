@@ -93,7 +93,7 @@ int dgd_generic_callback_dec( dgd_action_t *action,
       sprintf( p->buf, build_format( &(action->attr), 'd' ), *(int*)argv );
    }
 
-   size = min( strlen( p->curr ), str->high_bound - str->end );
+   size = min( strlen( p->curr ), (unsigned)(str->high_bound - str->end) );
    
    if(size > 0 ) {
       memcpy( (char*)str->end, p->curr, size );
@@ -118,7 +118,7 @@ int dgd_generic_callback_error( dgd_action_t *action,
    } persistent_t;
 
    dgd_error_arg_t *err = (dgd_error_arg_t*)argv;
-   char *str = "unknown error";
+   char *errdescr = "unknown error";
    persistent_t *p;
    unsigned int size;
 
@@ -131,19 +131,19 @@ int dgd_generic_callback_error( dgd_action_t *action,
 
    switch( err->error ) {
       case EVAL_ERR_BAD_ARG:
-	 str = "bad argument";
+	 errdescr = "bad argument";
 	 break;
       case EVAL_ERR_BAD_CACHE:
-	 str = "internal error";
+	 errdescr = "internal error";
 	 break;
       case EVAL_ERR_CONT_ARGS:
-	 str = "argument gap";
+	 errdescr = "argument gap";
 	 break;
       case EVAL_ERR_CALLBACK:
-	 str = "callback error";
+	 errdescr = "callback error";
 	 break;
       case EVAL_ERR_SMALLDATA:
-	 str = "data too small";
+	 errdescr = "data too small";
 	 break;
    }
 
@@ -152,7 +152,7 @@ int dgd_generic_callback_error( dgd_action_t *action,
       *p->buf = '\0';
 
       strcat( p->buf, "<" );
-      strcat( p->buf, str );
+      strcat( p->buf, errdescr );
       if( err->token.begin != NULL ) {
 	 strcat( p->buf, ": " );
 	 size = min( sizeof( p->buf ) - strlen( p->buf ) - 2,
@@ -164,7 +164,7 @@ int dgd_generic_callback_error( dgd_action_t *action,
       strcat( p->buf, ">" );
    }
    
-   size = min( strlen( p->curr ), str->high_bound - str->end );
+   size = min( strlen( p->curr ), (unsigned)(str->high_bound - str->end) );
    
    if(size > 0 ) {
       memcpy( (char*)str->end, p->curr, size );

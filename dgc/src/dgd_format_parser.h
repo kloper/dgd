@@ -52,6 +52,12 @@
 #define EVAL_T_DOUBLE       21
 #define EVAL_T_PTR          22
 
+#define PARS_ERR_UNKNOWN    0
+#define PARS_ERR_SYNTAX     1
+#define PARS_ERR_ALLOC      2
+#define PARS_ERR_ARGGAP     3
+#define PARS_ERR_ARGTYPE    4
+
 /* content of y.tab.h goes here */
 #ifndef YYERRCODE
 #define YYERRCODE 256
@@ -105,8 +111,6 @@
 
 cache_item_t *dgd_format_parse( char* format_string );
 cache_t      *dgd_format_parser_cache();
-cache_item_t* dgd_format_settle_args( cache_t *cache, 
-				      cache_item_t *parse_ring );
 
 #endif /* _dgd_format_parser_h_ */
 

@@ -45,7 +45,9 @@ static int yylex();
 static void yylexreset();
 static void yyerror( char* reason );
 
-extern cache_item_t *dgd_format_parser_result();
+cache_item_t* dgd_format_settle_args( cache_t *cache, 
+				      cache_item_t *parse_ring,
+				      cache_item_t *error_item );
 
 static lexer_state_t   lexer_state;
 static int             parser_init = 0;
@@ -654,12 +656,14 @@ cmd:
 	             }
           | error 
                      {
-                       cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
+                       cache_item_t *ring = NULL;
 
-                       dgd_cache_free( cache, &start_ring, -1 );
+		       dgd_cache_free( cache, &start_ring, -1 );
 
+		       ring = dgd_cache_alloc( cache, 1 );
                        if( ring != NULL ) {
                          ring->type               = PARS_T_ERROR;
+			 ring->value.error.error  = PARS_ERR_SYNTAX;
                          ring->value.error.lexeme = lexer_state.lexeme;
                        }
 
@@ -755,8 +759,8 @@ cache_t *dgd_format_parser_cache() {
 }
 
 cache_item_t *dgd_format_parse( char* format_string ) {
-   cache_item_t *result;
-
+   cache_item_t *result, *chain, err_item;
+   
    if( !parser_init ) {
       parser_init = 1;
 
@@ -771,19 +775,72 @@ cache_item_t *dgd_format_parse( char* format_string ) {
    init_lexer_state( &lexer_state );	
    yyparse();
 
-   result = dgd_format_settle_args( cache, yyval.ring );
+   result = dgd_format_settle_args( cache, yyval.ring, &err_item );
    if( result == NULL ) {
-      dgd_cache_free( cache, &(yyval.ring), -1 );
-      return NULL;
-   }
+      cache_item_t *ring = NULL;
 
-   result = dgd_cache_new( cache, format_string, result );
-   if( result == NULL ) {
+      ring = dgd_cache_alloc( cache, 1 );
+      if( ring != NULL ) {
+	 ring->type        = PARS_T_ERROR;
+	 ring->value.error = err_item.value.error;
+
+	 dgd_ring_push_back( &ring, yyval.ring );
+      } else {
+	 dgd_cache_free( cache, &(yyval.ring), -1 );
+	 // try again
+	 ring = dgd_cache_alloc( cache, 1 );
+	 if( ring != NULL ) {
+	    ring->type              = PARS_T_ERROR;
+	    ring->value.error.error = PARS_ERR_ALLOC;
+	 }
+      }
+      result = ring;
+   } 
+
+   chain = dgd_cache_new( cache, format_string, result );
+   if( chain == NULL ) {
+      cache_item_t *ring = NULL;
+
       dgd_cache_free( cache, &result, -1 );
-      return NULL;
+
+      ring = dgd_cache_alloc( cache, 1 );
+      if( ring != NULL ) {
+	 ring->type              = PARS_T_ERROR;
+	 ring->value.error.error = PARS_ERR_ALLOC;
+      }
+      chain = dgd_cache_new( cache, format_string, ring );
    }
 
-   return result;
+   return chain;
+}
+
+#define FIND_OK   0
+#define FIND_NOPE 1
+
+static 
+unsigned int dgd_ring_find( cache_item_t  *ring, 
+			    cache_item_t **item, 
+			    unsigned int   index ) {
+   cache_item_t *next;
+
+   if( ring == NULL ) {
+      *item = NULL;
+      return FIND_NOPE;
+   }
+
+   next = ring;
+
+   do {
+      if( next->value.argload.index >= index )
+	 break;
+      dgd_ring_forward( next );
+   } while( next != ring );
+
+   *item = next;
+   if( next->value.argload.index == index ) {
+      return FIND_OK;
+   }
+   return FIND_NOPE;
 }
 
 static
@@ -813,27 +870,45 @@ void dgd_ring_push_and_sort( cache_item_t **ring, cache_item_t *item ) {
    }
 }
 
+static
 cache_item_t*
-dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
+dgd_format_settle_args( cache_t *cache, 
+			cache_item_t *parse_ring,
+			cache_item_t *error_item ) {
    cache_item_t *eval_item;
    cache_item_t *parse_prefix = NULL;
    cache_item_t *ring = NULL;
-   unsigned argn = 0, maxargn = 0, i;
-
+   unsigned argn = 1, maxargn = 1, i, type;
+   
    eval_item = parse_ring;
 
    do {
       switch( eval_item->type ) {
 	 case PARS_T_NEXT_ARG:
-	    if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
-	       goto error;
-	    
-	    ring->type = EVAL_T_PTR;
-	    ring->value.argload.index = argn++;
-	    maxargn = max( maxargn, argn );
-	    ring->value.argload.attr.valid_mask = 0;
-
-	    dgd_ring_push_and_sort( &parse_prefix, ring );
+	    switch( dgd_ring_find( parse_prefix, &ring, argn ) ) {
+	       case FIND_NOPE:
+		  if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) {
+		     if( error_item != NULL ) 
+			error_item->value.error.error = PARS_ERR_ALLOC;
+		     goto error;
+		  }
+		  
+		  ring->type = EVAL_T_PTR;
+		  ring->value.argload.index = argn;
+		  dgd_ring_push_and_sort( &parse_prefix, ring );
+		  /* fall through */
+	       case FIND_OK:
+		  if( ring->type != EVAL_T_PTR ) {
+		     if( error_item != NULL ) {
+			error_item->value.error.error = PARS_ERR_ARGTYPE;
+			error_item->value.error.num   = argn;
+		     }
+		     goto error;
+		  }
+		  argn++; /* dont even think to insert ++ into the macro! */
+		  maxargn = max( maxargn, argn );
+		  break;
+	    }
 	    
 	    eval_item->value.next_arg.arg = ring;
 	    break;
@@ -853,67 +928,115 @@ dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
 	 case PARS_T_REP:
 	    if( (eval_item->value.call.attr.valid_mask & CALL_ATTR_WIDTH) &&
 		eval_item->value.call.attr.width <= 0 ) {
-	       if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
-		  goto error;
-	       
-	       ring->type = EVAL_T_INT;
+
 	       if( eval_item->value.call.attr.width < 0 ) 
 		  argn = -eval_item->value.call.attr.width;
-	       ring->value.argload.index = argn++;
-	       maxargn = max( maxargn, argn );
-	       ring->value.argload.attr.valid_mask = 0;
 
-	       dgd_ring_push_and_sort( &parse_prefix, ring );
+	       switch( dgd_ring_find( parse_prefix, &ring, argn ) ) {
+		  case FIND_NOPE:
+		     if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) {
+			if( error_item != NULL ) 
+			   error_item->value.error.error = PARS_ERR_ALLOC;
+			goto error;
+		     }
 	       
+		     ring->type = EVAL_T_INT;		     
+		     ring->value.argload.index = argn;
+		     dgd_ring_push_and_sort( &parse_prefix, ring );
+		     /* fall through */
+		  case FIND_OK:
+		     if( ring->type != EVAL_T_INT ) {
+			if( error_item != NULL ) {
+			   error_item->value.error.error = PARS_ERR_ARGTYPE;
+			   error_item->value.error.num   = argn;
+			}
+			goto error;
+		     }
+		     argn++; /* dont even think to insert ++ into the macro! */
+		     maxargn = max( maxargn, argn );
+		     break;
+	       }
 	       eval_item->value.call.width = ring;	       
 	    }
 
 	    if( (eval_item->value.call.attr.valid_mask & 
 		 CALL_ATTR_PRECISION) &&
 		eval_item->value.call.attr.precision <= 0 ) {
-	       if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
-		  goto error;
-	       
-	       ring->type = EVAL_T_INT;
+
 	       if( eval_item->value.call.attr.precision < 0 ) 
 		  argn = -eval_item->value.call.attr.precision;
-	       ring->value.argload.index = argn++;
-	       maxargn = max( maxargn, argn );
-	       ring->value.argload.attr.valid_mask = 0;
 
-	       dgd_ring_push_and_sort( &parse_prefix, ring );
-	       
+	       switch( dgd_ring_find( parse_prefix, &ring, argn ) ) {
+		  case FIND_NOPE:
+		     if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) {
+			if( error_item != NULL ) 
+			   error_item->value.error.error = PARS_ERR_ALLOC;
+			goto error;
+		     }
+		     
+		     ring->type = EVAL_T_INT;
+		     ring->value.argload.index = argn;
+		     dgd_ring_push_and_sort( &parse_prefix, ring );
+		     /* fall through */
+		  case FIND_OK:
+		     if( ring->type != EVAL_T_INT ) {
+			if( error_item != NULL ) {
+			   error_item->value.error.error = PARS_ERR_ARGTYPE;
+			   error_item->value.error.num   = argn;
+			}
+			goto error;
+		     }
+		     argn++; /* dont even think to insert ++ into the macro! */
+		     maxargn = max( maxargn, argn );
+		     break;
+	       }	       
 	       eval_item->value.call.precision = ring;	       
 	    }	       
 
-	    if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
-	       goto error;
-	    
+	    if( eval_item->value.call.attr.valid_mask & CALL_ATTR_ABSPOS ) 
+	       argn = eval_item->value.call.attr.position;
+
 	    switch( eval_item->type ) {
-	       	 case PARS_T_SCI:
+	       case PARS_T_SCI:
 	       case PARS_T_FLOAT:
 	       case PARS_T_SCIORFLOAT:
 	       case PARS_T_SCIHEX:
-		  ring->type = EVAL_T_DOUBLE;
+		  type = EVAL_T_DOUBLE;
 		  break;
 	       case PARS_T_STR:
 	       case PARS_T_PTR:
 	       case PARS_T_REP:
-		  ring->type = EVAL_T_PTR;
+		  type = EVAL_T_PTR;
 		  break;
 	       default:
-		  ring->type = EVAL_T_INT;
+		  type = EVAL_T_INT;
 		  break;
 	    }
 
-	    if( eval_item->value.call.attr.valid_mask & CALL_ATTR_ABSPOS ) 
-	       argn = eval_item->value.call.attr.position;
-	    ring->value.argload.index = argn++;
-	    maxargn = max( maxargn, argn );
-	    dgd_call_attr_assign( &(ring->value.argload.attr),
-				  &(eval_item->value.call.attr) );
-
-	    dgd_ring_push_and_sort( &parse_prefix, ring );
+	    switch( dgd_ring_find( parse_prefix, &ring, argn ) ) {
+	       case FIND_NOPE:
+		  if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) {
+		     if( error_item != NULL ) 
+			error_item->value.error.error = PARS_ERR_ALLOC;
+		     goto error;
+		  }
+	    
+		  ring->type                = type;
+		  ring->value.argload.index = argn;
+		  dgd_ring_push_and_sort( &parse_prefix, ring );
+		  /* fall through */
+	       case FIND_OK:
+		  if( ring->type != type ) {
+		     if( error_item != NULL ) {
+			error_item->value.error.error = PARS_ERR_ARGTYPE;
+			error_item->value.error.num   = argn;
+		     }
+		     goto error;
+		  }
+		  argn++; /* dont even think to insert ++ into the macro! */
+		  maxargn = max( maxargn, argn );
+		  break;
+	    }	       
 	    
 	    eval_item->value.call.arg = ring;
 
@@ -925,11 +1048,56 @@ dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
       dgd_ring_forward(eval_item);
    } while( eval_item != parse_ring );
 
+   eval_item = parse_prefix;
+   for( i = 1; i < maxargn; i++ ) {
+      if( eval_item->value.argload.index != i ) {
+	 if( error_item != NULL ) {
+	    error_item->value.error.error = PARS_ERR_ARGGAP;
+	    error_item->value.error.num   = i;
+	 }
+	 goto error;
+      }
+
+      dgd_ring_forward(eval_item);
+   }
+
   finish:
    dgd_ring_push_front( &parse_ring, parse_prefix );
    return parse_ring;
 
   error:
    dgd_cache_free( cache, &parse_prefix, -1 );
+   eval_item = parse_ring;
+
+   do {
+      switch( eval_item->type ) {
+	 case PARS_T_NEXT_ARG:
+	    eval_item->value.next_arg.arg = NULL;
+	    break;
+	    	 case PARS_T_DEC:
+	 case PARS_T_OCT:
+	 case PARS_T_UNSIGNED:
+	 case PARS_T_HEX:
+	 case PARS_T_CHAR:
+
+	 case PARS_T_SCI:
+	 case PARS_T_FLOAT:
+	 case PARS_T_SCIORFLOAT:
+	 case PARS_T_SCIHEX:
+
+	 case PARS_T_STR:
+	 case PARS_T_PTR:
+	 case PARS_T_REP:
+	    eval_item->value.call.width     = NULL;
+	    eval_item->value.call.precision = NULL;
+	    eval_item->value.call.arg       = NULL;
+	    break;
+	 default:
+	    break;
+      }
+
+      dgd_ring_forward(eval_item);
+   } while( eval_item != parse_ring );
+
    return NULL;
 }

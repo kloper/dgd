@@ -58,6 +58,8 @@ typedef struct _cache_item_t {
 		  str_range_t           lexeme;
 	    } lexeme;
 	    struct {
+		  unsigned int          error;
+		  unsigned int          num;
 		  str_range_t           lexeme;
 	    } error;
 	    struct {
@@ -71,8 +73,6 @@ typedef struct _cache_item_t {
 		  int                   num;
 		  double                dnum;
 		  void                 *ptr;
-		  char                  ch;
-		  call_attr_t           attr;
 	    } argload;
       } value;
 
