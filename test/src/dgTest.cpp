@@ -24,14 +24,88 @@
 
 #include <dgDebug.h>
 
+using namespace std;
+
+void single_channel_test( DGD::channel& debug) {
+   int i;
+
+   for(i = 0; i < 100; i++) {
+      debug << "Dimka" << ' ' << i << ' ' << "Pimka";
+   }
+
+   debug.wrap(false);
+   debug << endl;
+
+   for(i = 0; i < 120; i++) {
+      debug << "Dimka" << ' ' << i << ' ' << "Pimka";
+   }
+
+   debug.wrap(true);
+   debug.word_wrap(false);
+   debug << endl;
+
+   for(i = 0; i < 120; i++) {
+      debug << "Dimka" << ' ' << i << ' ' << "Pimka";
+   }
+   
+   debug.word_wrap(true);
+   debug << endl;
+
+   for(i = 0; i < 120; i++) {
+      if( i % 10 == 0) {
+	 debug << endl;
+	 debug.incr_indent();
+      }
+      debug << "Dimka" << ' ' << i << ' ' << "Pimka";
+   }
+
+   debug << endl;
+   debug.indent( 0 );
+   debug.word_wrap(false);
+
+   for(i = 0; i < 120; i++) {
+      if( i % 10 == 0) {
+	 debug << endl;
+	 if( i < 64 ) 
+	    debug.incr_indent();
+	 else
+	    debug.decr_indent();
+      }
+      debug << "Dimka" << ' ' << i << ' ' << "Pimka";
+   }
+
+   debug << endl;
+
+   debug.indent(0);
+   debug.word_wrap(true);
+
+   for(i = 0; i < 120; i++) {
+      if( i % 10 == 0) {
+	 if( i < 60 ) 
+	    debug.incr_indent();
+	 else
+	    debug.decr_indent();
+      }
+      debug << "qwertyui opasdfghjkl ;'zxcvbnm,./ dgdgdh d dgdg dgd dgdgdgd dfdfdfdg dgdgdgd d dhdhdhdie9deiosdfj23491111111087r4hnwef dfhefjsdf sdfjsdfhjdgfdhfg fvgdfhsgfshdfgsdh sdhfgsdfhd s\n";
+   }
+
+   debug << "qwertyui opas";
+   debug << std::endl;
+
+   debug << "11111111111111111111112222222222222222222222233333333333333333333333444444444444444444444455555555555555566666666666666666666666688888888888888" << endl;
+//     debug << "Hello World!!!" << ' ' 
+//  	 << incr << 1 << "\n" 
+//  	 << 2 << "\n" 
+//  	 << incr << 3 << "\n" 
+//  	 << 3 << "\n" << decr  
+//  	 << 5 << "\n" << std::endl 
+//  	 << indent(5) << "kuku" << std::endl;
+}
+
 int main( int argc, char** argv ) {
    DGD::Debug dout( argc, argv );
 
-   dout["main"].incr_indent();
-
-   for( int i = 0; i < 30; ++i )
-      dout["main"] << "Hello      World         ";
-
+   single_channel_test( dout["main"] );
    return 0;
 }
 

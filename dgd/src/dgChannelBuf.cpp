@@ -53,13 +53,27 @@ channelbuf::setbuf( char_type* ptr , std::streamsize size) {
 
 int channelbuf::sync() {
    overflow( traits_type::eof() );
+
+   if( pptr() != pbase() ) {
+      propagate( pbase(), pptr() );
+      setp( pbase(), epptr() );
+      m_word_pos = pbase();
+   }
+
    return 0;
 }
 
 channelbuf::int_type channelbuf::overflow( int_type ch ) {   
    const char_type* pos = pbase();
+   bool run_flag = true;
 
    do {
+      unsigned int indent = std::min( m_indent, m_max_width - m_min_width );
+      if( m_column < indent ) {
+	 propagate( ' ', indent - m_column );
+	 m_column = indent;	 
+      }
+
       const char_type* nearest = NULL;
       const char_type* space_pos = traits_type::find( pos, pptr()-pos, ' ' );
       const char_type* tab_pos   = traits_type::find( pos, pptr()-pos, '\t' );
@@ -98,9 +112,7 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	 if( m_column + (nearest-pos+1) < m_max_width ) {
 	    propagate( pos, nearest+1 );
 	    if( nl_nearest || rl_nearest ) {
-	       m_column = std::min( m_indent * m_indent_step,
-				    m_max_width - m_min_width );
-	       propagate( ' ', m_column );
+	       m_column = 0;
 	       m_line++;
 	    } else {
 	       m_word_pos = nearest+1;
@@ -109,23 +121,15 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	    pos = nearest + 1;
 	 } else if( m_column + (nearest-pos+1) == m_max_width ) {
 	    propagate( pos, nearest );
-	    propagate( '\n', 1 );
-	    if( m_wrap ) {
-	       if( space_nearest || tab_nearest ) {
-		  while( pos < epptr() && 
-			 ( *pos == ' ' || *pos == '\t' ) ) pos++;
-	       } else if( nl_nearest || rl_nearest ) {
-		  pos++;
-	       } 
-	       m_column = std::min( m_indent * m_indent_step,
-				    m_max_width - m_min_width );
-	       propagate( ' ', m_column );
+	    if( m_wrap ) {	       
+	       pos = nearest + 1;
+	       propagate( '\n', 1 );
+	       m_column = 0;
 	       m_line++;
 	    } else {
 	       if( nl_nearest || rl_nearest ) {
-		  m_column = std::min( m_indent * m_indent_step,
-				       m_max_width - m_min_width );
-		  propagate( ' ', m_column );
+		  propagate( '\n', 1 );
+		  m_column = 0;
 		  m_line++;
 	       } else {
 		  m_column += nearest-pos+1 + (tab_nearest?7:0);
@@ -135,60 +139,75 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	    m_word_pos = pos;
 	 } else { // m_column + (nearest-pos+1) > m_max_width
 	    if( m_wrap ) {
-	       if( m_word_wrap ) {
-		  propagate( pos, m_word_pos );
+	       if( m_column >= m_max_width ) {
 		  propagate( '\n', 1 );
-		  pos = m_word_pos;
+		  m_column = 0;
+		  m_line++;
+	       } else if( m_word_wrap ) {
+		  unsigned int prop_size =
+		     std::min( (unsigned)(m_word_pos-pos), 
+			       m_max_width-m_column );
+		  propagate( pos, pos + prop_size );
+		  propagate( '\n', 1 );
+		  pos += prop_size;
+		  m_column = 0;
+		  m_line++;
 		  m_word_pos = nearest+1;
 	       } else {
-		  propagate( pos, pos + (m_max_width-m_column) + 1 );
+		  propagate( pos, pos + m_max_width-m_column );
 		  propagate( '\n', 1 );
-		  pos += (m_max_width-m_column) + 1;
+		  pos += m_max_width-m_column;
+		  m_column = 0;
+		  m_line++;
+		  m_word_pos = nearest+1;
 	       }
-	       m_column = std::min( m_indent * m_indent_step,
-				    m_max_width - m_min_width );
-	       propagate( ' ', m_column );
-	       m_line++;
 	    } else {
 	       propagate( pos, nearest+1 );
 	       if( nl_nearest || rl_nearest ) {
-		  m_column = std::min( m_indent * m_indent_step,
-				       m_max_width - m_min_width );
-		  propagate( ' ', m_column );
+		  m_column = 0;
 		  m_line++;
 	       } else {
-		  m_word_pos = nearest+1;
 		  m_column += nearest-pos+1 + (tab_nearest?7:0);
 	       }
+	       m_word_pos = nearest+1;
 	       pos = nearest + 1;
 	    }
 	 }
       } else {
-	 while( (unsigned)(pptr()-pos) >= m_max_width-m_column ) {
-	    propagate( pos, pos + (m_max_width-m_column) + 1 );
-	    pos += (m_max_width-m_column) + 1;
-	    m_column = std::min( m_indent * m_indent_step,
-				 m_max_width - m_min_width );
-	    propagate( ' ', m_column );
-	    m_line++;  
-	 }
-	 
 	 unsigned int remaining_len = pptr()-pos;
-	 if( remaining_len > 0 ) {
-	    m_word_pos = pbase() + (pos - m_word_pos);
-	    traits_type::move( pbase(), pos, remaining_len );
-	    setp( pbase(), epptr() );
-	    pbump( remaining_len );
-	    pos = pbase();
+	 if( remaining_len < (unsigned)(epptr()-pbase()) ) {
+	    if( remaining_len > 0 ) {
+	       if( pos > pbase() )
+		  traits_type::move( pbase(), pos, remaining_len );
+	       setp( pbase(), epptr() );
+	       pbump( remaining_len );
+	    } else {
+	       setp( pbase(), epptr() );
+	    }
+	    m_word_pos = pbase();
+	    if( ch != traits_type::eof() )
+	       _M_xsputnc( ch, 1 );
+	    run_flag = false; // break the main loop
 	 } else {
-	    setp( pbase(), epptr() );
-	    pos = pbase();
-	 }
-	 if( ch != traits_type::eof() )
-	    _M_xsputnc( ch, 1 );
-	 break; // break the main loop
+	    if( m_column >= m_max_width ) {
+	       propagate( '\n', 1 );
+	       m_column = 0;
+	       m_line++;
+	    } else if( m_wrap ) {
+	       propagate( pos, pos + (m_max_width - m_column) );
+	       propagate( '\n', 1 );
+	       m_column = 0;
+	       m_line++;
+	       pos += m_max_width - m_column;
+	    } else {
+	       propagate( pos, pos + remaining_len );
+	       m_column += remaining_len;
+	       pos += remaining_len;
+	    }
+	    m_word_pos = pbase();
+	 }	 
       }
-   } while( 1 );
+   } while( run_flag );
 
    return 0;
 }
@@ -220,6 +239,10 @@ channelbuf::channelbuf() :
    m_spaces( " \t" ) {
 }
 
+channelbuf::~channelbuf() {
+   sync();
+}
+
 void channelbuf::assoc( const stream& dgs ) {
    m_assoc.push_back( dgs );
 }
@@ -233,6 +256,7 @@ unsigned int channelbuf::column() const {
 }
 
 void channelbuf::indent_step( unsigned int step ) {
+   sync();
    m_indent_step = step;
 }
 
@@ -241,14 +265,17 @@ unsigned int channelbuf::indent_step() const {
 }
 
 void channelbuf::incr_indent() {
+   sync();
    m_indent += m_indent_step;
 }
 
 void channelbuf::decr_indent() {
+   sync();
    m_indent -= m_indent_step;
 }
 
 void channelbuf::indent( const unsigned int val ) {
+   sync();
    m_indent = val;
 }
 
@@ -257,6 +284,7 @@ unsigned int channelbuf::indent() const {
 }
 
 void channelbuf::min_width( unsigned int width ) {
+   sync();
    m_min_width = width;
 }
 
@@ -265,6 +293,7 @@ unsigned int channelbuf::min_width() const {
 }
 
 void channelbuf::max_width( unsigned int width ) {
+   sync();
    m_max_width = width;
 }
 
@@ -273,6 +302,7 @@ unsigned int channelbuf::max_width() const {
 }
 
 void channelbuf::wrap( bool allow ) {
+   sync();
    m_wrap = allow;
 }
 
@@ -281,6 +311,7 @@ bool channelbuf::wrap() const {
 }
 
 void channelbuf::word_wrap( bool allow ) {
+   sync();
    m_word_wrap = allow;
 }
 
@@ -289,6 +320,7 @@ bool channelbuf::word_wrap() const {
 }
 
 void channelbuf::space_chars(const char* spc ) {
+   sync();
    m_spaces = spc;
 }
 

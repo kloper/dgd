@@ -77,6 +77,7 @@ class channelbuf: public std::streambuf {
       
    public:
       channelbuf();
+      ~channelbuf();
 
       void         assoc( const stream& );
       unsigned int line() const;

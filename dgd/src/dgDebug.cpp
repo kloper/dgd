@@ -22,9 +22,6 @@
 // dgDebug.cpp -- implementation for dgDebug.h
 //
 
-#include <exception>
-
-#include <boost/bind.hpp>
 
 #include "dgDebug.h"
 
