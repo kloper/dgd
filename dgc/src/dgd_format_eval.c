@@ -53,7 +53,7 @@ static
 int dgd_error_callback( dgd_action_t *action, 
 			str_bounded_range_t *str,
 			void* argv ) {
-
+   
 }
 
 static
