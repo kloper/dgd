@@ -64,6 +64,16 @@ typedef struct _str_range_t {
       char   *end;
 } str_range_t;
 
+typedef struct _ext_arg_t {
+      str_range_t name;
+      str_range_t value;
+} ext_arg_t;
+
+typedef struct _ext_args_t {
+      unsigned int argc;
+      ext_arg_t   *argv;
+} ext_args_t;
+
 #define dgd_out_of_range(r) (((r)==NULL)||\
                          ((r)->low_bound>(r)->high_bound)||\
                          ((r)->begin<(r)->low_bound)||\

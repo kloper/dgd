@@ -35,6 +35,7 @@ typedef struct _cache_item_t {
       union {
 	    struct {
 		  str_range_t           name;
+		  int                   index;
 		  call_attr_t           attr;
 		  unsigned int          num_param;
 		  struct _cache_item_t *arg;
@@ -72,6 +73,7 @@ typedef struct _cache_item_t {
 			int             num;
 			double          dnum;
 			void           *ptr;
+			ext_args_t      args;
 		  } v;
 	    } argload;
       } value;

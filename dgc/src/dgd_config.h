@@ -50,6 +50,8 @@
 #define DGD_CACHE_SIZE 128
 #define DGD_CACHE_RANGE 32
 
+#define DGD_MAX_EXT_ARGS 32
+
 typedef char dgd_char_t;
 typedef short dgd_short_t;
 typedef long dgd_longlong_t;

@@ -137,6 +137,7 @@ subcmd:
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = $1.lex.value.lexeme;
                        ring->value.call.num_param = 0;
+		       ring->value.call.index     = -1;
 
                        $$.ring = ring;                       
                      }
@@ -150,6 +151,7 @@ subcmd:
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = $1.lex.value.lexeme;
                        ring->value.call.num_param = dgd_ring_size( args_ring );
+		       ring->value.call.index     = -1;
 
                        dgd_ring_push_front( &args_ring, ring );
 

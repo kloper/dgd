@@ -46,17 +46,17 @@ dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE] = {
 };
 
 static
-dgd_action_callback_t lookup( char* name ) {
+int lookup( str_range_t *name ) {
    dgd_action_lookup_t *curr;
 
    for( curr = dgd_action_lookup_table;
 	curr->name != NULL &&
 	   curr < dgd_action_lookup_table + EVAL_ACTION_LOOKUP_SIZE;
 	curr++ ) {
-      if( strcmp( name, curr->name ) == 0 )
-	 return curr->callback;
+      if( strncmp( name->begin, curr->name, name->end - name->begin ) == 0 )
+	 return curr-dgd_action_lookup_table;
    }
-   return NULL;
+   return -1;
 }
 
 void 
@@ -77,10 +77,12 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
    cache_item_t *eval_item;
    int res = EVAL_RES_DONE;
    str_range_t *lexeme;
-   unsigned int size;
+   unsigned int size, i;
    int index;
    unsigned int rc;
    dgd_action_callback_t callback;
+   cache_item_t tmp;
+   ext_arg_t ext_args[DGD_MAX_EXT_ARGS];
 
    if( eval == NULL || str == NULL ) {
       if( eval != NULL ) 
@@ -196,6 +198,29 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	       }			       
 	    }
 	    break;
+	 case PARS_T_CALL_BY_NAME:
+	    index = eval_item->value.call.index;
+
+	    if( inedex < 0 ) 
+	       index = lookup( &(eval_item->value.call.name) );
+
+	    if( index < 0 ) {
+	       eval->error = EVAL_ERR_LOOKUP;
+	       res = EVAL_RES_ERROR;
+	       eval->state = EVAL_STATE_NORMAL;
+	       goto finish;
+	    }
+
+	    eval_item->value.call.index = index;
+	    eval_item->value.call.arg   = &tmp;
+
+	    tmp.value.argload.v.args.argc = eval_item->value.call.num_param;
+	    tmp.value.argload.v.args.argv = ext_args;
+
+	    for( i = 0; i < tmp.value.argload.v.args.argc; i++ ) {
+	       
+	    }
+	    /* fall through */
 	 case PARS_T_OCT:
 	    if( index < 0 ) 
 	       index = EVAL_ACTION_OCT;
@@ -279,7 +304,7 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 				 &(eval_item->
 				   value.call.arg->
 				   value.argload.v) );
-	       }
+	       } 
 
 	       switch( rc ) {
 		  case EVAL_RES_DONE:
