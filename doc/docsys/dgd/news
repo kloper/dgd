@@ -1,0 +1,12 @@
+<%attr>
+short => "News"
+brief => "DGD News"
+title => "DGD News and Changelog"
+</%attr>
+
+% use Text::EtText::EtText2HTML;
+% my $t = new Text::EtText::EtText2HTML;
+% open( NEWS, "<../../NEWS" ) or 
+%     die "Can't open NEWS: $!";
+<% $t->text2html ( <NEWS> ) %>
+% close(NEWS);

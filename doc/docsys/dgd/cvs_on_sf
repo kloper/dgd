@@ -1,0 +1,8 @@
+<%attr>
+short => "CVS"
+brief => "CVS"
+title => "CVS repository at Sourceforge.net"
+dummy => 1
+</%attr>
+
+http://sourceforge.net/cvs/?group_id=62230

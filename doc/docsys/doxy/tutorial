@@ -1,0 +1,12 @@
+<%attr>
+short => "Tutorial"
+brief => "Tutorial"
+title => "Tutorial Articles"
+dummy => 1
+</%attr>
+
+<%args>
+$config
+</%args>
+
+<& /lib/local, $config, "/doxy/gen/pages" &>

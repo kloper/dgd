@@ -1,0 +1,8 @@
+<%attr>
+short => "Sourceforge"
+brief => "DGD at Sourceforge.net"
+title => "DGD at Sourceforge.net"
+dummy => 1
+</%attr>
+
+http://sourceforge.net/projects/dgd

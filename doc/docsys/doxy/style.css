@@ -1,0 +1,36 @@
+<%args>
+$config
+</%args>
+
+<%attr>
+standalone => 1
+hidden => 1
+</%attr>
+
+<& /dgd/style.css, config => $config &>
+
+<%perl>
+
+use CSS::Tiny;
+
+my $doxygen_css = CSS::Tiny->read( "../doxygen/html/doxygen.css" ) or
+    die "Can't read doxygen.css";
+
+for my $tag (keys( %{$doxygen_css} )) {
+    my $new_tag = $tag;
+    if( $new_tag =~ /\.[\w]+$/i ) {
+	$new_tag =~ s/\./.doxy/g;
+	$m->print( "$new_tag {\n" );
+	for my $property (keys( %{$doxygen_css->{$tag}} )) {
+	    next if( $property =~ /width/ &&
+		     $doxygen_css->{$tag}->{$property} =~ /[^%]$/ );
+
+	    $m->print( " $property: " . 
+		       $doxygen_css->{$tag}->{$property} . 
+		       ";\n" );
+	}
+	$m->print( "}\n\n" );
+    } 
+}
+
+</%perl>

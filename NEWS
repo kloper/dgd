@@ -2,6 +2,11 @@
 Depression Glass Debug Library NEWS
 ===================================
 
+18/04/2003:	Release 0.25. Documentation build system is redesigned. 
+Switched from Webmake to Mason. I have no plans of adding new features to DGD. 
+Next few releases will have only documentation updates and better porting 
+support. 
+
 10/04/2003:	Version 0.24 is a bug fix release. Fixed two major bugs and 
 added some more code documentation, primary on funnels and multifile logs.
 
@@ -43,4 +48,4 @@ output and webmake generated site.
 
 [forum]:	http://sourceforge.net/forum/forum.php?forum_id=209774
 
-[tutorial]:	doxygen_html_pages.html
+[tutorial]:	doxy_gen_pages.html

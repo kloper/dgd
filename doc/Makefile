@@ -40,13 +40,12 @@ LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /
 LDOUTOPT = /out:
 INCLUDES = -I. -I.. -I$(top_srcdir)
 PERL = /d/perl/bin/perl.exe
-WEBMAKE = d:/perl/bin/webmake
-DOXYGEN = /d/Progra~1/doxygen/bin/doxygen.exe
+DOXYGEN = /c/Progra~1/doxygen/bin/doxygen.exe
 
 SUBDIRS =
 TARGETS = all
 
-all:  doxygen webmake subdirs
+all:  doxygen docs subdirs
 
 .PHONY: subdirs $(SUBDIRS) clean depend builddir doxygen webmake
 
@@ -63,22 +62,19 @@ depend: $(SUBDIRS)
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status
 
-html/dgd.wmk: html/dgd.wmk.in
+doxygen/dgd.doxy: doxygen/dgd.doxy.in
 	cd $(top_srcdir) && ./config.status
 
-doxygen/dgd.doxy: doxygen/dgd.doxy.in
+docsys/dgd/config: docsys/dgd/config.in
 	cd $(top_srcdir) && ./config.status
 
 $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
                              $(top_srcdir)/configure.ac
 	cd $(top_srcdir) && $(MAKE) config.status
 
-doxygen: doxygen/dgd.doxy
+doxygen:: doxygen/dgd.doxy
 	cd doxygen && $(DOXYGEN) dgd.doxy
 
-html/doxygen_html.wmk: html/doxygen/html/*.html  
-	cd html && $(PERL) ../../util/bin/html2wmk doxygen/html 
-
-webmake: html/dgd.wmk html/doxygen_html.wmk doxygen/dgd.doxy
-	cd html && $(PERL) $(WEBMAKE) -f dgd.wmk
+docs:: docsys/dgd/config
+	cd docsys && $(PERL) ./docsys dgd && $(PERL) ./docsys doxy
 

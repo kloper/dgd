@@ -1,0 +1,12 @@
+<%attr>
+short => "Classes"
+brief => "Class List"
+title => "Class List"
+dummy => 1
+</%attr>
+
+<%args>
+$config
+</%args>
+
+<& /lib/local, $config, "/doxy/gen/annotated" &>

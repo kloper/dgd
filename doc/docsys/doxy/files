@@ -1,0 +1,12 @@
+<%attr>
+short => "Files"
+brief => "File List"
+title => "File List"
+dummy => 1
+</%attr>
+
+<%args>
+$config
+</%args>
+
+<& /lib/local, $config, "/doxy/gen/files" &>

@@ -1,0 +1,12 @@
+<%attr>
+short => "Functions"
+brief => "Functions"
+title => "Global Functions"
+dummy => 1
+</%attr>
+
+<%args>
+$config
+</%args>
+
+<& /lib/local, $config, "/doxy/gen/functions" &>

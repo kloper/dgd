@@ -1,0 +1,163 @@
+<%args>
+$config
+</%args>
+
+<%perl>
+
+use File::Basename;
+use HTML::Tree;
+use URI;
+
+sub dump_content ($) {
+    (my $node) = @_;
+
+    my $output = "";
+
+    for my $item ($node->content_list()) {
+	if( !( ref $item ) ) {
+	    $output .= "$item";
+	} else {
+	    $output .= $item->as_HTML();
+	}
+    }
+    return $output;
+}
+
+sub substitute_links($$) {
+    my ($config, $node) = @_;
+
+    for (@{  $node->extract_links()  }) {
+	(my $link, my $element, my $attr, my $tag) = @$_;
+	my $url = URI->new($link);
+	if( defined( $url->scheme() ) ) {
+	    next;
+	}
+	( my $name, my $path, my $suffix ) = fileparse( $url->path );
+	my $file_name = "";
+	if( defined( $name ) && $name ) {
+	    $file_name = "/doxy/gen/$name";
+	    $file_name =~ s/\.html?$//;
+	}
+
+	if( $file_name ) {
+	    $file_name = $m->comp( "/lib/local", $config, $file_name );
+	}
+
+	$element->attr( $attr, 
+			$file_name .
+			( defined($url->fragment)?
+			  "#" . $url->fragment : "" ) );
+
+    }
+}
+
+sub substitute_class($$) {
+    (my $node) = @_;
+
+    for( $node->look_down( sub { defined( $_[0]->attr('class') ); } ) ) {    
+	my $element = $_;
+	my $class = $element->attr( 'class' );
+	$element->attr( 'class', "doxy$class" );
+    }
+}
+
+
+my $dgd_config = $m->comp( "/dgd/config" );
+my @dgd_sitemap;
+my @doxy_sitemap;
+
+local *doxy_component;
+
+for my $dgd_comp_name (@{$dgd_config->{"sitemap"}}) {
+    $dgd_comp_name = $dgd_comp_name->[0] if( ref( $dgd_comp_name ) );
+    my $dgd_comp = $m->fetch_comp( $dgd_comp_name );
+
+    next if( $dgd_comp->attr_if_exists("hidden") );
+    
+    my $comp_name;
+    if( $dgd_comp->attr_if_exists("dummy") ) {
+	$comp_name = $dgd_comp_name;
+    } else {
+	$comp_name = "/doxy/gen/" . basename( $dgd_comp_name );
+	
+	open( doxy_component, ">.$comp_name" ) or
+	    die "Cant create component for $comp_name";
+
+	print doxy_component 
+	    "<%attr>" . "\n" .
+	    "short => \"" . $dgd_comp->attr("short") . "\"" . "\n" .
+	    "brief => \"" . $dgd_comp->attr("brief") . "\"" . "\n" .
+	    "title => \"" . $dgd_comp->attr("title") . "\"" . "\n" .
+	    "dummy => 1" . "\n" .
+	    "</%attr>" . "\n" .
+	    "<%args>" . "\n" .
+	    "\$config" . "\n" .
+	    "</%args>" . "\n" .
+	    "" . "\n" .
+	    "<& /lib/local, \$config, \"$dgd_comp_name\" &>" . "\n";
+
+	close( doxy_component );
+    }
+    push @dgd_sitemap, $comp_name;
+}
+
+while( my $file_name = <../doxygen/html/*.html> ) {
+    ( my $name, my $path, my $suffix ) = fileparse( $file_name, ".html" );
+    
+    my $tree = HTML::TreeBuilder->new; 
+    $tree->parse_file($file_name) or
+	die "Can't parse $file_name";
+
+    my $title = $tree->find_by_tag_name( 'title' );
+    if( !defined($title) ) {
+	$title = $name;
+    } else {
+	$title = dump_content($title);
+    }
+    
+    my $comp_name = "/doxy/gen/$name";
+    push @doxy_sitemap, $comp_name;
+
+    open( doxy_component, ">.$comp_name" ) or
+	die "Can create component for $name";
+    
+    print doxy_component 
+	"<%attr>" . "\n" .
+	"short => \"$title\"" . "\n" .
+	"brief => \"$title\"" . "\n" .
+	"title => \"$title\"" . "\n" .
+	"hidden => 1" . "\n" .
+	"</%attr>" . "\n" .
+	"<%args>" . "\n" .
+	"\$config" . "\n" .
+	"</%args>" . "\n" .
+	"" . "\n" .
+	"<& /doxy/comp, config => \$config, " .
+	"file_name => \"$file_name\" &>" . "\n";
+
+    close( doxy_component );
+}
+
+return ( \@dgd_sitemap, \@doxy_sitemap );
+</%perl>
+
+<%method html_content>
+<%perl>
+my ($node) = @_;
+$m->print( dump_content($node) );
+</%perl>
+</%method>
+
+<%method substitute_links>
+<%perl>
+my ($config, $node) = @_;
+substitute_links( $config, $node );
+</%perl>
+</%method>
+
+<%method substitute_class>
+<%perl>
+my ($config, $node) = @_;
+substitute_class( $node );
+</%perl>
+</%method>

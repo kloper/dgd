@@ -1,0 +1,43 @@
+<%once>
+my $config;
+</%once>
+
+<%init>
+
+$config = {
+    "name"       => "dgd",
+    "long_name"  => "Depression Glass Debug Library",
+    "logo"       => "dgd_logo.gif",
+    "version"    => "@DGD_SHORT_VERSION@",
+    "page"       => "/dgd/page",
+    "image_dir"  => "images",
+    "style_dir"  => "style",
+    "html_dir"   => "html",
+    "style_comp" => "/dgd/style.css",
+    "colorscheme" => "sky",
+    "copy_asis"  => { "images/*" => "html/images/\$basename" },
+    "sitemap"  => [ "/dgd/home",
+		    "/dgd/news",
+                    "/dgd/faq",
+                    "/dgd/doc",
+		    "/dgd/install",
+                    "/dgd/todo",
+		    "/dgd/sourceforge",
+                    "/dgd/download", 
+		    "/dgd/cvs_on_sf",
+		    "/dgd/style.css" ],
+    "navitems" => [ "/dgd/home", 
+                    "/dgd/doc",
+                    "/dgd/faq",
+		    "/dgd/download", 
+		    "/dgd/sourceforge", 
+		    "/dgd/cvs_on_sf" ]
+    };
+
+</%init>
+
+<%perl>
+
+return $config;
+
+</%perl>

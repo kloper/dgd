@@ -1,0 +1,17 @@
+<%attr>
+standalone => 1
+hidden => 1
+</%attr>
+
+<table cellspacing="0" cellpadding="10" width="100%">
+% for my $base ("red", "green", "blue", "yellow", "cyan", "magenta", "white", "black", "sky", "grass", "flame" ) {
+<tr>
+% for ( my $i = 0; $i <= 100; $i += 10 ) {
+<td bgcolor="<&/lib/color, $base, $i &>">
+<% $base %>
+<% $i %>
+</td>
+% }
+</tr>
+% }
+</table>

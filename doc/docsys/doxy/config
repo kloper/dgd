@@ -1,0 +1,38 @@
+<%once>
+my $config;
+</%once>
+
+<%init>
+
+$config = $m->comp( "/dgd/config" );
+$config->{"name"} = "dgd_doxygen";
+$config->{"style_comp"} = "/doxy/style.css";
+$config->{"colorscheme"} = "flame";
+$config->{"copy_asis"} = {
+    "../doxygen/html/*.gif" => "html/images/doxy_gen_\$basename",
+    "../doxygen/html/*.jpg" => "html/images/doxy_gen_\$basename",
+    "../doxygen/html/*.jpeg" => "html/images/doxy_gen_\$basename",
+    "../doxygen/html/*.png" => "html/images/doxy_gen_\$basename"
+};
+my @sitemaps = $m->comp("/doxy/generate", config => $config );
+
+$config->{"sitemap"} = [ @{$sitemaps[0]},
+			 [ "/dgd/doc",
+			   "/doxy/namespaces",
+			   "/doxy/hierarchy",
+			   "/doxy/classes",
+			   "/doxy/files",
+			   "/doxy/namespacemembers",
+			   "/doxy/functions",
+			   "/doxy/globals",
+			   "/doxy/tutorial",
+			   @{$sitemaps[1]} ],
+			 "/doxy/style.css" ];
+
+</%init>
+
+<%perl>
+
+return $config;
+
+</%perl>

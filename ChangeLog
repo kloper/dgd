@@ -1,4 +1,162 @@
+2003-04-18  dimka
+	* Makefile:
+	* NEWS:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgMultifileLog.cpp:
+	* doc/Makefile:
+	* doc/Makefile.in:
+	* doc/docsys/dgd/config:
+	* doc/docsys/dgd/config.in:
+	* doc/docsys/dgd/cvs_on_sf:
+	* doc/docsys/dgd/doc:
+	* doc/docsys/dgd/download:
+	* doc/docsys/dgd/faq:
+	* doc/docsys/dgd/home:
+	* doc/docsys/dgd/install:
+	* doc/docsys/dgd/news:
+	* doc/docsys/dgd/page:
+	* doc/docsys/dgd/readme:
+	* doc/docsys/dgd/sourceforge:
+	* doc/docsys/dgd/style.css:
+	* doc/docsys/dgd/todo:
+	* doc/docsys/docsys:
+	* doc/docsys/doxy/classes:
+	* doc/docsys/doxy/comp:
+	* doc/docsys/doxy/config:
+	* doc/docsys/doxy/files:
+	* doc/docsys/doxy/functions:
+	* doc/docsys/doxy/generate:
+	* doc/docsys/doxy/globals:
+	* doc/docsys/doxy/hierarchy:
+	* doc/docsys/doxy/namespacemembers:
+	* doc/docsys/doxy/namespaces:
+	* doc/docsys/doxy/style.css:
+	* doc/docsys/doxy/tutorial:
+	* doc/docsys/images/black_arrow.gif:
+	* doc/docsys/images/dgd_logo.gif:
+	* doc/docsys/images/dgd_logo2.gif:
+	* doc/docsys/images/download_perl.gif:
+	* doc/docsys/images/powered_by_mason.jpg:
+	* doc/docsys/lib/color:
+	* doc/docsys/lib/footer:
+	* doc/docsys/lib/header:
+	* doc/docsys/lib/import_html:
+	* doc/docsys/lib/local:
+	* doc/docsys/lib/navbar:
+	* doc/docsys/lib/newsbox:
+	* doc/docsys/lib/palette_test:
+	* doc/docsys/lib/sidebar:
+	* doc/docsys/lib/title:
+	* doc/doxygen/dgd.doxy:
+	* doc/doxygen/dgd.doxy.in:
+	* doc/html/dgd.wmk:
+	* doc/html/dgd.wmk.in:
+	* doc/html/doxygen_html.wmk:
+	* doc/html/images/dgd_web_logo.jpg:
+	* doc/html/images/main_bg.gif:
+	* doc/html/images/sidebox_bottom.gif:
+	* doc/html/images/sidebox_title_bg.gif:
+	* doc/html/images/simple_bottom.gif:
+	* doc/html/images/topnav_bg.gif:
+	* doc/html/images/wmlogo.gif:
+	* doc/html/style/style.css:
+	* getopt/Makefile:
+	* reconf:
+	* regex/Makefile:
+	* samples/Makefile:
+	* test/Makefile:
+	* util/bin/mkdis:
+		Documentation system switch from webmake to mason
+
+2003-04-10  dimka
+	* NEWS:
+	* README:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgFunnel.cpp:
+	* dgd/src/dgFunnel.h:
+	* dgd/src/dgMultifileLog.cpp:
+	* dgd/src/dgMultifileLog.h:
+	* doc/dgd_faq.html:
+	* doc/dgd_todo.html:
+	* doc/html/doxygen_html.wmk:
+		Documentation on Funnels and Multifile logs. Minor doc changes.
+
+2003-04-09  dimka
+	* Makefile:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* doc/Makefile:
+	* doc/doxygen/dgd.doxy:
+	* doc/html/dgd.wmk:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* samples/Makefile:
+	* test/Makefile:
+	* util/bin/mkdis:
+		Configure update
+
+	* Makefile:
+	* NEWS:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelManip.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgFunnel.h:
+	* doc/Makefile:
+	* doc/dgd_todo.html:
+	* doc/doxygen/dgd.doxy:
+	* doc/html/dgd.wmk:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* samples/Makefile:
+	* test/Makefile:
+	* test/src/dgTest.cpp:
+		Fixed bug in channelbuf::overflow(). In situation of enabled char wrap
+		and very long line without spaces, spanning more then two lines, pos was
+		badly advanced since m_column was reset before.
+		
+		Fixed bug in manipulators output operators. Changed static_cast<> to
+		dynamic_cast<> which will throw exception if input stream is not
+		DGD::channel.
+		
+		More documentation of DGD::funnel class.
+
 2002-12-09  dimka
+	* Makefile:
+	* NEWS:
+	* NEWS:
+	* README:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/Makefile:
+	* doc/dgd_todo.html:
+	* doc/doxygen/dgd.doxy:
+	* doc/html/dgd.wmk:
+	* doc/html/doxygen_html.wmk:
+	* doc/html/doxygen_html.wmk:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* samples/Makefile:
+	* test/Makefile:
+	* util/bin/mkdis:
+		Final steps before release
+
 	* INSTALL:
 	* Makefile:
 	* NEWS:
@@ -26,6 +184,7 @@
 	* doc/doxygen/dgd.doxy:
 	* doc/html/dgd.wmk:
 	* doc/html/doxygen_html.wmk:
+	* doc/html/doxygen_html.wmk:
 	* getopt/Makefile:
 	* regex/Makefile:
 	* samples/Makefile:
@@ -36,6 +195,9 @@
 		Minor interface changes/additions.
 		Funnels and multifile logs.
 		Fixed build depenency generation.
+
+	* util/bin/unixify:
+		Forgot to add unixify script
 
 2002-11-30  dimka
 	* test/src/dgTest.cpp:

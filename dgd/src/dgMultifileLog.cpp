@@ -22,6 +22,12 @@
 // dgMultifileLog.cpp -- implementation for dgMultifileLog.h
 //
 
+/**
+ * @file dgMultifileLog.cpp
+ *
+ * implementation of DGD::multifile_log
+ */
+
 #include <boost/lexical_cast.hpp>
 
 #include "dgMultifileLog.h"

@@ -1,0 +1,7 @@
+<%attr>
+short => "FAQ"
+brief => "FAQ"
+title => "DGD Frequently Asked Questions"
+</%attr>
+
+<& /lib/import_html, file => "../dgd_faq.html" &>

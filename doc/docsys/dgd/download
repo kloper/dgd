@@ -1,0 +1,8 @@
+<%attr>
+short => "Download"
+brief => "Download DGD"
+title => "Download DGD at Sourceforge.net"
+dummy => 1
+</%attr>
+
+http://sourceforge.net/project/showfiles.php?group_id=62230

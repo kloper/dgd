@@ -1,0 +1,12 @@
+<%attr>
+short => "Install"
+brief => "DGD Installation Guide"
+title => "DGD Installation and Build Guide"
+</%attr>
+
+% use Text::EtText::EtText2HTML;
+% my $t = new Text::EtText::EtText2HTML;
+% open( INSTALL, "<../../INSTALL" ) or 
+%     die "Can't open INSTALL: $!";
+<% $t->text2html ( <INSTALL> ) %>
+% close(INSTALL);

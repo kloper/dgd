@@ -1,0 +1,22 @@
+<%args>
+$file_name
+$config
+</%args>
+
+<%perl>
+use HTML::Tree;
+use URI;
+
+my $tree = HTML::TreeBuilder->new; 
+$tree->parse_file($file_name) or
+	die "Can't parse $file_name";
+
+my $body = $tree->find_by_tag_name( 'body' ) or 
+    die "$file_name has no body";
+
+$m->scomp( "/doxy/generate:substitute_links", $config, $body );
+$m->scomp( "/doxy/generate:substitute_class", $config, $body );
+
+</%perl>
+
+<& /doxy/generate:html_content, $body &>

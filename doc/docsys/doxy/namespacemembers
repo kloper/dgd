@@ -1,0 +1,12 @@
+<%attr>
+short => "Namespace Members"
+brief => "Namespace Members"
+title => "Namespace Members"
+dummy => 1
+</%attr>
+
+<%args>
+$config
+</%args>
+
+<& /lib/local, $config, "/doxy/gen/namespacemembers" &>
