@@ -165,6 +165,20 @@ void pointers_test( channel& debug ) {
 void empty_test( channel& debug ) {
 }
 
+void tie_test( Debug::debug_factory_ref& dout) {
+   stream s = dout->create_file( "tie_test.log" );
+
+   DGD::channel& base_channel = dout->create_channel( "base_channel" );
+   DGD::channel& tie_channel = dout->create_channel( "tie_channel" );
+
+   assoc( s.get(), base_channel );
+   assoc( &base_channel, tie_channel );
+
+   manip_test( base_channel );
+   base_channel << incr << incr;
+   manip_test( tie_channel );
+}
+
 class My_class {
    public:
       int x;
@@ -216,6 +230,7 @@ int main( int argc, char** argv ) {
    two_channels_test();
    overload_test( *dgd_channel(main) );
    pointers_test( *dgd_channel(main) );
+   tie_test( dout );
 
    return 0;
 }
