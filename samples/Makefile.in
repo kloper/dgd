@@ -63,7 +63,8 @@ BOOSTDEFINES =
 
 CPPFILES = \
 stand_alone_channelbuf.cpp \
-formatting.cpp
+formatting.cpp \
+mult_assoc.cpp
 
 OBJECTS = ${patsubst %.cpp, %.$(OBJEXT), $(CPPFILES)}
 
@@ -111,7 +112,14 @@ fmt$(EXEEXT): formatting.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
 	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/formatting.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
 else
-	$(CXX) $(LDFLAGS) $(BUILDDIR)/stand_alone_channelbuf.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
+	$(CXX) $(LDFLAGS) $(BUILDDIR)/formatting.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
+endif
+
+mult_assoc$(EXEEXT): mult_assoc.$(OBJEXT) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
+ifeq ($(LIBEXT),lib)
+	$(LD) $(LDFLAGS) /pdb:$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) $(BUILDDIR)/mult_assoc.$(OBJEXT)  $(LDOUTOPT)$(BUILDDIR)/$@
+else
+	$(CXX) $(LDFLAGS) $(BUILDDIR)/mult_assoc.$(OBJEXT) $(EXTRA_LDFLAGS) $(LDLIBS) $(LDOUTOPT)$(BUILDDIR)/$@
 endif
 
 %.$(OBJEXT): %.cpp
