@@ -35,6 +35,7 @@ char *build_format( call_attr_t *attr, char format ) {
    char *curr;
 
    curr = buffer;
+   *curr++ = '%';
 
    if( attr->valid_mask & CALL_ATTR_ALTERNATE )   { *curr++ = '#'; }
    if( attr->valid_mask & CALL_ATTR_ZERO_PAD )    { *curr++ = '0'; }
@@ -102,6 +103,7 @@ int dgd_generic_callback_dec( dgd_action_t *action,
    }
 
    if( *p->curr != '\0' ) {
+      action->state = EVAL_STATE_RANGED;
       return EVAL_RES_RANGE;
    } 
    

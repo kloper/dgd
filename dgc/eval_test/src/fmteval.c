@@ -23,32 +23,60 @@
  *
  */
 
-#include <dgd_format_parser.h>
-#include <dgd_dgc_debug.h>
+#include <stdio.h>
 
-int main( int argc, char** argv ) {
-   int i;
-   cache_item_t *result;
+#include <dgd_dgc_debug.h>
+#include <dgd_format_parser.h>
+#include <dgd_format_eval.h>
+#include <dgd_format_generic.h>
+
+void dgd_printf( char* format, ... ) {
+   va_list arg;
    cache_t *cache;
+   cache_item_t *chain;
+   dgd_eval_t eval;
+   unsigned int rc;
+   str_bounded_range_t str;
+   char buffer[5];
+
+   va_start( arg, format );
 
    cache = dgd_format_parser_cache();
+   chain = dgd_format_parse( format );
+   dgd_init_bounded_range( &str, buffer, sizeof(buffer) );
+   
+   if( chain == NULL )
+      return;
 
-   for( i = 1; i < argc; i++ ) {
-      printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
-      printf( "> %s\n", argv[i] );
-      result = dgd_format_parse( argv[i] );
-      
-      if( result != NULL ) {
-	 dgd_dump_parser_bytecode( stdout, result->value.chain.ring, 0 );
-         printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
-      }
-   }
-
-   for( i = 1; i < argc; i++ ) {
-      dgd_cache_delete( cache, argv[i] );
-   }
+   dgd_dump_parser_bytecode( stderr, chain->value.chain.ring, 0 );
    printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
 
+   dgd_eval_init( &eval, 0, chain, NULL );
+
+   do {
+      rc = dgd_format_eval( &eval, &str, arg );
+      printf( "%.*s", str.end-str.begin, str.begin );
+      str.begin = str.end;
+      if( str.end == str.high_bound ) 
+	 str.begin = str.end = str.low_bound;
+   } while( rc == EVAL_RES_RANGE );
+
+   va_end( arg );
+}
+
+int main( int argc, char** argv ) {
+
+   dgd_generic_callback_init( dgd_action_lookup_table );
+
+   dgd_printf( "{%d}\n", 101 );
+   dgd_printf( "{%10d}\n", 102 );
+   dgd_printf( "{%*d}\n", 20, 103 );
+   dgd_printf( "{%*.*d}\n", 20, 15, 104 );
+   dgd_printf( "{%-*.*d}\n", 20, 15, 105 );
+   dgd_printf( "{%4$*.*d}{%3$d}\n", 20, 15, 106, 107 );
+   dgd_printf( "{%4$*2$.*1$d}{%3$-*1$d}\n", 10, 15, 108, 109 );
+   dgd_printf( "{%*.*d}{%3$#*1$.*2$d}\n", 10, 15, 108, 109 );
+   dgd_printf( "{%hhd}\n", 0x7fffffff );
    return 0;
 }
 

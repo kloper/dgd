@@ -30,8 +30,6 @@
 
 #include "dgd_types.h"
 
-#define CACHE_ITEM_CSIZE 3
-
 typedef struct _cache_item_t {
       unsigned int type;
       union {

@@ -72,6 +72,11 @@ typedef struct _str_range_t {
                          ((r)->end>(r)->high_bound)||\
                          ((r)->end<(r)->begin))
 
+#define dgd_init_bounded_range(r,b,s) ((r)->low_bound=(b),\
+				       (r)->high_bound=((char*)b)+(s),\
+				       (r)->begin=(b),\
+				       (r)->end=(b))
+
 void dgd_call_attr_set_default( call_attr_t *attr );
 void dgd_call_attr_assign( call_attr_t *dst, call_attr_t *src );
 

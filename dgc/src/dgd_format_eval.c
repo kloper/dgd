@@ -127,6 +127,7 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	    }
 
 	    if( lexeme->begin != lexeme->end ) {
+	       eval->state = EVAL_STATE_RANGED;
 	       *(str_range_t*)eval->data = *lexeme;
 	       res = EVAL_RES_RANGE;
 	       goto finish;
@@ -142,6 +143,7 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	       str->end++;
 	       eval->state = EVAL_STATE_NORMAL;
 	    } else {
+	       eval->state = EVAL_STATE_RANGED;
 	       res = EVAL_RES_RANGE;
 	       goto finish;
 	    }
@@ -156,8 +158,9 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	    if( callback != NULL ) {
 	       dgd_action_t *action;
 
+	       action = &(dgd_action_lookup_table[index].action);
+
 	       if( eval->state == EVAL_STATE_NORMAL ) {
-		  action = &(dgd_action_lookup_table[index].action);
 		  action->state     = EVAL_STATE_NORMAL;
 		  action->flags     = eval->flags;
 		  action->error     = 0;
@@ -190,8 +193,11 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 
 	       switch( rc ) {
 		  case EVAL_RES_DONE:
+		     action->attr.valid_mask = 0;
+		     eval->state = EVAL_STATE_NORMAL;
 		     break;
 		  case EVAL_RES_ERROR:
+		     action->attr.valid_mask = 0;
 		     eval->error = EVAL_ERR_CALLBACK;
 		     eval->state = EVAL_STATE_NORMAL;
 		     res = rc;
