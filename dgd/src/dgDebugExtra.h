@@ -42,7 +42,7 @@
  *
  * @param s any expression
  */
-#define dgd_expand(s) #s " = " << (s)
+#define dgd_expand(s) #s " = " << dgd << (s)
 
 #define dgd_channel(name) ((DGD::Debug::debug_factory->operator[](#name)))
 
