@@ -22,6 +22,8 @@
 // dgTest.cpp -- test for DGD
 //
 
+#include <boost/smart_ptr.hpp>
+
 #include <dgDebug.h>
 
 using namespace std;
@@ -106,6 +108,8 @@ void single_channel_test( channel& debug ) {
 void manip_test( channel& debug ) {
    int i;
 
+   debug << "hello world" << incr;
+
    debug << wrap(false) << endl;
 
    for(i = 0; i < 120; i++) {
@@ -121,11 +125,29 @@ void manip_test( channel& debug ) {
    debug << word_wrap(true) << endl;   
 }
 
-int main( int argc, char** argv ) {
-   Debug dout( argc, argv );
+void two_channels_test() {
+   dgd_start_scope( dimka, "void two_channels_test()" );
+   dgd_trace( dimka, "Hello World" << endl );
+   dgd_end_scope( dimka );
+}
 
-   single_channel_test( dout["main"] );
-   manip_test( dout["main"] );
+void empty_test( channel& debug ) {
+}
+
+int main( int argc, char** argv ) {
+//   Debug dout( argc, argv );
+   Debug::debug_factory_ref dout = Debug::create_factory( argc, argv );
+      
+   assoc( dout->create_file( "dimka.log" ),    
+	  dout->create_channel( "dimka" ) );
+
+   single_channel_test( dgd_channel(main) );
+   manip_test( dgd_channel(main) );
+   empty_test( dgd_channel(main) );
+   two_channels_test();
+
+   int* x = NULL;
+   x[10] = 22;
 
    return 0;
 }

@@ -27,6 +27,8 @@
 
 namespace DGD {
 
+Debug* Debug::debug_factory = NULL;
+
 class bad_params: std::exception {
    public:
       const char* what() const {
@@ -35,7 +37,7 @@ class bad_params: std::exception {
 };
 
 Debug::Debug( int argc, char** argv ) {
-   if (cmdline_parser (argc, argv, &m_args_info) != 0) {
+   if (dgd_cmdline_parser (argc, argv, &m_args_info) != 0) {
       throw bad_params();
    }
 
@@ -118,6 +120,23 @@ void Debug::current( const std::string& name ) {
 channel& Debug::current() const {
    return **m_current_channel;
 }
+
+Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
+   if( debug_factory != NULL )
+      return debug_factory_ref( debug_factory );
+   
+   debug_factory_ref df;
+   try {
+      debug_factory = new Debug( argc, argv );
+      df.reset( debug_factory );
+   } catch( bad_params& ) {
+      debug_factory = NULL;
+      df.reset( NULL );
+   }
+
+   return df;
+}
+
 
 }; // end of namespace DGD
 

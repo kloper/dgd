@@ -31,8 +31,11 @@
 #include <string>
 #include <list>
 
+#include <boost/smart_ptr.hpp>
+
 #include "dgChannel.h"
 #include "dgChannelManip.h"
+#include "dgDebugExtra.h"
 #include "dgDebugOpt.h"
 
 namespace DGD {
@@ -40,6 +43,7 @@ namespace DGD {
 class Debug {
    public:
       typedef channel& channel_ref;
+      typedef boost::shared_ptr<Debug> debug_factory_ref;
 
    public:
       Debug( int argc, char** argv );
@@ -51,7 +55,11 @@ class Debug {
       channel& operator[] ( const std::string& name );
       void current( const std::string& name );
       channel& current() const;
-      
+
+   public:
+      static Debug* debug_factory;
+      static debug_factory_ref create_factory( int argc, char** argv );
+
    protected:
       typedef boost::shared_ptr<channel> Channel_ptr;
       typedef std::list< Channel_ptr > Channel_list;

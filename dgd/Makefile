@@ -42,6 +42,7 @@ VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MV  = mv
+SED = sed
 MKDIR = mkdir -p
 CXX = cl
 LD  = link
@@ -60,9 +61,9 @@ DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D _DG_CPP_FILE_ $(BOOSTDEFINES)
 BOOSTDEFINES =
 
 SUBDIRS = 
-TARGETS = dgd.lib
-PDBFILE = dgd.pdb
-PCHFILE = dgd.pch
+TARGET = $(BUILDDIR)/dgd.lib
+PDBFILE = $(BUILDDIR)/dgd.pdb
+PCHFILE = $(BUILDDIR)/dgd.pch
 
 HEADERS = 
 
@@ -75,9 +76,9 @@ dgDebugOpt.cpp
 GGEFILES = \
 dgDebugOpt.gge
 
-OBJECTS = ${patsubst %.cpp, %.obj, $(CPPFILES)}
+OBJECTS = ${patsubst %.cpp, $(BUILDDIR)/%.obj, $(CPPFILES)}
 
-all:  builddir $(TARGETS) subdirs
+all:  builddir $(TARGET) subdirs
 
 .PHONY: all subdirs $(SUBDIRS) clean depend builddir
 
@@ -85,9 +86,10 @@ all:  builddir $(TARGETS) subdirs
             ${patsubst %.gge, %.h, $(GGEFILES)}
 
 %.cpp: %.gge
-	$(GENGETOPT) --file-name=${basename $@} < $<
+	$(GENGETOPT) --no-handle-help --no-handle-version --no-handle-error --file-name=${basename $@} --func-name=dgd_cmdline_parser < $<
 	$(MV) ${basename $@}.c ./src/$@
 	$(MV) ${basename $@}.h ./src/	
+
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
@@ -101,8 +103,8 @@ clean: $(SUBDIRS)
 
 depend: .depend $(SUBDIRS)
 
-.depend: $(CPPFILES)
-	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.obj -p$(BUILDDIR)/ $^ > $@ 2> $@.err
+.depend:${patsubst %.cpp, src/%.cpp, $(CPPFILES)}
+	$(MAKEDEPEND) $(LOCALINCLUDES) $(DEFINES) -f- -o.obj -p$(BUILDDIR)/ $^ 2> $@.err | $(SED) 's%$(BUILDDIR)/src%$(BUILDDIR)%' > $@ 
 
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status
@@ -111,10 +113,10 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
                              $(top_srcdir)/configure.ac
 	cd $(top_srcdir) && $(MAKE) config.status
 
-dgd.lib: $(OBJECTS)
-	$(LD) $(LDFLAGS)  ${patsubst %.obj, $(BUILDDIR)/%.obj, $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@ 
+$(TARGET): $(OBJECTS)
+	$(LD) $(LDFLAGS)  $(OBJECTS) $(LDOUTOPT)$@ 
 
-%.obj: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c -Fo$(BUILDDIR)/$@  -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) $<
+$(BUILDDIR)/%.obj: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c -Fo$@  -Fd$(PDBFILE) -Fp$(PCHFILE) $<
 
 include .depend

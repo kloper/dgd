@@ -39,10 +39,10 @@ struct gengetopt_args_info {
   int debug_space_characters_given ;	/* Whether debug-space-characters was given.  */
 } ;
 
-int cmdline_parser (int argc, char * const *argv, struct gengetopt_args_info *args_info);
+int dgd_cmdline_parser (int argc, char * const *argv, struct gengetopt_args_info *args_info);
 
-void cmdline_parser_print_help(void);
-void cmdline_parser_print_version(void);
+void dgd_cmdline_parser_print_help(void);
+void dgd_cmdline_parser_print_version(void);
 
 #ifdef __cplusplus
 }

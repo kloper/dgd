@@ -56,45 +56,66 @@ class channel_manip_void {
 typedef channel_manip<bool> channel_manip_bool;
 typedef channel_manip<unsigned int>  channel_manip_uint;
 
-channel& operator <<( channel& cnl, const channel_manip_void& manip ) {
+inline channel& operator <<( channel& cnl, const channel_manip_void& manip ) {
    (cnl.*(manip.m_method))();
    return cnl;
 }
 
-channel& operator <<( channel& cnl, const channel_manip_bool& manip ) {
+inline channel& operator <<( channel& cnl, const channel_manip_bool& manip ) {
    (cnl.*(manip.m_method))( manip.m_argument );
    return cnl;
 }
 
-channel& operator <<( channel& cnl, const channel_manip_uint& manip ) {
+inline channel& operator <<( channel& cnl, const channel_manip_uint& manip ) {
    (cnl.*(manip.m_method))( manip.m_argument );
    return cnl;
 }
+
+inline std::ostream& operator <<( std::ostream& cnl, 
+				  const channel_manip_void& manip ) {
+   
+   (static_cast<channel&>(cnl).*(manip.m_method))();
+   return cnl;
+}
+
+inline std::ostream& operator <<( std::ostream& cnl, 
+				  const channel_manip_bool& manip ) {
+   (static_cast<channel&>(cnl).*(manip.m_method))( manip.m_argument );
+   return cnl;
+}
+
+inline std::ostream& operator <<( std::ostream& cnl, 
+				  const channel_manip_uint& manip ) {
+   (static_cast<channel&>(cnl).*(manip.m_method))( manip.m_argument );
+   return cnl;
+}
+
+/* --- */
 
 const channel_manip_void incr = channel_manip_void( &channel::incr_indent );
 const channel_manip_void decr = channel_manip_void( &channel::decr_indent );
 
-channel_manip_uint step( unsigned int s ) {
+inline channel_manip_uint step( unsigned int s ) {
    return channel_manip_uint( &channel::indent_step, s );
 }
 
-channel_manip_uint indent( unsigned int s ) {
+inline channel_manip_uint indent( unsigned int s ) {
    return channel_manip_uint( &channel::indent, s );
 }
 
-channel_manip_uint minwidth( unsigned int s ) {
+inline channel_manip_uint minwidth( unsigned int s ) {
    return channel_manip_uint( &channel::min_width, s );
 }
 
-channel_manip_uint maxwidth( unsigned int s ) {
+inline channel_manip_uint maxwidth( unsigned int s ) {
    return channel_manip_uint( &channel::max_width, s );
 }
 
-channel_manip_bool wrap( bool s ) {
+inline channel_manip_bool wrap( bool s ) {
    return channel_manip_bool( &channel::wrap, s );
 }
 
-channel_manip_bool word_wrap( bool s ) {
+inline channel_manip_bool word_wrap( bool s ) {
    return channel_manip_bool( &channel::word_wrap, s );
 }
 
