@@ -15,16 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# This file is part of Valence Mesh Coding  project. 
-# This work is a part of research effort of Computer Science department of 
-# Technion. 
+# This file is part of Depression Glass library.
 #
-# Copyright (c) 2001. Dimitry Kloper <dimka@cs.technion.ac.il>
-# Technion, Israel Institute of Technology. Computer Science Department.
-#
-# Supervised by 
-# Craig Gotsman <gotsman@cs.technion.ac.il> 
-# Gill Barequet <barequet@cs.technion.ac.il>
+# Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
 #
 # Makefile.in -- template for a DGPhrase Makefile 
 #

@@ -158,8 +158,11 @@ AC_CHECK_PROG(GENGETOPT, gengetopt, gengetopt, echo,, )
 AC_CHECK_PROG(RC, rc, rc, echo,, )
 AC_CHECK_PROG(ISCC, ISCC, ISCC, ISCC,, )
 AC_CHECK_PROG(ETAGS, etags, etags, echo,, )
+AC_CHECK_PROG(PERL, perl, perl, perl,, )
+AC_CHECK_PROG(WEBMAKE, webmake, webmake, webmake,, )
+AC_CHECK_PROG(DOXYGEN, doxygen, doxygen, doxygen,, )
 
-AC_CONFIG_FILES(Makefile doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile ) 
+AC_CONFIG_FILES(Makefile doc/Makefile doc/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile ) 
 
 AC_OUTPUT
 

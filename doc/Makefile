@@ -19,45 +19,39 @@
 #
 # Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
 #
-# Makefile.in -- template for a regex library Makefile 
+# Makefile.in -- template for a getopt library Makefile 
 #
 
 SHELL = /bin/sh
-@SET_MAKE@
 
-srcdir     = @srcdir@
-top_srcdir = @top_srcdir@
-BUILDDIR   = $(srcdir)/@BUILDDIR@
+
+srcdir     = .
+top_srcdir = ..
+BUILDDIR   = $(srcdir)/Debug
 
 VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
 
-RM  = @RM@
-MKDIR = @MKDIR@
-CC = @CC@
-LD  = @LD@
-CFLAGS = @CFLAGS@ @DEFS@
-LDFLAGS  = @LD_STATIC_FLAGS@ @LDFLAGS@
-LDOUTOPT = @LDOUTOPT@
+RM  = rm -f
+MKDIR = mkdir -p
+CC = cl
+LD  = link
+CFLAGS =  -nologo -W3 -GR -GX -MTd
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
 INCLUDES = -I. -I.. -I$(top_srcdir)
+PERL = /d/perl/bin/perl.exe
+WEBMAKE = d:/perl/bin/webmake
+DOXYGEN = /d/Progra~1/doxygen/bin/doxygen.exe
 
 SUBDIRS =
-TARGETS = regex.lib
-PDBFILE = regex.pdb
-PCHFILE = regex.pch
+TARGETS = all
 
-HEADERS = regex.h
-CFILES  = regex.c 
-OBJECTS = ${patsubst %.c, %.obj, $(CFILES)}
+all:  doxygen webmake subdirs
 
-all:  builddir $(TARGETS) subdirs
-
-.PHONY: subdirs $(SUBDIRS) clean depend builddir
+.PHONY: subdirs $(SUBDIRS) clean depend builddir doxygen webmake
 
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
-
-builddir:
-	-$(MKDIR) $(BUILDDIR)
 
 subdirs: $(SUBDIRS)
 
@@ -73,11 +67,12 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
                              $(top_srcdir)/configure.ac
 	cd $(top_srcdir) && $(MAKE) config.status
 
-$(TARGETS): $(OBJECTS)
-	$(LD) $(LDFLAGS) ${patsubst %.obj, $(BUILDDIR)/%.obj, $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
+doxygen:
+	cd doxygen; $(DOXYGEN) dgd.doxy
 
-%.obj: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c -Fo$(BUILDDIR)/$@  -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE) $<
+webmake:
+	$(PERL) $(WEBMAKE) -f dgd.wmk
+
 
 
 

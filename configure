@@ -2923,7 +2923,106 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
-ac_config_files="$ac_config_files Makefile doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile"
+# Extract the first word of "perl", so it can be a program name with args.
+set dummy perl; ac_word=$2
+echo "$as_me:2928: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_PERL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$PERL"; then
+  ac_cv_prog_PERL="$PERL" # Let the user override the test.
+else
+  ac_save_IFS=$IFS; IFS=$ac_path_separator
+ac_dummy="$PATH"
+for ac_dir in $ac_dummy; do
+  IFS=$ac_save_IFS
+  test -z "$ac_dir" && ac_dir=.
+  $as_executable_p "$ac_dir/$ac_word" || continue
+ac_cv_prog_PERL="perl"
+echo "$as_me:2943: found $ac_dir/$ac_word" >&5
+break
+done
+
+  test -z "$ac_cv_prog_PERL" && ac_cv_prog_PERL="perl"
+fi
+fi
+PERL=$ac_cv_prog_PERL
+if test -n "$PERL"; then
+  echo "$as_me:2952: result: $PERL" >&5
+echo "${ECHO_T}$PERL" >&6
+else
+  echo "$as_me:2955: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+# Extract the first word of "webmake", so it can be a program name with args.
+set dummy webmake; ac_word=$2
+echo "$as_me:2961: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_WEBMAKE+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$WEBMAKE"; then
+  ac_cv_prog_WEBMAKE="$WEBMAKE" # Let the user override the test.
+else
+  ac_save_IFS=$IFS; IFS=$ac_path_separator
+ac_dummy="$PATH"
+for ac_dir in $ac_dummy; do
+  IFS=$ac_save_IFS
+  test -z "$ac_dir" && ac_dir=.
+  $as_executable_p "$ac_dir/$ac_word" || continue
+ac_cv_prog_WEBMAKE="webmake"
+echo "$as_me:2976: found $ac_dir/$ac_word" >&5
+break
+done
+
+  test -z "$ac_cv_prog_WEBMAKE" && ac_cv_prog_WEBMAKE="webmake"
+fi
+fi
+WEBMAKE=$ac_cv_prog_WEBMAKE
+if test -n "$WEBMAKE"; then
+  echo "$as_me:2985: result: $WEBMAKE" >&5
+echo "${ECHO_T}$WEBMAKE" >&6
+else
+  echo "$as_me:2988: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+# Extract the first word of "doxygen", so it can be a program name with args.
+set dummy doxygen; ac_word=$2
+echo "$as_me:2994: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_DOXYGEN+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$DOXYGEN"; then
+  ac_cv_prog_DOXYGEN="$DOXYGEN" # Let the user override the test.
+else
+  ac_save_IFS=$IFS; IFS=$ac_path_separator
+ac_dummy="$PATH"
+for ac_dir in $ac_dummy; do
+  IFS=$ac_save_IFS
+  test -z "$ac_dir" && ac_dir=.
+  $as_executable_p "$ac_dir/$ac_word" || continue
+ac_cv_prog_DOXYGEN="doxygen"
+echo "$as_me:3009: found $ac_dir/$ac_word" >&5
+break
+done
+
+  test -z "$ac_cv_prog_DOXYGEN" && ac_cv_prog_DOXYGEN="doxygen"
+fi
+fi
+DOXYGEN=$ac_cv_prog_DOXYGEN
+if test -n "$DOXYGEN"; then
+  echo "$as_me:3018: result: $DOXYGEN" >&5
+echo "${ECHO_T}$DOXYGEN" >&6
+else
+  echo "$as_me:3021: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+ac_config_files="$ac_config_files Makefile doc/Makefile doc/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3034,7 +3133,7 @@ rm -f confdef2opt.sed
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:3037: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:3136: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -3201,7 +3300,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:3204: error: ambiguous option: $1
+    { { echo "$as_me:3303: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -3220,7 +3319,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:3223: error: unrecognized option: $1
+  -*) { { echo "$as_me:3322: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -3256,6 +3355,8 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+  "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
+  "doc/dgd.wmk" ) CONFIG_FILES="$CONFIG_FILES doc/dgd.wmk" ;;
   "doc/doxygen/dgd.doxy" ) CONFIG_FILES="$CONFIG_FILES doc/doxygen/dgd.doxy" ;;
   "getopt/Makefile" ) CONFIG_FILES="$CONFIG_FILES getopt/Makefile" ;;
   "regex/Makefile" ) CONFIG_FILES="$CONFIG_FILES regex/Makefile" ;;
@@ -3263,7 +3364,7 @@ do
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
   "dgd/src/dgDebugOpt.gge" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgDebugOpt.gge" ;;
   "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
-  *) { { echo "$as_me:3266: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:3367: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -3393,6 +3494,9 @@ s,@GENGETOPT@,$GENGETOPT,;t t
 s,@RC@,$RC,;t t
 s,@ISCC@,$ISCC,;t t
 s,@ETAGS@,$ETAGS,;t t
+s,@PERL@,$PERL,;t t
+s,@WEBMAKE@,$WEBMAKE,;t t
+s,@DOXYGEN@,$DOXYGEN,;t t
 CEOF
 
 EOF
@@ -3502,7 +3606,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:3505: creating $ac_file" >&5
+    { echo "$as_me:3609: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -3520,7 +3624,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:3523: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:3627: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -3533,7 +3637,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:3536: error: cannot find input file: $f" >&5
+           { { echo "$as_me:3640: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;

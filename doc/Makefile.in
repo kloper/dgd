@@ -19,23 +19,36 @@
 #
 # Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il>
 #
-# Makefile.in -- template for a root Makefile 
+# Makefile.in -- template for a getopt library Makefile 
 #
 
 SHELL = /bin/sh
 @SET_MAKE@
 
-srcdir = @srcdir@
+srcdir     = @srcdir@
 top_srcdir = @top_srcdir@
+BUILDDIR   = $(srcdir)/@BUILDDIR@
 
-RM= @RM@
-ETAGS = @ETAGS@
+VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
 
-SUBDIRS = getopt regex dgd test
+RM  = @RM@
+MKDIR = @MKDIR@
+CC = @CC@
+LD  = @LD@
+CFLAGS = @CFLAGS@
+LDFLAGS  = @LD_STATIC_FLAGS@ @LDFLAGS@
+LDOUTOPT = @LDOUTOPT@
+INCLUDES = -I. -I.. -I$(top_srcdir)
+PERL = @PERL@
+WEBMAKE = @WEBMAKE@
+DOXYGEN = @DOXYGEN@
 
-all: subdirs
+SUBDIRS =
+TARGETS = all
 
-.PHONY: subdirs $(SUBDIRS) clean depend etags
+all:  doxygen webmake subdirs
+
+.PHONY: subdirs $(SUBDIRS) clean depend builddir doxygen webmake
 
 $(SUBDIRS):
 	$(MAKE) -C $@ $(MAKECMDGOALS)
@@ -43,19 +56,23 @@ $(SUBDIRS):
 subdirs: $(SUBDIRS)
 
 clean: $(SUBDIRS)
-	$(RM) vc60.*
+	-$(RM) -r $(BUILDDIR)
 
 depend: $(SUBDIRS)
 
-etags:
-	$(ETAGS) -R dgd getopt
+Makefile: Makefile.in $(top_srcdir)/config.status
+	cd $(top_srcdir) && ./config.status
 
-configure: configure.ac aclocal.m4
-	cd $(srcdir) && autoconf
+$(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
+                             $(top_srcdir)/configure.ac
+	cd $(top_srcdir) && $(MAKE) config.status
 
-Makefile: Makefile.in config.status
-	./config.status
+doxygen:
+	cd doxygen; $(DOXYGEN) dgd.doxy
 
-config.status: configure
-	./config.status --recheck
+webmake:
+	$(PERL) $(WEBMAKE) -f dgd.wmk
+
+
+
 

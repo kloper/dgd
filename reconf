@@ -3,4 +3,4 @@
 unset QTDIR
 
 autoconf
-./configure --with-msvc --without-pch --enable-debug --with-cvs="cvs.exe"
+./configure --with-msvc --without-pch --enable-debug --with-cvs="cvs.exe" PERL="/d/perl/bin/perl.exe" WEBMAKE="d:/perl/bin/webmake" DOXYGEN="/d/Progra~1/doxygen/bin/doxygen.exe"
