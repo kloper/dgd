@@ -1,4 +1,4 @@
-<%once>
+<%once> 
 my $config;
 </%once>
 
@@ -8,7 +8,7 @@ $config = {
     "name"       => "dgd",
     "long_name"  => "DGD Library",
     "logo"       => "dgd_logo.gif",
-    "version"    => "0.0.25.117",
+    "version"    => "0.1.0.2",
     "page"       => "/dgd/page",
     "image_dir"  => "images",
     "style_dir"  => "style",

@@ -1,4 +1,4 @@
-<%once>
+<%once> 
 my $config;
 </%once>
 

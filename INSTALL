@@ -12,21 +12,13 @@ Building DGD
 DGD makes extensive use of C++ boost (http://www.boost.org). You
 need boost 1.25.0 or later to compile DGD. 
 
-STLPort 4.5 (http://www.stlport.com) was used during DGD
+STLPort (http://www.stlport.com) was used during DGD
 developing. It is recommended but not required. In fact DGD works well
 with the native VC++ version of STL.
 
-On Cygwin or Unix machines just examine 'reconf' script in the root
-directory and run it with the appropriate option. If configure does not work,
-emitting strange errors - use util/bin/unixify script to get rid of windoze
-EOLs.
-
-On Windows the primary building process is different then building
-usual Win32 libraries. DGD uses GNU build tools and VC++. You need to
-install cygwin package (http://www.cygwin.com) and Visual Studio. 
-
-There are Visual Studio project files in 'msvc-prj' directory, but
-they will be updated only for stable versions.
+From version 0.1.0.0 DGD uses Cons (http://www.gnu.org/software/cons/)
+as its primary build system. Thus, you need perl (tested with perl 5.6.1) 
+to build DGD. 
 
 The following steps are required to build DGD:
 
@@ -38,36 +30,30 @@ The following steps are required to build DGD:
     Do this in the same directory where boost library is installed or in
     directory one or two levels behind. DGD configure script will
     search for boost library.
- 4. Inspect all ./configure options in dgd-XXX directory. Modify
-    ./reconf script according to your needs. Run ./reconf.
- 5. run 'make'
+ 4. On Win32 built with VC++ run:
+    perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost
+ 5. For cygwin and Linux
+    perl -I cons ./cons/cons.pl -- --toolset=gcc,boost
 
-Configure script options
-========================
+Important Cons Options
+======================
 
- * --enable-debug - compile debug version of DGD
- * --with-cvs - use CVS to automatically get the version of DGD.
-   Optional parameter can specify a full path (including executable itself) 
-   to cvs client. If this option is not specified dgd/src/dgConfig.h.in need 
-   to be edited to update the version.
- * --with-stlport - compile using STLPort library. Optional parameter can
-   specify the root directory of STLPort distribution.
- * --with-msvc - use MS VC++ as a compiler. 
- * --with-pch - use precompiled headers if available. This option is treated 
-                only when '--with-msvc' is specified.
+  * --verbose=int - defines verbosity level. 0 means quiet mode. 
+  * --build=[Debug|Release] - used to trigger the build type. Default is Debug.
+  * --toolset=toolset_list - defines which toolsets will be used for build.
+    Currently the following toolsets are supported: msvc70, gcc, cygwin, clo,
+    boost, stlport, doxygen.
+  * --[toolset]-root-dir=string - overrides the root directory of particular 
+    toolset. By default Cons will try to guess the location. 
 
 Additional packages
 ===================
 
 You will need some additional programs if you want to change DGD. 
 
- * makedepend -  makes make file dependencies from set of source files. 
-   Available from ftp.x.org
-
- * GNU Gengetopt - generates command line parser. Use this if you want to 
-   change dgd/dgd/src/dgDebugOpt.gge. This program is available from 
-   http://www.gnu.org/software/gengetopt/gengetopt.html
-
+ * clo++ -  (http://pmade.org/software/clo++/) generates command line parser. 
+   Use this if you want to change dgd/src/dgDebugOpt.xml. 
+   
 
 
 

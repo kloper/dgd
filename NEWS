@@ -1,9 +1,30 @@
 
 Depression Glass Debug Library NEWS
 ===================================
-06/10/2003:	I am working on C clone of DGD (it will be called DGC) and will
-feature special implementations of printf(3) family of functions and 
-stdio-like streams with formatting functionality.
+05/06/2004:	After long period of silence I am releasing DGD-0.1.0. This is 
+development version. Main changes are:
+  - migrated from GNU autoconf and make to Cons 
+  - migrated from gnugetopt to clo++
+  - changed prefix of the command line options from --debug to --trace
+  - added articles to tutorial
+  - added samles
+  - changed versioning  
+
+04/06/2004:	Bad news for lazy guys
+ - I have upgraded my compilers to msvc70 and gcc-3.3.2 so support 
+   for older ones is dropped. If you are interested, please write an 
+   appropriate Cons modules and let me know. 
+ - There are no more makefiles in DGD. I will try to invent some makefile 
+   generation scriptology, but until then you will need to get Cons working. 
+   See INSTALL file for more details.
+
+01/05/2004:	I have changed DGD versioning. Now DGD version will have four 
+numbers:
+ 1. Stable version. Incremented only on stable releases.
+ 2. Major version. Incremented only when major changes were mage.
+ 3. Build number. Incremented upon finishing of adding features or fixing bugs.
+ 4. Compilation number. Incremented automatically and is not part of official 
+    version.
 
 23/04/2003:	Fixed Doxygen to generate right inner class names in HTML 
 documentation. The DGD documentation is updated.
