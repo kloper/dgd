@@ -1,0 +1,110 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Depression Glass Debug Spec</title>
+</head>
+
+<body bgcolor="#FFFF99">
+
+<h1>Depression Glass Debug library</h1>
+<h2>What is Depression Glass?</h2>
+<p>Find exact references on the web, for example
+<a href="http://www.dgshopper.com/whatis.html">here is good explanation</a>. So, 
+for now, &quot;Depression Glass&quot; means something simple, cheap, less then 
+perfect (ok, <b>not buggy</b>, but containing minimal feature set) which can be and actually was 
+heavily used during long period of time. </p>
+<h2>Purpose of the library.</h2>
+<p>DGD is a library for debugging algorithms. Usually, implementing of any 
+algorithm with complexity above then trivial&nbsp; (implementation complexity 
+not the algorithm complexity!)&nbsp; requires some tracing being included in the 
+code. Most of the time this tracing is a form of printf() statements or so. DGD 
+is supposed to be easily extended C++ printf() (or so) wrapper, with a handy set 
+of tools allowing readable and precise output.</p>
+<h2>Features wanted.</h2>
+<ol>
+  <li>Formatting. Everything std::ostream can do.</li>
+  <li>Indentation:
+  <ul>
+  <li>
+  increase and decrease indentation<li>
+  possibility to limit indentation level in both direction. This means that 
+  indentation counter will be increased/decreased but no actual indentation will 
+  occur</ul>
+  </li>
+  <li>Limited or unlimited string length. </li>
+  <li>Wrap:
+  <ul>
+  <li>
+  word wrap<li>
+  char wrap<li>
+  if word wrap is disabled use char wrap<li>
+  if word wrap is impossible use char wrap</ul>
+  </li>
+  <li>Possibility to turn on and off. When turned off must take minimum or no 
+  execution time.</li>
+  <li>Possibility to be compiled out (need to check whether can be done without 
+  heavy use of macros)</li>
+  <li>Channels. See below.</li>
+  </ol>
+
+<h2>Features which are <font color="#FF0000">not yet</font> wanted, but may be 
+candidates for the future.</h2>
+<ol>
+  <li>Fine grain message typing: NOTICE, WARNING, ERROR, etc... types of 
+  messages and ability of user to choose between them.</li>
+  <li>Multithreading support</li>
+  <li>Support for multiple languages</li>
+  <li>Unicode.</li>
+</ol>
+
+<h2>Channels</h2>
+<p>Most of the time your main algorithm (read main loop, main application, 
+etc...) calls some other algorithms. If you developed those algorithms as well, 
+good chances that they will emit DGD output too. Placing this output in one 
+place (e.g. one log file) is a bad idea. Since once the (sub) algorithm is stable 
+you are rarely interested in its debug output. So, you want to be able either:</p>
+<ul>
+  <li>Turn of the output from the algorithm.</li>
+  <li>Let the output from the algorithm go into different place called
+  <font color="#FF0000"><b><i>channel</i></b></font>. Your main algorithm 
+  channel is called <i>main</i> channel and sub-algorithm channels are, as you 
+  probably guessed, sub-channels.</li>
+</ul>
+<h2>Features wanted on channels.</h2>
+<ol>
+  <li>Possibility to link channels. Need to insert references in places where 
+  should stay output which went to other channel.</li>
+  <li>/dev/null channel</li>
+  <li>/dev/text and /dev/html channels</li>
+  <li>User must have ability to decide (dynamic decision ability is needed !!!) where formatted 
+  output from channels go physically. Examples:
+  <ul>
+  <li>
+  All channels go in the single file or memory buffer. <b>Note</b> that 
+  channels' output must not be intermixed and the order is important.<li>
+  Some channel(s) goes into separate file. Main channel has references to <b>
+  exact places</b> in that file.<li>
+  Some channel(s) go into memory buffer.</ul>
+  By default all channels go into same file. 
+  </li>
+  <li>User must have ability to turn off/on some or all channels. When turned 
+  off channel must not take CPU, or take minimum CPU.</li>
+</ol>
+
+<h2>Thoughts on design of channels.</h2>
+<p>Every channel must have a name. The name is hardcoded, it is user 
+responsibility to choose right channel names.</p>
+<p>There must be an object called file which can do following:</p>
+<p>File file;</p>
+<p>file.add( Channel(&quot;a&quot;) );</p>
+<p>file.add( Channel(&quot;b&quot;) );</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>
