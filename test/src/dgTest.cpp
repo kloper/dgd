@@ -139,6 +139,29 @@ void two_channels_test() {
    dgd_end_scope( dimka );
 }
 
+struct A {
+      char str[30];
+      A() {
+	 std::fill(str, str+30, '-' );
+      }
+      virtual const char* get() const {
+	 return str;
+      }
+};
+
+void pointers_test( channel& debug ) {
+   char* a = "Hello World";
+   A b;
+
+   debug << dgd_expand(a) << endl
+	 << dgd_expand(mem_ref(a)) << endl
+	 << dgd_expand(mem_ref(a, true)) << endl
+	 << dgd_expand(&b) << endl
+	 << dgd_expand(mem_ref(&b)) << endl
+	 << incr << dgd_expand(mem(&b)) << decr << endl
+	 << incr << incr << dgd_expand(mem(&b, 100)) << decr << decr << endl;
+}
+
 void empty_test( channel& debug ) {
 }
 
@@ -192,6 +215,7 @@ int main( int argc, char** argv ) {
    empty_test( *dgd_channel(main) );
    two_channels_test();
    overload_test( *dgd_channel(main) );
+   pointers_test( *dgd_channel(main) );
 
    return 0;
 }

@@ -29,6 +29,7 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <typeinfo>
 
 #include "dgDebug.h"
 
@@ -91,6 +92,88 @@ inline channel& operator << ( channel& cnl,
    return cnl;
 }
 
+template <class T>
+struct dgd_reference {
+      const T* const m_pointer;
+      const bool m_use_as_void;
+      const unsigned int m_size;
+      
+      dgd_reference() : m_pointer(NULL), m_use_as_void(false), m_size(0) {}
+      explicit dgd_reference( const T* const p,
+			      const bool use_as_void = false,
+			      const unsigned int size = 0 ) :
+	 m_pointer( p ), m_use_as_void(use_as_void), m_size(size) {}
+
+      dgd_reference( const dgd_reference& peer ) : 
+	 m_pointer( peer.m_pointer ), 
+	 m_use_as_void( peer.m_use_as_void ),
+	 m_size( peer.m_size ) {}
+};
+
+template <class T> 
+inline dgd_reference<T> mem_ref( const T* const p,
+				 const bool use_as_void = false,
+				 const unsigned int size = 0 ) {
+   return dgd_reference<T>(p, use_as_void, size);
+}
+
+template <class T> 
+inline dgd_reference<T> mem( const T* const p,
+			     const unsigned int size = sizeof(T),
+			     const bool use_as_void = false ) {
+   return dgd_reference<T>(p, use_as_void, size);
+}
+
+template <class T> 
+inline std::ostream& operator << ( std::ostream& cnl,
+				   const dgd_reference<T>& ptr ) {
+   if( !ptr.m_use_as_void ) {
+      cnl << "(" << typeid(T).name() << "*)";
+   }
+   std::ostream::fmtflags flags = cnl.flags();
+   cnl << hex << "0x" << (void*)ptr.m_pointer;
+
+   if( ptr.m_size > 0 ) {
+      channel* dgd_cnl = dynamic_cast< channel* > ( &cnl );
+      unsigned int width = channelbuf::DefaultMaxWidth;
+      
+      if( dgd_cnl ) {
+	 if( dgd_cnl->wrap() ) {
+	    width = dgd_cnl->max_width() - dgd_cnl->indent();
+	 }
+      }
+
+      unsigned int num_bytes_per_line = 
+	 std::min( (unsigned int)16, (width - 10) / 4 );
+      unsigned int bytes_written = 0, i;
+      unsigned char* mem = (unsigned char*)ptr.m_pointer;
+      
+      cnl << dec << " " << ptr.m_size << hex << " bytes" << std::endl;
+      while(bytes_written < ptr.m_size) {
+	 cnl << (unsigned long)( mem + bytes_written ) << " ";
+	 
+	 for(i = 0; i < num_bytes_per_line; i++) {
+	    if( bytes_written+i < ptr.m_size ) {
+	       cnl.width(2);
+	       cnl << (unsigned int)(0xff & mem[bytes_written+i]) << " ";
+	    } else {
+	       cnl << "   ";
+	    }
+	 }
+	 cnl << " ";
+	 for( i = 0; i < num_bytes_per_line && 
+		 bytes_written+i < ptr.m_size; i++ ) {
+	    char c = mem[bytes_written+i];
+	    cnl << ((c >= ' ')?c:'.');
+	 }
+	 bytes_written += num_bytes_per_line;
+	 cnl << std::endl;
+      }
+   }
+
+   cnl.flags( flags );
+   return cnl;
+}
 }; // end of namespace DGD
 
 #endif /* _dgDebugStd_h_ */
