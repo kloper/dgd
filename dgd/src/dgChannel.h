@@ -50,7 +50,7 @@ class channel: public std::ostream {
       unsigned int indent_step() const;
       void         incr_indent();
       void         decr_indent();
-      void         indent(const unsigned int);
+      void         indent( unsigned int val );
       unsigned int indent() const;
       
       void         min_width( unsigned int width );

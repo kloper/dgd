@@ -37,6 +37,7 @@ namespace DGD {
 class channelbuf: public std::streambuf {
    public:
       typedef std::streambuf Parent;
+      typedef std::pair<unsigned,unsigned> position_type;
 
    protected:
       typedef std::list< stream > Assoc_list;
@@ -102,6 +103,8 @@ class channelbuf: public std::streambuf {
       
       void         space_chars(const char* spc = " \t");
       std::string  space_chars() const;
+
+      position_type position() const;
 
    private:
       Assoc_list m_assoc;

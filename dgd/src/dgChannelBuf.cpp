@@ -328,6 +328,10 @@ std::string channelbuf::space_chars() const {
    return m_spaces;
 }
 
+channelbuf::position_type channelbuf::position() const {
+   return position_type( m_line, m_column );
+}
+
 }; // end of namespace DGD
 
 // 

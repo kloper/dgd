@@ -25,8 +25,9 @@
 #include <dgDebug.h>
 
 using namespace std;
+using namespace DGD;
 
-void single_channel_test( DGD::channel& debug) {
+void single_channel_test( channel& debug ) {
    int i;
 
    for(i = 0; i < 100; i++) {
@@ -102,10 +103,30 @@ void single_channel_test( DGD::channel& debug) {
 //  	 << indent(5) << "kuku" << std::endl;
 }
 
+void manip_test( channel& debug ) {
+   int i;
+
+   debug << wrap(false) << endl;
+
+   for(i = 0; i < 120; i++) {
+      debug << "Dimka" << ' ' << i << ' ' << "Pimka";
+   }
+
+   debug << wrap(true) << word_wrap(false) << endl;
+
+   for(i = 0; i < 120; i++) {
+      debug << "Dimka" << ' ' << i << ' ' << "Pimka";
+   }
+   
+   debug << word_wrap(true) << endl;   
+}
+
 int main( int argc, char** argv ) {
-   DGD::Debug dout( argc, argv );
+   Debug dout( argc, argv );
 
    single_channel_test( dout["main"] );
+   manip_test( dout["main"] );
+
    return 0;
 }
 

@@ -76,7 +76,7 @@ void channel::decr_indent() {
    m_buffer.decr_indent();
 }
 
-void channel::indent( const unsigned int val ) {
+void channel::indent( unsigned int val ) {
    m_buffer.indent( val );
 }
 

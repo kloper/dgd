@@ -32,6 +32,7 @@
 #include <list>
 
 #include "dgChannel.h"
+#include "dgChannelManip.h"
 #include "dgDebugOpt.h"
 
 namespace DGD {
