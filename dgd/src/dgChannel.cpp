@@ -32,6 +32,10 @@
 
 #include <ctime>
 
+#ifndef DGD_WITHOUT_BOOST
+#include "dgDebug.h"
+#endif
+
 #include "dgChannel.h"
 
 namespace DGD {
