@@ -10,16 +10,18 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* Don't define PACKAGE and VERSION if we use automake.  */
-#ifndef PACKAGE
-/* ******* WRITE THE NAME OF YOUR PROGRAM HERE ******* */
-#define PACKAGE ""
+#if defined PACKAGE
+#  undef PACKAGE
 #endif
-#ifndef VERSION
-/* ******* WRITE THE VERSION OF YOUR PROGRAM HERE ******* */
-#define VERSION ""
+#define PACKAGE "dgd"
+#if defined VERSION
+#  undef VERSION
 #endif
+#define VERSION "dgd-0.11 Tue Sep  3 12:30:11  2002"
 
 struct dgd_gengetopt_args_info {
+  int debug_version_flag;	/* Print dgd version and exit (default=off).  */
+  int debug_help_flag;	/* Print debug help and exit (default=off).  */
   int debug_enable_flag;	/* Enable debug (default=off).  */
   char * debug_main_file_arg;	/* Primary debug output file.  */
   int debug_min_width_arg;	/* Default minimum output width.  */
@@ -33,6 +35,8 @@ struct dgd_gengetopt_args_info {
 
   int help_given ;	/* Whether help was given.  */
   int version_given ;	/* Whether version was given.  */
+  int debug_version_given ;	/* Whether debug-version was given.  */
+  int debug_help_given ;	/* Whether debug-help was given.  */
   int debug_enable_given ;	/* Whether debug-enable was given.  */
   int debug_main_file_given ;	/* Whether debug-main-file was given.  */
   int debug_min_width_given ;	/* Whether debug-min-width was given.  */

@@ -25,7 +25,7 @@
 #ifndef _dgConfig_h_
 #define _dgConfig_h_
 
-#define DG_VERSION_STRING "@DG_VERSION@"
+#define DG_VERSION_STRING "dgd-0.11 Tue Sep  3 12:30:11  2002"
 
 #endif /* _dgConfig_h_ */
 

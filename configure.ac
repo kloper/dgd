@@ -159,7 +159,7 @@ AC_CHECK_PROG(RC, rc, rc, echo,, )
 AC_CHECK_PROG(ISCC, ISCC, ISCC, ISCC,, )
 AC_CHECK_PROG(ETAGS, etags, etags, echo,, )
 
-AC_CONFIG_FILES(Makefile getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h test/Makefile ) 
+AC_CONFIG_FILES(Makefile getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile ) 
 
 AC_OUTPUT
 

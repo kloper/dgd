@@ -40,6 +40,8 @@ dgd_cmdline_parser_print_help (void)
 "Usage: %s [OPTIONS]...\n\
    -h         --help                           Print help and exit\n\
    -V         --version                        Print version and exit\n\
+              --debug-version                  Print dgd version and exit (default=off)\n\
+              --debug-help                     Print debug help and exit (default=off)\n\
               --debug-enable                   Enable debug (default=off)\n\
               --debug-main-file=STRING         Primary debug output file\n\
               --debug-min-width=INT            Default minimum output width\n\
@@ -78,6 +80,8 @@ dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info
 
   args_info->help_given = 0 ;
   args_info->version_given = 0 ;
+  args_info->debug_version_given = 0 ;
+  args_info->debug_help_given = 0 ;
   args_info->debug_enable_given = 0 ;
   args_info->debug_main_file_given = 0 ;
   args_info->debug_min_width_given = 0 ;
@@ -89,6 +93,8 @@ dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info
   args_info->debug_turn_on_given = 0 ;
   args_info->debug_turn_off_given = 0 ;
 #define clear_args() { \
+  args_info->debug_version_flag = 0;\
+  args_info->debug_help_flag = 0;\
   args_info->debug_enable_flag = 0;\
   args_info->debug_main_file_arg = NULL; \
   args_info->debug_allow_wrap_flag = 1;\
@@ -111,6 +117,8 @@ dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info
       static struct option long_options[] = {
         { "help",	0, NULL, 'h' },
         { "version",	0, NULL, 'V' },
+        { "debug-version",	0, NULL, 0 },
+        { "debug-help",	0, NULL, 0 },
         { "debug-enable",	0, NULL, 0 },
         { "debug-main-file",	1, NULL, 0 },
         { "debug-min-width",	1, NULL, 0 },
@@ -160,9 +168,23 @@ dgd_cmdline_parser (int argc, char * const *argv, struct dgd_gengetopt_args_info
         
         
         
+        
+        
         case 0:	/* Long option with no short option */
+          /* Print dgd version and exit.  */
+          if (strcmp (long_options[option_index].name, "debug-version") == 0)
+          {
+            args_info->debug_version_flag = !(args_info->debug_version_flag);
+            break;
+          }
+          /* Print debug help and exit.  */
+          else if (strcmp (long_options[option_index].name, "debug-help") == 0)
+          {
+            args_info->debug_help_flag = !(args_info->debug_help_flag);
+            break;
+          }
           /* Enable debug.  */
-          if (strcmp (long_options[option_index].name, "debug-enable") == 0)
+          else if (strcmp (long_options[option_index].name, "debug-enable") == 0)
           {
             args_info->debug_enable_flag = !(args_info->debug_enable_flag);
             break;

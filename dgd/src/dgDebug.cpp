@@ -49,6 +49,13 @@ class debug_disabled: public std::exception {
       }
 };
 
+class exit_required: public std::exception {
+   public:
+      const char* what() const {
+	 return "debug required exit";
+      }
+};
+
 Debug::Debug() :
    m_main_file( NULL ) 
 {
@@ -66,13 +73,23 @@ void Debug::process_options( int argc, char** argv ) {
       throw bad_params();
    }
 
+   if( m_args_info.debug_version_flag ) {
+      dgd_cmdline_parser_print_version();
+      throw exit_required();
+   }
+   
+   if( m_args_info.debug_help_flag ) {
+      dgd_cmdline_parser_print_help();
+      throw exit_required();
+   }      
+
+   if( !m_args_info.debug_enable_flag )
+      throw debug_disabled();
+
    if( m_args_info.debug_main_file_given ) {
       m_main_file = create_file( m_args_info.debug_main_file_arg );
       assoc( m_main_file, **m_current_channel );
    }
-
-   if( !m_args_info.debug_enable_flag )
-      throw debug_disabled();
 
    // apply options on existing channels
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i )
@@ -198,6 +215,8 @@ Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
    } catch( debug_disabled& ) {
       debug_factory = NULL;
       df.reset( NULL );
+   } catch( exit_required& ) {
+      exit(0);
    }
 
    return df;
