@@ -62,12 +62,15 @@ HEADERS = \
 dgd_types.h \
 dgd_format_lexer.h \
 dgd_format_parser.h \
-dgd_format_cache.h
+dgd_format_cache.h \
+dgd_format_eval.h
 CFILES  = \
 dgd_format_parser.c \
 dgd_types.c \
 dgd_format_lexer.c \
-dgd_format_cache.c
+dgd_format_cache.c \
+dgd_format_eval.c
+
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs

@@ -28,6 +28,7 @@
 
 #include "dgd_config.h"
 #include "dgd_types.h"
+#include "dgd_format_cache.h"
 
 #define EVAL_STATE_INIT   0
 #define EVAL_STATE_NORMAL 1
@@ -42,6 +43,7 @@
 #define EVAL_ERR_BAD_CACHE 2
 #define EVAL_ERR_BAD_CALL  3
 #define EVAL_ERR_CONT_ARGS 4
+#define EVAL_ERR_CALLBACK  5
 
 #define EVAL_T_INT         20
 #define EVAL_T_DOUBLE      21
@@ -53,30 +55,64 @@
 
 #define EVAL_DATA_SIZE 512
 
+#define EVAL_ACTION_LOOKUP_SIZE 512
+
+#define EVAL_ACTION_DEC      0
+#define EVAL_ACTION_OCT      1
+#define EVAL_ACTION_HEX      2
+#define EVAL_ACTION_UNSIGNED 3
+#define EVAL_ACTION_REPORT   4
+#define EVAL_ACTION_SCI      5
+#define EVAL_ACTION_FLOAT    6
+#define EVAL_ACTION_SCIFLOAT 7
+#define EVAL_ACTION_SCIHEX   8
+#define EVAL_ACTION_CHAR     9
+#define EVAL_ACTION_STR      10
+#define EVAL_ACTION_PTR      11
+
 typedef struct _dgd_action_t {
+      unsigned int  state;
       unsigned int  flags;
+      call_attr_t   attr;
       unsigned int  error;
       void         *user_data;
+      unsigned int  data_size;
       char         *data;
 } dgd_action_t;
 
-typedef int (dgd_action_callback_t*)( dgd_action_t *action, 
+typedef int (*dgd_action_callback_t)( dgd_action_t *action, 
 				      str_bounded_range_t *str,
-				      call_attr_t *attr,
-				      int argc,
-				      char **argv );
+				      void* argv );
+
+typedef struct _dgd_action_lookup_t {
+      char                 *name;
+      dgd_action_callback_t callback;
+      dgd_action_t          action;
+} dgd_action_lookup_t;
+
+extern dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE];
 
 typedef struct _dgd_eval_t {
       unsigned int  state;
       unsigned int  flags;
       unsigned int  error;
-      unsigned int  argn;
       cache_item_t *chain;
       cache_item_t *next_item;
       void         *user_data;
       char          data[EVAL_DATA_SIZE];      
 } dgd_eval_t;
 
+void dgd_eval_init( dgd_eval_t   *eval,       
+		    unsigned int  flags,
+		    cache_item_t *chain,
+		    void         *user_data );
+
+int dgd_format_eval( dgd_eval_t *eval, 
+		     str_bounded_range_t *str, 
+		     va_list arg );
+
+cache_item_t* dgd_format_settle_args( cache_t *cache, 
+				      cache_item_t *parse_ring );
 
 #endif /* _dgd_format_eval_h_ */
 
