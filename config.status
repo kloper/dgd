@@ -130,7 +130,7 @@ do
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:3189: error: ambiguous option: $1
+    { { echo "$as_me:3204: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -149,7 +149,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:3208: error: unrecognized option: $1
+  -*) { { echo "$as_me:3223: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -186,7 +186,7 @@ do
   "dgd/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgd/Makefile" ;;
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
   "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
-  *) { { echo "$as_me:3248: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:3263: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -276,8 +276,8 @@ s,@target_cpu@,i686,;t t
 s,@target_vendor@,pc,;t t
 s,@target_os@,cygwin,;t t
 s,@CVS@,cvs.exe,;t t
-s,@DGD_VERSION@,dgd-0.04 Tue Aug 20 22:57:03  2002,;t t
-s,@DGD_SHORT_VERSION@,0.04,;t t
+s,@DGD_VERSION@,dgd-0.05 Thu Aug 22 17:20:21  2002,;t t
+s,@DGD_SHORT_VERSION@,0.05,;t t
 s,@BUILDDIR@,Debug,;t t
 s,@TARGETS@,,;t t
 s,@CXX_DYNAMIC_FLAGS@,,;t t
@@ -299,7 +299,7 @@ s,@CPP@,cl -E,;t t
 s,@LD@,link,;t t
 s,@STLDIR@,./../STLport-4.5,;t t
 s,@BOOSTDIR@,./../boost,;t t
-s,@EXTRA_LDFLAGS@, -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/getopt/Debug,;t t
+s,@EXTRA_LDFLAGS@, -libpath:$(top_srcdir)/./../boost/libs/regex/build/lib -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/getopt/Debug,;t t
 s,@LDLIBS@,getopt.lib dgd.lib,;t t
 s,@SET_MAKE@,,;t t
 s,@RM@,rm -f,;t t
@@ -417,7 +417,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:3487: creating $ac_file" >&5
+    { echo "$as_me:3502: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -435,7 +435,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:3505: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:3520: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -448,7 +448,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:3518: error: cannot find input file: $f" >&5
+           { { echo "$as_me:3533: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;

@@ -53,6 +53,19 @@ AC_CHECK_PROG(CVS, cvs, cvs,,,)
 
 DG_VERSION_FROM_CVS
 
+AC_ARG_WITH(stlport,
+	    AC_HELP_STRING([--with-stlport],
+	                   [search for STLPort, arg is optional]),
+if test "X$with_stlport" != "Xno"; then
+   if test "X$withval" != "X"; then
+      STLDIR=$withval
+   fi
+else 
+   STLDIR=.
+fi
+,
+)
+
 if test $win32 = 1; then 
   AC_ARG_WITH(msvc, 
               AC_HELP_STRING([--with-msvc],
@@ -122,6 +135,7 @@ AC_SUBST(BOOSTDIR)
 
 if test $win32 = 1; then 
    EXTRA_LDFLAGS="$EXTRA_LDFLAGS \
+-libpath:\$(top_srcdir)/$BOOSTDIR/libs/regex/build/lib \
 -libpath:\$(top_srcdir)/$STLDIR/lib \
 -libpath:\$(top_srcdir)/dgd/$BUILDDIR \
 -libpath:\$(top_srcdir)/getopt/$BUILDDIR"
