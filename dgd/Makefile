@@ -34,7 +34,7 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/./../STLport-4.5
+STLDIR     = $(top_srcdir)/../CGAL-2.3/stlport
 BOOSTDIR   = $(top_srcdir)/./../boost
 BUILDDIR   = $(srcdir)/Debug
 

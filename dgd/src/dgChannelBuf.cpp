@@ -186,7 +186,7 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	    }
 	    m_word_pos = pbase();
 	    if( ch != traits_type::eof() )
-	       _M_xsputnc( ch, 1 );
+	       sputc( ch );
 	    run_flag = false; // break the main loop
 	 } else {
 	    if( m_column >= m_max_width ) {
