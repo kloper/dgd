@@ -102,9 +102,27 @@ int dgd_generic_callback( dgd_action_t *action,
 	    sprintf( p->buf, build_format( &(action->attr), format ), 
 		     *(double*)argv );
 	    break;
-	 case 's': case 'p': case 'n':
+	 case 's': case 'p':
 	    sprintf( p->buf, build_format( &(action->attr), format ), 
-		     argv );
+		     *(char**)argv );
+	    break;
+	 case 'n':
+	    *p->buf = '\0';
+	    if( action->attr.valid_mask & CALL_ATTR_BYTECOUNT ) {
+	       switch( action->attr.byte_count ) {
+		  case sizeof(dgd_char_t):
+		     **(dgd_char_t**)argv = str->end - str->begin;
+		     break;
+		  case sizeof(dgd_short_t):
+		     **(dgd_short_t**)argv = str->end - str->begin;
+		     break;
+		  case sizeof(dgd_long_t):
+		     **(dgd_long_t**)argv = str->end - str->begin;
+		     break;
+	       }
+	    } else {
+	       **(dgd_size_t**)argv = str->end - str->begin;
+	    }
 	    break;
       }
    }
@@ -179,6 +197,24 @@ int dgd_generic_callback_scihex( dgd_action_t *action,
    return dgd_generic_callback( action, str, 'a', argv );
 }
 
+int dgd_generic_callback_str( dgd_action_t *action, 
+			      str_bounded_range_t *str,
+			      void* argv ) {
+   return dgd_generic_callback( action, str, 's', argv );
+}
+
+int dgd_generic_callback_ptr( dgd_action_t *action, 
+			      str_bounded_range_t *str,
+			      void* argv ) {
+   return dgd_generic_callback( action, str, 'p', argv );
+}
+
+int dgd_generic_callback_rep( dgd_action_t *action, 
+			      str_bounded_range_t *str,
+			      void* argv ) {
+   return dgd_generic_callback( action, str, 'n', argv );
+}
+
 static
 int dgd_generic_callback_error( dgd_action_t *action, 
 				str_bounded_range_t *str,
@@ -189,7 +225,6 @@ int dgd_generic_callback_error( dgd_action_t *action,
    } persistent_t;
 
    dgd_error_arg_t *err = (dgd_error_arg_t*)argv;
-   char *errdescr = "unknown error";
    persistent_t *p;
    unsigned int size;
 
@@ -249,6 +284,9 @@ dgd_generic_callback_init( dgd_action_lookup_t* lookup) {
    lookup[EVAL_ACTION_FLOAT].callback    = dgd_generic_callback_float;
    lookup[EVAL_ACTION_SCIFLOAT].callback = dgd_generic_callback_scifloat;
    lookup[EVAL_ACTION_SCIHEX].callback   = dgd_generic_callback_scihex;
+   lookup[EVAL_ACTION_STR].callback      = dgd_generic_callback_str;
+   lookup[EVAL_ACTION_PTR].callback      = dgd_generic_callback_ptr;
+   lookup[EVAL_ACTION_REPORT].callback   = dgd_generic_callback_rep;
    lookup[EVAL_ACTION_ERROR].callback    = dgd_generic_callback_error;
 }
 

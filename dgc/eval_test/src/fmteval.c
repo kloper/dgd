@@ -65,6 +65,7 @@ void dgd_printf( char* format, ... ) {
 }
 
 int main( int argc, char** argv ) {
+   unsigned int n = -1;
 
    dgd_generic_callback_init( dgd_action_lookup_table );
 
@@ -82,6 +83,10 @@ int main( int argc, char** argv ) {
    dgd_printf( "{%1$e}{%1$f}{%1$E}{%1$a}{%1$g}{%1$G}\n", 123.456 );
    dgd_printf( "{%1$c}{%1$d}{%1$x}{%1$10.5c}\n", 'q' );
    dgd_printf( "{%1$c}{%1$d}{%1$x}{%1$10.5c}\n", 0x7172 );
+   dgd_printf( "{%1$s}{%1$10s}{%1$10.5s}\n", "hello world" );
+   dgd_printf( "{%1$p}{%1$x}\n", "hello" );
+   dgd_printf( "{%s}{%n}\n", "zz", &n ); 
+   dgd_printf( "{%d}\n", n );
    return 0;
 }
 

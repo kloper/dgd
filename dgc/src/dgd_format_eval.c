@@ -228,6 +228,18 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
 	    if( index < 0 ) 
 	       index = EVAL_ACTION_CHAR;
 	    /* fall through */
+	 case PARS_T_STR:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_STR;
+	    /* fall through */
+	 case PARS_T_PTR:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_PTR;
+	    /* fall through */
+	 case PARS_T_REP:
+	    if( index < 0 ) 
+	       index = EVAL_ACTION_REPORT;
+	    /* fall through */
 	 case PARS_T_DEC:
 	    if( index < 0 ) 
 	       index = EVAL_ACTION_DEC;

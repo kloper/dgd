@@ -59,10 +59,6 @@
 #define PARS_ERR_ARGTYPE    4
 
 /* content of y.tab.h goes here */
-#ifndef YYERRCODE
-#define YYERRCODE 256
-#endif
-
 #define LEX_EOF 257
 #define LEX_ZERO 258
 #define LEX_MINUS 259

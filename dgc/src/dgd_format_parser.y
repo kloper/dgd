@@ -904,7 +904,8 @@ dgd_format_settle_args( cache_t *cache,
 		  dgd_ring_push_and_sort( &parse_prefix, ring );
 		  /* fall through */
 	       case FIND_OK:
-		  if( ring->type != EVAL_T_PTR ) {
+		  if( ring->type != EVAL_T_PTR &&
+		      ring->type != EVAL_T_INT ) {
 		     if( error_item != NULL ) {
 			error_item->value.error.error = PARS_ERR_ARGTYPE;
 			error_item->value.error.num   = argn;
@@ -951,7 +952,8 @@ dgd_format_settle_args( cache_t *cache,
 		     dgd_ring_push_and_sort( &parse_prefix, ring );
 		     /* fall through */
 		  case FIND_OK:
-		     if( ring->type != EVAL_T_INT ) {
+		     if( ring->type != EVAL_T_INT  &&
+			 ring->type != EVAL_T_PTR) {
 			if( error_item != NULL ) {
 			   error_item->value.error.error = PARS_ERR_ARGTYPE;
 			   error_item->value.error.num   = argn;
@@ -985,7 +987,8 @@ dgd_format_settle_args( cache_t *cache,
 		     dgd_ring_push_and_sort( &parse_prefix, ring );
 		     /* fall through */
 		  case FIND_OK:
-		     if( ring->type != EVAL_T_INT ) {
+		     if( ring->type != EVAL_T_INT &&
+			 ring->type != EVAL_T_PTR ) {
 			if( error_item != NULL ) {
 			   error_item->value.error.error = PARS_ERR_ARGTYPE;
 			   error_item->value.error.num   = argn;
@@ -1032,7 +1035,9 @@ dgd_format_settle_args( cache_t *cache,
 		  dgd_ring_push_and_sort( &parse_prefix, ring );
 		  /* fall through */
 	       case FIND_OK:
-		  if( ring->type != type ) {
+		  if( ring->type != type && 
+		      ( ring->type == EVAL_T_INT && type != EVAL_T_PTR ) &&
+		      ( ring->type == EVAL_T_PTR && type != EVAL_T_INT ) ) {
 		     if( error_item != NULL ) {
 			error_item->value.error.error = PARS_ERR_ARGTYPE;
 			error_item->value.error.num   = argn;
