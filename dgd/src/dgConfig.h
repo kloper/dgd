@@ -19,13 +19,20 @@
 //
 // Copyright (c) 2002. Dimitry Kloper <dimka@cs.technion.ac.il> . 
 //
-// vmcConfig.h -- config stuff for VMC
+// vmcConfig.h -- config stuff for DGD
 //
 
 #ifndef _dgConfig_h_
 #define _dgConfig_h_
 
-#define DG_VERSION_STRING "dgd-0.14 Thu Sep 12 02:41:38  2002"
+/**
+ * @file dgConfig.in
+ * Configuration file for DGD. It must be generated from dgConfig.h.in
+ * by GNU autoconf. If you want this file to be changed - go to
+ * dgConfig.h.in 
+ */
+
+#define DG_VERSION_STRING "dgd-0.15 Tue Sep 17 01:24:59  2002"
 
 #endif /* _dgConfig_h_ */
 

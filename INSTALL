@@ -1,9 +1,10 @@
+
 Depression Glass Debug Library INSTALL
 ======================================
 
 Copyright (c) 2002. Dimitry Kloper <kloper@users.sourceforge.net>
 
-Available from <http://sourceforge.net/projects/dgd>
+Available from http://sourceforge.net/projects/dgd
 
 Precompiled version
 ===================
@@ -20,54 +21,56 @@ Building DGD
 
 Building DGD is different then building usual Win32 libraries. DGD
 uses GNU build tools and VC++. You need to install cygwin package
-<http://www.cygwin.com> and Visual Studio. 
+(http://www.cygwin.com) and Visual Studio. 
 
-DGD makes extensive use of C++ boost <http://www.boost.org>. You
+DGD makes extensive use of C++ boost (http://www.boost.org). You
 need boost 1.25.0 or later to compile DGD.
 
-STLPort 4.5 <http://www.stlport.com> was used during DGD
+STLPort 4.5 (http://www.stlport.com) was used during DGD
 developing. It is recommended but not required. In fact DGD works well
 with the native VC++ version of STL.
 
 The following steps are required to build DGD:
 
-1. Download and open C++ boost and STLPort libraries.
-2. Download DGD distribution (dgd-XXX.tar.gz from
-http://sourceforge.net/projects/dgd, here XXX refers to the package
-version). 
-3. gzip -dc dgd-XXX.tar.gz | tar -xf - 
-Do this in the same directory where boost library is installed or in
-directory one or two levels behind. DGD configure script will
-search for boost library.
-4. Inspect all ./configure options in dgd-XXX directory. Modify
-./reconf script according to your needs. Run ./reconf.
-5. run 'make'
+ 1. Download and open C++ boost and STLPort libraries.
+ 2. Download DGD distribution (dgd-XXX.tar.gz from
+    http://sourceforge.net/projects/dgd, here XXX refers to the package
+    version). 
+ 3.  gzip -dc dgd-XXX.tar.gz | tar -xf - 
+    Do this in the same directory where boost library is installed or in
+    directory one or two levels behind. DGD configure script will
+    search for boost library.
+ 4. Inspect all ./configure options in dgd-XXX directory. Modify
+    ./reconf script according to your needs. Run ./reconf.
+ 5. run 'make'
 
 Configure script options
 ========================
 
-* --enable-debug - compile debug version of DGD
-* --with-cvs     - use CVS to automatically get the version of DGD.
-                   Optional parameter can specify a full path (including 
-                   executable itself) to cvs client. If this option is not 
-                   specified dgd/src/dgConfig.h.in need to be edited to 
-                   update the version.
-* --with-stlport - compile using STLPort library. Optional parameter can
-                   specify the root directory of STLPort distribution.
-* --with-msvc    - use MS VC++ as a compiler. This is a required option for 
-                   the current release.
-* --with-pch     - use precompiled headers if available.
+ * --enable-debug - compile debug version of DGD
+ * --with-cvs - use CVS to automatically get the version of DGD.
+   Optional parameter can specify a full path (including executable itself) 
+   to cvs client. If this option is not specified dgd/src/dgConfig.h.in need 
+   to be edited to update the version.
+ * --with-stlport - compile using STLPort library. Optional parameter can
+   specify the root directory of STLPort distribution.
+ * --with-msvc - use MS VC++ as a compiler. This is a required option for 
+   the current release.
+ * --with-pch - use precompiled headers if available.
 
 Additional packages
 ===================
 
 You will need some additional programs if you want to change DGD. 
 
-* makedepend - makes make file dependencies from set of source files. 
-Available from ftp.x.org
+ * makedepend -  makes make file dependencies from set of source files. 
+   Available from ftp.x.org
 
-* GNU Gengetopt - generates command line parser. Use this if you want to 
-change dgd/dgd/src/dgDebugOpt.gge. This program is available from 
-http://www.gnu.org/software/gengetopt/gengetopt.html
+ * GNU Gengetopt - generates command line parser. Use this if you want to 
+   change dgd/dgd/src/dgDebugOpt.gge. This program is available from 
+   http://www.gnu.org/software/gengetopt/gengetopt.html
+
+
+
 
 

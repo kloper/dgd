@@ -1,3 +1,53 @@
+2002-09-16  dimka
+	* COPYING:
+	* INSTALL:
+	* Makefile:
+	* README:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgChannelBuf.cpp:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgChannelManip.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgConfig.h.in:
+	* dgd/src/dgDebug.cpp:
+	* dgd/src/dgDebug.h:
+	* dgd/src/dgDebugExtra.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* dgd/src/dgDebugStd.h:
+	* dgd/src/dgOptionFilter.cpp:
+	* dgd/src/dgOptionFilter.h:
+	* dgd/src/dgStream.h:
+	* doc/doxygen/dgd.doxy:
+	* doc/doxygen/dgd.doxy.in:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+		Updated documentation
+
+2002-09-12  dimka
+	* Makefile:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/doxygen/dgd.doxy:
+	* doc/doxygen/dgd.doxy:
+	* doc/doxygen/dgd.doxy.in:
+	* doc/doxygen/dgd.doxy.in:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+		Started code documentation
+
 2002-09-09  dimka
 	* Makefile:
 	* config.status:

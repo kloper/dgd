@@ -23,7 +23,7 @@ PROJECT_NAME           = "Depression Glass Debug Library"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = "dgd-0.14 Thu Sep 12 02:41:38  2002"
+PROJECT_NUMBER         = "dgd-0.15 Tue Sep 17 01:24:59  2002"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -433,7 +433,7 @@ REFERENCES_RELATION    = YES
 # of all compounds will be generated. Enable this if the project 
 # contains a lot of classes, structs, unions or interfaces.
 
-ALPHABETICAL_INDEX     = YES
+ALPHABETICAL_INDEX     = NO
 
 # If the alphabetical index is enabled (see ALPHABETICAL_INDEX) then 
 # the COLS_IN_ALPHA_INDEX tag can be used to specify the number of columns 
@@ -708,7 +708,7 @@ MAN_LINKS              = NO
 # feature is still experimental and incomplete at the 
 # moment.
 
-GENERATE_XML           = NO
+GENERATE_XML           = YES
 
 #---------------------------------------------------------------------------
 # configuration options for the AutoGen Definitions output
