@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: dgd\\dgc\\lexer_test\\Attic\\Makefile.in~,v 1.1 2003/08/05 20:12:31 dimka Exp $
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,37 +23,36 @@
 #
 
 SHELL = /bin/sh
+@SET_MAKE@
 
-
-srcdir     = .
-top_srcdir = ..
-BUILDDIR   = $(srcdir)/Debug
+srcdir     = @srcdir@
+top_srcdir = @top_srcdir@
+BUILDDIR   = $(srcdir)/@BUILDDIR@
 
 VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
-RM  = rm -f
-MKDIR = mkdir -p
-CC = gcc
-LD  = ld
-AR  = ar
-RANLIB = ranlib
-CFLAGS =  -Wall -g
-LDFLAGS  =   -g
-LDOUTOPT = -o
-COUTOPT  = -o
+RM  = @RM@
+MKDIR = @MKDIR@
+CC = @CC@
+LD  = @LD@
+AR  = @AR@
+RANLIB = @RANLIB@
+CFLAGS = @CFLAGS@
+LDFLAGS  = @LD_STATIC_FLAGS@ @LDFLAGS@
+LDOUTOPT = @LDOUTOPT@
+COUTOPT  = @COUTOPT@
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
-LIBPREFIX = lib
-LIBEXT = a
-OBJEXT = o
+EXEEXT = @EXEEXT@
+OBJEXT = @OBJEXT@
 
 SUBDIRS =
-TARGETS = $(LIBPREFIX)getopt.$(LIBEXT)
-PDBFILE = getopt.pdb
-PCHFILE = getopt.pch
+TARGETS = lexer$(EXEEXT)
+PDBFILE = lexer.pdb
+PCHFILE = lexer.pch
 
-HEADERS = getopt.h
-CFILES  = alloca.c getopt.c getopt1.c
+HEADERS = 
+CFILES  = lexer.c
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs
@@ -81,11 +80,10 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 	cd $(top_srcdir) && $(MAKE) config.status
 
 $(TARGETS): $(OBJECTS)
-ifeq ($(LIBEXT),lib)
+ifeq ($(EXEEXT),.exe)
 	$(LD) $(LDFLAGS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
 else
-	$(AR) cr $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}
-	$(RANLIB) $(BUILDDIR)/$@
+	$(CC) -o $(BUILDDIR)/$@ -L../dgc/$(BUILDDIR) -ldgc${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}
 endif
 
 %.$(OBJEXT): %.c

@@ -1,0 +1,14 @@
+dump
+alloc data1 32
+dump
+alloc data2 32
+dump
+assoc key1 data1
+dump
+assoc key2 data2
+dump
+del key2
+dump
+alloc data3 60
+dump
+

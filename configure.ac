@@ -131,10 +131,12 @@ with_msvc=yes
         AC_DEFINE(_DEBUG)
         CXXFLAGS="$CXXFLAGS -g"
         LDFLAGS="$LDFLAGS -g"
+	CFLAGS="$CFLAGS -g"
         BUILDDIR=Debug
      else
         AC_DEFINE(NODEBUG)
         CXXFLAGS="$CXXFLAGS -O2"
+	CFLAGS="$CFLAGS -O2"
         BUILDDIR=Release
      fi
      LDOUTOPT="-o"
@@ -211,13 +213,14 @@ AC_CHECK_PROG(RANLIB, ranlib, ranlib, ranlib,, )
 AC_CHECK_PROG(AR, ar, ar, ar,, )
 AC_CHECK_PROG(MAKEDEPEND, makedepend, makedepend, echo,, )
 AC_CHECK_PROG(GENGETOPT, gengetopt, gengetopt, gengetopt )
+AC_CHECK_PROG(YACC, byacc, byacc, byacc,, )
 AC_CHECK_PROG(RC, rc, rc, echo,, )
 AC_CHECK_PROG(ISCC, ISCC, ISCC, ISCC,, )
 AC_CHECK_PROG(ETAGS, etags, etags, echo,, )
 AC_CHECK_PROG(PERL, perl, perl, perl,, )
 AC_CHECK_PROG(DOXYGEN, doxygen, doxygen, doxygen,, )
 
-AC_CONFIG_FILES(Makefile doc/Makefile doc/docsys/dgd/config getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile samples/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk) 
+AC_CONFIG_FILES(Makefile doc/Makefile doc/docsys/dgd/config getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge dgc/Makefile dgc/lexer_test/Makefile dgc/parser_test/Makefile dgc/cache_test/Makefile test/Makefile samples/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk) 
 
 AC_OUTPUT
 

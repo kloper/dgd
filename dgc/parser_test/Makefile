@@ -19,14 +19,14 @@
 #
 # Copyright (c) 2002. Dimitry Kloper <kloper@users.sf.net>
 #
-# Makefile.in -- template for a getopt library Makefile 
+# Makefile.in -- template for a parser test library Makefile 
 #
 
 SHELL = /bin/sh
 
 
 srcdir     = .
-top_srcdir = ..
+top_srcdir = ../..
 BUILDDIR   = $(srcdir)/Debug
 
 VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
@@ -41,19 +41,18 @@ CFLAGS =  -Wall -g
 LDFLAGS  =   -g
 LDOUTOPT = -o
 COUTOPT  = -o
-INCLUDES = -I. -I.. -I$(top_srcdir)
+INCLUDES = -I. -I.. -I$(top_srcdir) -I../src
 
-LIBPREFIX = lib
-LIBEXT = a
+EXEEXT = 
 OBJEXT = o
 
 SUBDIRS =
-TARGETS = $(LIBPREFIX)getopt.$(LIBEXT)
-PDBFILE = getopt.pdb
-PCHFILE = getopt.pch
+TARGETS = parser$(EXEEXT)
+PDBFILE = parser.pdb
+PCHFILE = parser.pch
 
-HEADERS = getopt.h
-CFILES  = alloca.c getopt.c getopt1.c
+HEADERS = 
+CFILES  = parser.c
 OBJECTS = ${patsubst %.c, %.$(OBJEXT), $(CFILES)}
 
 all:  builddir $(TARGETS) subdirs
@@ -81,11 +80,10 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 	cd $(top_srcdir) && $(MAKE) config.status
 
 $(TARGETS): $(OBJECTS)
-ifeq ($(LIBEXT),lib)
+ifeq ($(EXEEXT),.exe)
 	$(LD) $(LDFLAGS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} $(LDOUTOPT)$(BUILDDIR)/$@
 else
-	$(AR) cr $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}
-	$(RANLIB) $(BUILDDIR)/$@
+	$(CC) $(LDFLAGS) -o $(BUILDDIR)/$@ ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)} -L../$(BUILDDIR) -ldgc 
 endif
 
 %.$(OBJEXT): %.c

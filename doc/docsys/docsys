@@ -95,7 +95,7 @@ sub generate_component( $$@ ) {
     }
 }
 
-$root_dir = "d:/dgd/doc/docsys";
+$root_dir = "/home/dimka/dgd/doc/docsys";
 
 my $interp = HTML::Mason::Interp->new
     (comp_root  => $root_dir,

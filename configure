@@ -271,7 +271,7 @@ PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 
 ac_unique_file="dgd/src/dgConfig.h.in"
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os CVS DGD_VERSION DGD_SHORT_VERSION LD CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CXXCPP CPP BUILDDIR TARGETS LD_STATIC_FLAGS LDOUTOPT COUTOPT LIBEXT STLDIR BOOSTDIR EXTRA_LDFLAGS LDLIBS LIBPREFIX SET_MAKE RM MV CP CAT SED MKDIR RANLIB AR MAKEDEPEND GENGETOPT RC ISCC ETAGS PERL DOXYGEN LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os CVS DGD_VERSION DGD_SHORT_VERSION LD CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT CC CFLAGS ac_ct_CC CXXCPP CPP BUILDDIR TARGETS LD_STATIC_FLAGS LDOUTOPT COUTOPT LIBEXT STLDIR BOOSTDIR EXTRA_LDFLAGS LDLIBS LIBPREFIX SET_MAKE RM MV CP CAT SED MKDIR RANLIB AR MAKEDEPEND GENGETOPT YACC RC ISCC ETAGS PERL DOXYGEN LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1557,6 +1557,7 @@ _ACEOF
 
         CXXFLAGS="$CXXFLAGS -g"
         LDFLAGS="$LDFLAGS -g"
+	CFLAGS="$CFLAGS -g"
         BUILDDIR=Debug
      else
         cat >>confdefs.h <<\_ACEOF
@@ -1564,6 +1565,7 @@ _ACEOF
 _ACEOF
 
         CXXFLAGS="$CXXFLAGS -O2"
+	CFLAGS="$CFLAGS -O2"
         BUILDDIR=Release
      fi
      LDOUTOPT="-o"
@@ -3588,6 +3590,42 @@ else
 echo "${ECHO_T}no" >&6
 fi
 
+# Extract the first word of "byacc", so it can be a program name with args.
+set dummy byacc; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_YACC+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$YACC"; then
+  ac_cv_prog_YACC="$YACC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_YACC="byacc"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_YACC" && ac_cv_prog_YACC="byacc"
+fi
+fi
+YACC=$ac_cv_prog_YACC
+if test -n "$YACC"; then
+  echo "$as_me:$LINENO: result: $YACC" >&5
+echo "${ECHO_T}$YACC" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
 # Extract the first word of "rc", so it can be a program name with args.
 set dummy rc; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
@@ -3769,7 +3807,7 @@ echo "${ECHO_T}no" >&6
 fi
 
 
-                                                                                                                                  ac_config_files="$ac_config_files Makefile doc/Makefile doc/docsys/dgd/config getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile samples/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk"
+                                                                                                                                                                          ac_config_files="$ac_config_files Makefile doc/Makefile doc/docsys/dgd/config getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge dgc/Makefile dgc/lexer_test/Makefile dgc/parser_test/Makefile dgc/cache_test/Makefile test/Makefile samples/Makefile util/bin/mkdis util/bin/copytree util/bin/html2wmk"
 
 
 cat >confcache <<\_ACEOF
@@ -4329,6 +4367,10 @@ do
   "dgd/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgd/Makefile" ;;
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
   "dgd/src/dgDebugOpt.gge" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgDebugOpt.gge" ;;
+  "dgc/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgc/Makefile" ;;
+  "dgc/lexer_test/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgc/lexer_test/Makefile" ;;
+  "dgc/parser_test/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgc/parser_test/Makefile" ;;
+  "dgc/cache_test/Makefile" ) CONFIG_FILES="$CONFIG_FILES dgc/cache_test/Makefile" ;;
   "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
   "samples/Makefile" ) CONFIG_FILES="$CONFIG_FILES samples/Makefile" ;;
   "util/bin/mkdis" ) CONFIG_FILES="$CONFIG_FILES util/bin/mkdis" ;;
@@ -4467,6 +4509,7 @@ s,@RANLIB@,$RANLIB,;t t
 s,@AR@,$AR,;t t
 s,@MAKEDEPEND@,$MAKEDEPEND,;t t
 s,@GENGETOPT@,$GENGETOPT,;t t
+s,@YACC@,$YACC,;t t
 s,@RC@,$RC,;t t
 s,@ISCC@,$ISCC,;t t
 s,@ETAGS@,$ETAGS,;t t
