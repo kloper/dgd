@@ -22,20 +22,38 @@
 // dgFunnel.cpp -- implementation for dgFunnel.cpp
 //
 
+/**
+ * @file dgFunnel.cpp
+ *
+ * implementation of DGD::funnel
+ */
+
 #include <ctime>
 
 #include "dgFunnel.h"
 
 namespace DGD {
 
+/**
+ * funnelbuf default constructor. Initially it has no associated callback
+ */
 funnelbuf::funnelbuf() :
    m_callback(NULL)
 {
 }
 
+/**
+ * funnelbuf destructor
+ */
 funnelbuf::~funnelbuf() {
 }
 
+/**
+ * This method overloads channelbuf::post_process(). It checks whether
+ * the callback is set and invokes the callback passing the current
+ * line, column and number of bytes written.
+ * @see channelbuf::post_process()
+ */
 void funnelbuf::post_process() 
 {
    if( m_callback != NULL ) {
@@ -45,22 +63,47 @@ void funnelbuf::post_process()
    }
 }
 
+/**
+ * This is overloaded method from channelbuf. It calls the
+ * channelbuf::assoc(). The method is implemented for hiding the
+ * assoc() interface.
+ * @see channelbuf::assoc(std::ostream*)
+ * @see assoc(std::ostream*,channel& channel)
+ */
 void funnelbuf::assoc( std::ostream* str )
 {
    channelbuf::assoc( str );
 }
 
+/**
+ * Set callback object pointer.
+ * @see funnelbuf::Callback
+ */
 void funnelbuf::callback( Callback* cb ) 
 {
    m_callback = cb;
 }
 
+/**
+ * Get callback object pointer.
+ * @see funnelbuf::Callback
+ */
 const funnelbuf::Callback* funnelbuf::callback() const 
 {
    return m_callback;
 }
 
-
+/**
+ * DGD::funnel constructor. Funnel can be associated with a single
+ * physical stream, this the constructor receives reference to the
+ * stream. By default, character wrapping is disabled for
+ * funnels. This can be turned on in the subclass or by using
+ * funnel::rdbuf() method.
+ *
+ * @see channelbuf
+ * @see funnelbuf
+ * @see funnel
+ */
 funnel::funnel( std::ostream& physical_stream ) :
    Parent( NULL )
 {
@@ -71,10 +114,17 @@ funnel::funnel( std::ostream& physical_stream ) :
    m_buffer.wrap(false);
 }
 
+/**
+ * Get funnelbuf of this funnel.
+ */
 funnelbuf& funnel::rdbuf() {
    return m_buffer;
 }
 
+/**
+ * This method overloads the corresponding method in DGD::channel. 
+ * @see channel::header();
+ */
 void funnel::header() {
    funnel& self = *this;
    time_t local_time;

@@ -2,8 +2,8 @@
 Depression Glass Debug Library NEWS
 ===================================
 
-09/04/2003:	Version 0.23 is a bug fix release. Fixed two major bugs and 
-added some more documentation on funnels.
+10/04/2003:	Version 0.24 is a bug fix release. Fixed two major bugs and 
+added some more code documentation, primary on funnels and multifile logs.
 
 09/12/2002:	Released version 0.22. The main target of this release is
 funnel - special channel-like object which can be bound to physical streams

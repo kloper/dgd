@@ -39,8 +39,8 @@ maintained for stable DGD releases.</p>
 <p>Q: Is DGD multi-thread safe? </p>
 
 <p>A: No. DGD is as multithread safe as std::ostream is. If two threads write 
-into same DGD::channel it is good chance that the output will be me messed. But 
-nothing will fail and no deadlocks will. So, DGD certainly <b>can be used</b> in 
+into same DGD::channel it is good chance that the output will be messed. But 
+nothing will fail and no deadlocks will occur. So, DGD certainly <b>can be used</b> in 
 multi-threaded applications, but it is good practice to write output of each 
 thread to separate file/channel.</p>
 

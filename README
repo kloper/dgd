@@ -18,14 +18,14 @@ and Linux.
 
 Features list:
 
- * Provides simple extension for std::ostream which allows 
-   post-formatting of the output stream. The output stream is treated as
-   text log with optional maximum and minimum line width, indentation,
+ * Provides channels which can be used as general purpose output
+   formatters. DGD channels are simple extension of std::ostream which allow
+   post-formatting. The output stream is treated as text log with
+   optional maximum and minimum line width, indentation,
    character and word wrapping.
 
- * Can be used as general purpose output formatter.
-
- * Provides custom channels and channel factory.
+ * DGD channels can be turned on/off on the fly. Groups of channels
+   can be selected by their names using regular expressions.
 
  * Provides multifile logs a-la Unix /var/log
 

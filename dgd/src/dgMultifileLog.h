@@ -26,6 +26,12 @@
 #ifndef _dgMultifileLog_h_
 #define _dgMultifileLog_h_
 
+/**
+ * @file dgMultifileLog.h
+ *
+ * Declaration of DGD::multifile_log
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -34,8 +40,39 @@
 
 namespace DGD {
 
+/**
+ * An extension of funnel for producing fixed size log
+ * files. DGD::multifile_log keeps internal std::ofstream object, it
+ * also keeps track of amount of information passed to the
+ * file. Upon certain condition, the current file is closed and a new
+ * file opened and all output of the funnel goes to the new file.
+ *
+ * There are a different criteria for splitting the log
+ * file. DGD::multifile_log implements three of them:
+ * - No Splitting. 
+ * - Split by amount of lines
+ * - Split by amount of bytes
+ * All the criteria are implemented by Dont_split, Split_by_size and
+ * Split_by_lines classes. All of the classes are derived from
+ * Split_criteria class. multifile_log::Split_criteria class is an
+ * abstract class providing the simple mechanism for adding new split
+ * criteria. Use second parameter for multifile_log() constructor to
+ * set the preferable criteria. By default split-by-size is used with
+ * size set to 5M.
+ */
 class multifile_log: public funnel {
    public:
+      /**
+       * Abstract class providing interface for predicate triggering
+       * splitting the output file. 
+       * @param volume number of current split volume (first part of the
+       * file is a volume #0, the second #1, etc...)
+       * @param line current line number
+       * @param column current column number
+       * @param bytes total number of bytes written to the file
+       * (including the previous volumes)
+       * @return true if split is needed, false otherwise.
+       */
       class Split_criteria {
 	 public:
 	    virtual bool operator () ( unsigned long volume,
@@ -44,6 +81,10 @@ class multifile_log: public funnel {
 				       unsigned long bytes ) const = 0;
       };
 
+      /**
+       * Provided for convenience. This class provides predicate which
+       * always returns false, thus the log will be never split.
+       */
       class Dont_split: public Split_criteria {
 	 public:
 	    bool operator () (  unsigned long volume,
@@ -52,6 +93,11 @@ class multifile_log: public funnel {
 			       unsigned long bytes ) const { return false; };
       };
 
+      /**
+       * Split by size predicate. Returns true only when amount of
+       * bytes written into current volume exceeds the specified size.
+       * By default the size is 5M.
+       */
       class Split_by_size: public Split_criteria  {
 	 public:
 	    Split_by_size() : m_vol_size(1024*1024*5) {} // 5M per volume
@@ -67,6 +113,11 @@ class multifile_log: public funnel {
 	    unsigned long m_vol_size;
       };
 
+      /**
+       * Split by lines amount predicate. Returns true only when amount of
+       * lines written into current volume exceeds the specified amount.
+       * By default the number of lines is 60K.
+       */
       class Split_by_lines: public Split_criteria  {
 	 public:
 	    Split_by_lines() : m_vol_size(60000) {} // ~5M per volume

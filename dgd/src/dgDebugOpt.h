@@ -17,7 +17,7 @@ extern "C" {
 #if defined VERSION
 #  undef VERSION
 #endif
-#define VERSION "dgd-0.22 Wed Apr  9 01:58:25  2003"
+#define VERSION "dgd-0.23 Wed Apr  9 02:40:22  2003"
 
 struct dgd_gengetopt_args_info {
   int debug_version_flag;	/* Print dgd version and exit (default=off).  */
