@@ -1,3 +1,82 @@
+2002-09-28  dimka
+	* Makefile:
+	* NEWS:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/src/dgChannel.cpp:
+	* dgd/src/dgChannel.h:
+	* dgd/src/dgChannelBuf.h:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/Makefile:
+	* doc/Makefile.in:
+	* doc/dgd.wmk:
+	* doc/dgd.wmk.in:
+	* doc/dgd_faq.html:
+	* doc/dgd_todo.html:
+	* doc/doxygen/dgd.doxy:
+	* doc/doxygen/dgd.doxy.in:
+	* doc/html/dgd.wmk:
+	* doc/html/dgd.wmk.in:
+	* doc/html/doxygen_html.wmk:
+	* doc/html/images/dgd_web_logo.jpg:
+	* doc/html/images/main_bg.gif:
+	* doc/html/images/sidebox_bottom.gif:
+	* doc/html/images/sidebox_title_bg.gif:
+	* doc/html/images/simple_bottom.gif:
+	* doc/html/images/topnav_bg.gif:
+	* doc/html/images/wmlogo.gif:
+	* doc/html/style/style.css:
+	* getopt/Makefile:
+	* msvc-prj/README:
+	* msvc-prj/vc6-stlport/dgd.dsw:
+	* msvc-prj/vc6-stlport/dgd/dgd.dsp:
+	* msvc-prj/vc6-stlport/dgdtest/dgdtest.dsp:
+	* msvc-prj/vc6-stlport/getopt/getopt.dsp:
+	* msvc-prj/vc6-stlport/regex/regex.dsp:
+	* msvc-prj/vc6/dgd.dsw:
+	* msvc-prj/vc6/dgd/dgd.dsp:
+	* msvc-prj/vc6/dgdtest/dgdtest.dsp:
+	* msvc-prj/vc6/getopt/getopt.dsp:
+	* msvc-prj/vc6/regex/regex.dsp:
+	* regex/Makefile:
+	* test/Makefile:
+	* util/bin/html2wmk:
+	* util/bin/html2wmk.in:
+	* util/bin/mkdis:
+	* util/bin/mkdis.in:
+		Integrated the webmake-generated docs with doxygen ones. This one using
+		html2wmk perl script.
+		
+		Minor documentation updates and fixes.
+
+2002-09-22  dimka
+	* util/bin/copytree:
+	* util/bin/copytree.in:
+	* util/bin/mkdis:
+		created new perl utility to make a distribution
+		created new perl utility to copy the entire source tree
+
+	* Makefile:
+	* config.status:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/Makefile:
+	* doc/dgd.wmk:
+	* doc/doxygen/dgd.doxy:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+	* util/bin/mkdis:
+	* util/bin/mkdis.in:
+		created new perl utility to make a distribution
+
 2002-09-21  dimka
 	* Makefile:
 	* Makefile.in:
@@ -45,9 +124,6 @@
 		Added NEWS file.
 		Changed README, INSTALL and COPYING a little to support
 		EtText formatting.
-
-	* examples/dgExample.cpp:
-		Removed deprecated examples/*.cpp
 
 2002-09-18  dimka
 	* README:
@@ -380,7 +456,6 @@
 	* dgd/src/dgDebugOpt.h:
 	* dgd/src/dgStream.h:
 	* doc/DGDSpec.html:
-	* examples/dgExample.cpp:
 	* getopt/src/alloca.c:
 	* getopt/src/getopt.c:
 	* getopt/src/getopt.h:
