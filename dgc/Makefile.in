@@ -62,7 +62,7 @@ HEADERS = \
 dgd_types.h \
 dgd_format_lexer.h \
 dgd_format_parser.h \
-dgd_compile_cache.h
+dgd_format_cache.h
 CFILES  = \
 dgd_format_parser.c \
 dgd_types.c \
