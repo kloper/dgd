@@ -29,7 +29,7 @@ srcdir = .
 top_srcdir = ..
 STLDIR     = $(top_srcdir)/./../STLport-4.5
 BOOSTDIR   = $(top_srcdir)/./../boost
-BUILDDIR   = $(srcdir)/Release
+BUILDDIR   = $(srcdir)/Debug
 
 RM = rm -f
 MV = mv
@@ -39,9 +39,9 @@ LD  = link
 MAKEDEPEND = makedepend
 SED = sed
 
-CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP -MTd -O2 -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
-LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT 
-EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Release -libpath:$(top_srcdir)/regex/Release -libpath:$(top_srcdir)/getopt/Release 
+CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
 LDLIBS = getopt.lib regex.lib dgd.lib
 LDOUTOPT = /out:
 COUTOPT  = -Fo
@@ -53,7 +53,7 @@ BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I $(top_srcdir)/getopt/src
 DGDINCLUDES    = -I $(top_srcdir)/dgd/src
 
-DEFINES = -DWIN32=1 -D_WINDOWS=1 -DNODEBUG=1  -D_TRACE $(BOOSTDEFINES)
+DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_TRACE $(BOOSTDEFINES)
 
 LIBEXT = lib
 OBJEXT = obj
