@@ -1,3 +1,58 @@
+2002-09-21  dimka
+	* Makefile:
+	* Makefile.in:
+	* NEWS:
+	* config.status:
+	* configure:
+	* configure.ac:
+	* dgd/Makefile:
+	* dgd/Makefile.in:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* doc/Makefile:
+	* doc/Makefile.in:
+	* doc/construction.html:
+	* doc/dgd.wmk:
+	* doc/dgd.wmk.in:
+	* doc/dgd_faq.html:
+	* doc/dgd_todo.html:
+	* doc/doxygen/dgd.doxy:
+	* getopt/Makefile:
+	* getopt/Makefile.in:
+	* reconf:
+	* regex/Makefile:
+	* regex/Makefile.in:
+	* test/Makefile:
+		Created web site for DGD
+
+2002-09-19  dimka
+	* COPYING:
+	* INSTALL:
+	* Makefile:
+	* NEWS:
+	* README:
+	* config.status:
+	* dgd/Makefile:
+	* dgd/src/dgConfig.h:
+	* dgd/src/dgDebugOpt.gge:
+	* dgd/src/dgDebugOpt.h:
+	* doc/dgd.wmk:
+	* doc/doxygen/dgd.doxy:
+	* getopt/Makefile:
+	* regex/Makefile:
+	* test/Makefile:
+		Started to create WebMake template.
+		Added NEWS file.
+		Changed README, INSTALL and COPYING a little to support
+		EtText formatting.
+
+	* examples/dgExample.cpp:
+		Removed deprecated examples/*.cpp
+
+2002-09-18  dimka
+	* README:
+		added a section on related libraries
+
 2002-09-16  dimka
 	* COPYING:
 	* INSTALL:

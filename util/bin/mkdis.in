@@ -1,0 +1,135 @@
+#!@PERL@ -w -- -*- perl -*-
+
+use strict;
+use File::Basename;
+use File::Copy;
+
+my $exe_name = $0;
+my $localdir = dirname($exe_name);
+my $ignore_pattern = '~$|CVS|xml$|Debug'; #'
+my $root = "d:/dgd";
+my $datadir  = "c:/dimka/mkdis";
+my $filelist = "$datadir/filelist.log";
+my $cvs  = "cvs.exe";
+my $tar  = "tar";
+my $gzip = "gzip";
+my $target = "d:/dgd-@DGD_SHORT_VERSION@";
+
+chdir $root or die "can't change directory to $root: $!";
+
+sub cvs_ready_check {
+    local *cvs_handle;
+    open(cvs_handle, "$cvs -n update |") or die "can't run cvs: $!";
+    local $_;
+    my %update = <cvs_handle>;
+    if( scalar ( keys( %update ) ) != 2 ) {
+	return 0;
+    }
+    return 1;
+}
+
+sub make_file_list {
+    if( !(-e $datadir) ) {
+	mkdir $datadir or die "can't create directory $datadir: $!";
+    }
+
+    local *filelist_handle;
+    open(filelist_handle, ">$filelist") or die "Can't create $filelist: $!";
+
+    my @dir_stack = ( $root );
+    while( scalar( @dir_stack ) > 0 ) {
+	my $dir = $dir_stack[0];
+	shift @dir_stack;
+
+	local *dir_handle;	
+	opendir dir_handle, $dir or die "Cn't open directory $dir: $!";
+	close dir_handle;
+	local $_;
+
+	my @files = readdir dir_handle;
+	for (@files) {
+	    my $full_file_name = "$dir/$_";
+	    if( -d $full_file_name ) {
+		if( $_ ne "." && $_ ne ".." ) {
+		    push @dir_stack, $full_file_name;
+		}
+	    } 
+	    if( $_ ne "." && $_ ne ".."  &&
+		!($full_file_name =~ /$ignore_pattern/) ) {
+		print filelist_handle $full_file_name . "\n";
+	    }	
+	}
+    }
+    close filelist_handle;
+}
+
+my $cvs_check_res = cvs_ready_check;
+my $answer;
+if( !$cvs_check_res ) {
+    print "There are files that differ from CVS. " . 
+	"Do you want to proceed?[yes/no] ";
+    do {
+	if( defined ( $answer ) ) {
+	    print "Please answer yes or no...";
+	}
+	$answer = <STDIN>; chop( $answer );
+	
+    } while( $answer ne "yes" && $answer ne "no" );
+    
+    die "Please commit/update your files in CVS" if( $answer eq "no" );
+}
+
+my $filelist_exists = -e $filelist && -f $filelist;
+
+if( !$filelist_exists ) {
+    make_file_list;
+
+    die "The file list is created for first time.\n" .
+	"Please edit and run this program again.\n";
+}
+
+die "Target directory $target already exists..." if( -e $target );
+
+mkdir $target or die "can't create directory $target: $!";
+
+local *filelist_handle;
+open(filelist_handle, "$filelist") or die "Can't create $filelist: $!";
+
+my $file_name;
+my $target_file_name;
+
+while( defined( $file_name = <filelist_handle> ) ) {
+    chop( $file_name );
+    die "file does not exist $file_name" if( !(-e $file_name) );
+    
+    ($target_file_name = $file_name) =~ s/^$root/$target/;
+    
+    if( -d $file_name ) {
+	mkdir $target_file_name or 
+	    die "can't create directory $target_file_name: $!";
+    } else {
+	copy($file_name,$target_file_name) or
+	    die "can't copy file $file_name: $!";
+    }
+}
+
+$answer = undef;
+print "Do you want binaries included in the distribution?[yes/no] ";
+do {
+    if( defined ( $answer ) ) {
+	print "Please answer yes or no...";
+    }
+    $answer = <STDIN>; chop( $answer );
+    
+} while( $answer ne "yes" && $answer ne "no" );
+
+if( $answer eq "yes" ) {
+    if( -e "$root/dgd/Debug/dgd.lib" ) {
+	mkdir "$target/lib";
+	copy( "$root/dgd/Debug/dgd.lib", "$target/lib" );
+    }
+    if( -e "$root/test/Debug/dgdtest.exe" ) {
+	mkdir "$target/bin";
+	copy( "$root/test/Debug/dgdtest.exe", "$target/bin" );
+    }
+}
