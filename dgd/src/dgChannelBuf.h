@@ -106,6 +106,11 @@ class channelbuf: public std::streambuf {
 
       position_type position() const;
 
+   protected:
+      char_type* find_one_of( const char_type* s, const unsigned int n,
+			      const char_type* c_set ) const;
+      bool is_dos_eol( const char_type* p ) const;
+
    private:
       Assoc_list m_assoc;
       unsigned int m_line;

@@ -71,6 +71,9 @@ class Debug {
       typedef Channel_list::iterator Channel_iterator;
       typedef std::list< stream > File_list;
 
+   protected:
+      void apply_options( channel_ptr& chnl );
+
    private:
       Channel_list     m_channels;
       Channel_iterator m_current_channel;

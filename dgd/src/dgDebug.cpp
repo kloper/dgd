@@ -73,8 +73,56 @@ void Debug::process_options( int argc, char** argv ) {
 
    if( !m_args_info.debug_enable_flag )
       throw debug_disabled();
+
+   // apply options on existing channels
+   for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i )
+      apply_options( *i );
 }
 
+void Debug::apply_options( channel_ptr& chnl ) {
+   if( m_args_info.debug_min_width_given ) 
+      chnl->min_width( m_args_info.debug_min_width_arg );
+   
+   if( m_args_info.debug_max_width_given ) 
+      chnl->max_width( m_args_info.debug_max_width_arg );
+   
+   if( m_args_info.debug_indent_step_given ) 
+      chnl->indent_step( m_args_info.debug_indent_step_arg );
+
+   if( m_args_info.debug_allow_wrap_given )
+      chnl->wrap( ((m_args_info.debug_allow_wrap_flag == 0)? false: true) );
+   if( m_args_info.debug_allow_word_wrap_flag )
+      chnl->word_wrap( ((m_args_info.debug_allow_word_wrap_flag == 0)? 
+			false:true) );
+   
+   if( m_args_info.debug_space_characters_given ) 
+      chnl->space_chars( m_args_info.debug_space_characters_arg );
+
+   if( m_args_info.debug_turn_on_given ) {
+      try {
+	 boost::regex e( m_args_info.debug_turn_on_arg );
+	 if( boost::regex_match( chnl->name(), e ) ) {
+	    chnl->open();
+	 }
+      } catch( boost::bad_expression& ) {
+	 throw bad_params( "bad regular expression" );
+      }
+   }
+
+   if( m_args_info.debug_turn_off_given ) {
+      try {
+	 boost::regex e( m_args_info.debug_turn_off_arg );
+	 if( boost::regex_match( chnl->name(), e ) ) {
+	    chnl->close();
+	 }
+      } catch( boost::bad_expression& ) {
+	 throw bad_params( "bad regular expression" );
+      }
+   }
+
+   if( m_args_info.debug_space_characters_given ) 
+      chnl->space_chars( m_args_info.debug_space_characters_arg );
+}
 
 Debug::~Debug() {
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i ) 
@@ -92,46 +140,7 @@ channel& Debug::create_channel( const std::string& name ) {
 
    chnl.reset( new channel( name ) );
 
-   if( m_args_info.debug_min_width_given ) 
-      chnl->min_width( m_args_info.debug_min_width_arg );
-
-   if( m_args_info.debug_max_width_given ) 
-      chnl->max_width( m_args_info.debug_max_width_arg );
-
-   if( m_args_info.debug_indent_step_given ) 
-      chnl->indent_step( m_args_info.debug_indent_step_arg );
-
-   chnl->wrap( ((m_args_info.debug_allow_wrap_flag == 0)? false: true) );
-   chnl->word_wrap( ((m_args_info.debug_allow_word_wrap_flag == 0)? 
-			false:true) );
-   
-   if( m_args_info.debug_space_characters_given ) 
-      chnl->space_chars( m_args_info.debug_space_characters_arg );
-
-   if( m_args_info.debug_turn_on_given ) {
-      try {
-	 boost::regex e( m_args_info.debug_turn_on_arg );
-	 if( boost::regex_match( name, e ) ) {
-	    chnl->open();
-	 }
-      } catch( boost::bad_expression& ) {
-	 throw bad_params( "bad regular expression" );
-      }
-   }
-
-   if( m_args_info.debug_turn_off_given ) {
-      try {
-	 boost::regex e( m_args_info.debug_turn_off_arg );
-	 if( boost::regex_match( name, e ) ) {
-	    chnl->close();
-	 }
-      } catch( boost::bad_expression& ) {
-	 throw bad_params( "bad regular expression" );
-      }
-   }
-
-   if( m_args_info.debug_space_characters_given ) 
-      chnl->space_chars( m_args_info.debug_space_characters_arg );
+   apply_options( chnl );
 
    m_channels.push_back( chnl );
 

@@ -75,66 +75,47 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
       }
 
       const char_type* nearest = NULL;
-      const char_type* space_pos = traits_type::find( pos, pptr()-pos, ' ' );
-      const char_type* tab_pos   = traits_type::find( pos, pptr()-pos, '\t' );
-      const char_type* nl_pos    = traits_type::find( pos, pptr()-pos, '\n' );
-      const char_type* rl_pos    = traits_type::find( pos, pptr()-pos, '\r' );
+      const char_type* space_pos = find_one_of( pos, pptr()-pos, 
+						m_spaces.c_str() );
+      const char_type* nl_pos    = find_one_of( pos, pptr()-pos, "\r\n" );
       
       bool space_nearest = ( 
 	 ( space_pos != NULL ) &&
-	 ( tab_pos == NULL || space_pos < tab_pos ) &&
-	 ( nl_pos == NULL || space_pos < nl_pos ) &&
-	 ( rl_pos == NULL || space_pos < rl_pos ) );
+	 ( nl_pos == NULL || space_pos < nl_pos ) );
       if( space_nearest ) nearest = space_pos;
-
-      bool tab_nearest = ( 
-	 ( tab_pos != NULL ) &&
-	 ( space_pos == NULL || space_pos < tab_pos ) &&
-	 ( nl_pos == NULL || tab_pos < nl_pos ) &&
-	 ( rl_pos == NULL || tab_pos < rl_pos ) );
-      if( tab_nearest ) nearest = tab_pos;
       
       bool nl_nearest = ( 
 	 ( nl_pos != NULL ) &&
-	 ( tab_pos == NULL || nl_pos < tab_pos ) &&
-	 ( space_pos == NULL || nl_pos < space_pos ) &&
-	 ( rl_pos == NULL || nl_pos < rl_pos ) );
+	 ( space_pos == NULL || nl_pos < space_pos ) );
       if( nl_nearest ) nearest = nl_pos;
-
-      bool rl_nearest = ( 
-	 (rl_pos != NULL) &&
-	 ( tab_pos == NULL || rl_pos < tab_pos ) &&
-	 ( nl_pos == NULL || rl_pos < nl_pos ) &&
-	 ( space_pos == NULL || rl_pos < space_pos ) );
-      if( rl_nearest ) nearest = rl_pos; 
       
       if( nearest != NULL ) {
 	 if( m_column + (nearest-pos+1) < m_max_width ) {
 	    propagate( pos, nearest+1 );
-	    if( nl_nearest || rl_nearest ) {
+	    if( nl_nearest ) {
 	       m_column = 0;
 	       m_line++;
 	    } else {
 	       m_word_pos = nearest+1;
-	       m_column += nearest-pos+1 + (tab_nearest?7:0);
+	       m_column += nearest-pos+1 + ((*nearest=='\t')?7:0);
 	    }
-	    pos = nearest + 1;
+	    pos = nearest + (is_dos_eol( nearest )?2:1);
 	 } else if( m_column + (nearest-pos+1) == m_max_width ) {
 	    propagate( pos, nearest );
 	    if( m_wrap ) {	       
-	       pos = nearest + 1;
+	       pos = nearest;
 	       propagate( '\n', 1 );
 	       m_column = 0;
 	       m_line++;
 	    } else {
-	       if( nl_nearest || rl_nearest ) {
+	       if( nl_nearest ) {
 		  propagate( '\n', 1 );
 		  m_column = 0;
 		  m_line++;
 	       } else {
-		  m_column += nearest-pos+1 + (tab_nearest?7:0);
+		  m_column += nearest-pos+1 + ((*nearest=='\t')?7:0);
 	       }
-	       pos = nearest + 1;
+	       pos = nearest + (is_dos_eol( nearest )?2:1);
 	    }
 	    m_word_pos = pos;
 	 } else { // m_column + (nearest-pos+1) > m_max_width
@@ -163,14 +144,14 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	       }
 	    } else {
 	       propagate( pos, nearest+1 );
-	       if( nl_nearest || rl_nearest ) {
+	       if( nl_nearest ) {
 		  m_column = 0;
 		  m_line++;
 	       } else {
-		  m_column += nearest-pos+1 + (tab_nearest?7:0);
+		  m_column += nearest-pos+1 + ((*nearest=='\t')?7:0);
 	       }
 	       m_word_pos = nearest+1;
-	       pos = nearest + 1;
+	       pos = nearest + (is_dos_eol( nearest )?2:1);
 	    }
 	 }
       } else {
@@ -207,6 +188,7 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	    m_word_pos = pbase();
 	 }	 
       }
+
    } while( run_flag );
 
    return 0;
@@ -330,6 +312,31 @@ std::string channelbuf::space_chars() const {
 
 channelbuf::position_type channelbuf::position() const {
    return position_type( m_line, m_column );
+}
+
+channelbuf::char_type* channelbuf::find_one_of( const char_type* s, 
+						const unsigned int n,
+						const char_type* c_set ) const
+{
+   const char_type* res = NULL;
+
+   while( *c_set != '\0' ) {
+      const char_type* local_res = traits_type::find( s, n, *c_set );
+      if( res == NULL )
+	 res = local_res;
+      else if( local_res != NULL )
+	 res = std::min( res, local_res );
+      c_set++;
+   }
+   
+   return (char_type*)res;
+}
+
+
+bool channelbuf::is_dos_eol( const char_type* p ) const {
+   if( (*p == '\n' && *(p+1) == '\r') || (*p == '\r' && *(p+1) == '\n') )
+      return true;
+   return false;
 }
 
 }; // end of namespace DGD
