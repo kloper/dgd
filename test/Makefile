@@ -27,24 +27,24 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/.
+STLDIR     = $(top_srcdir)/./../STLport-4.5
 BOOSTDIR   = $(top_srcdir)/./../boost
 BUILDDIR   = $(srcdir)/Debug
 
 RM = rm -f
 MV = mv
 MKDIR = mkdir -p
-CXX = g++
-LD  = ld
+CXX = cl
+LD  = link
 MAKEDEPEND = makedepend
 SED = sed
 
-CXXFLAGS =   -Wall -g
-LDFLAGS  =   -g
-EXTRA_LDFLAGS =  
-LDLIBS = ../dgd/$(BUILDDIR)/dgd.a ../getopt/$(BUILDDIR)/getopt.a ../regex/$(BUILDDIR)/regex.a
-LDOUTOPT = -o
-COUTOPT  = -o
+CXXFLAGS =   -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  =   /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+EXTRA_LDFLAGS =  -libpath:$(top_srcdir)/./../STLport-4.5/lib -libpath:$(top_srcdir)/dgd/Debug -libpath:$(top_srcdir)/regex/Debug -libpath:$(top_srcdir)/getopt/Debug 
+LDLIBS = getopt.lib regex.lib dgd.lib
+LDOUTOPT = /out:
+COUTOPT  = -Fo
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) \
 $(BOOSTINCLUDES) $(GETOPTINCLUDES) $(DGDINCLUDES)
 LOCALINCLUDES = -I. -I.. -I../.. -I$(top_srcdir) 
@@ -53,10 +53,10 @@ BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I $(top_srcdir)/getopt/src
 DGDINCLUDES    = -I $(top_srcdir)/dgd/src
 
-DEFINES = -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1  -D_TRACE $(BOOSTDEFINES)
+DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_TRACE $(BOOSTDEFINES)
 
-LIBEXT = a
-OBJEXT = o
+LIBEXT = lib
+OBJEXT = obj
 EXEEXT = .exe
 
 BOOSTDEFINES =

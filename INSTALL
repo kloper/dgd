@@ -19,16 +19,19 @@ library path dgd-XXX/lib and to the libraries list add dgd.lib.
 Building DGD
 ============
 
-Building DGD is different then building usual Win32 libraries. DGD
-uses GNU build tools and VC++. You need to install cygwin package
-(http://www.cygwin.com) and Visual Studio. 
-
 DGD makes extensive use of C++ boost (http://www.boost.org). You
 need boost 1.25.0 or later to compile DGD.
 
 STLPort 4.5 (http://www.stlport.com) was used during DGD
 developing. It is recommended but not required. In fact DGD works well
 with the native VC++ version of STL.
+
+On Cygwin or Unix machines just examine 'reconf' script in the root
+directory and run it with the appropriate option.
+
+On Windows building process is different then building usual Win32 libraries. 
+DGD uses GNU build tools and VC++. You need to install cygwin package
+(http://www.cygwin.com) and Visual Studio. 
 
 The following steps are required to build DGD:
 
@@ -54,9 +57,9 @@ Configure script options
    to be edited to update the version.
  * --with-stlport - compile using STLPort library. Optional parameter can
    specify the root directory of STLPort distribution.
- * --with-msvc - use MS VC++ as a compiler. This is a required option for 
-   the current release.
- * --with-pch - use precompiled headers if available.
+ * --with-msvc - use MS VC++ as a compiler. 
+ * --with-pch - use precompiled headers if available. This option is treated 
+                only when '--with-msvc' is specified.
 
 Additional packages
 ===================

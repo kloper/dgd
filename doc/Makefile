@@ -33,11 +33,11 @@ VPATH += :$(srcdir)::$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = gcc
-LD  = ld
-CFLAGS =  -Wall
-LDFLAGS  =   -g
-LDOUTOPT = -o
+CC = cl
+LD  = link
+CFLAGS =  -nologo -W3 -GR -GX -MTd -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
 INCLUDES = -I. -I.. -I$(top_srcdir)
 PERL = /d/perl/bin/perl.exe
 WEBMAKE = d:/perl/bin/webmake

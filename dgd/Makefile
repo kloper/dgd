@@ -27,7 +27,7 @@ SHELL = /bin/sh
 
 srcdir     = .
 top_srcdir = ..
-STLDIR     = $(top_srcdir)/.
+STLDIR     = $(top_srcdir)/./../STLport-4.5
 BOOSTDIR   = $(top_srcdir)/./../boost
 BUILDDIR   = $(srcdir)/Debug
 
@@ -38,17 +38,17 @@ MV  = mv
 CAT = cat
 SED = sed
 MKDIR = mkdir -p
-CXX = g++
-LD  = ld
+CXX = cl
+LD  = link
 AR  = ar
 RANLIB = ranlib
 MAKEDEPEND = makedepend
 GENGETOPT  = gengetopt
 
-CXXFLAGS =  -Wall -g
-LDFLAGS  =   -g
-LDOUTOPT = -o
-COUTOPT  = -o
+CXXFLAGS =  -nologo -Zm300 -W3 -GR -GX -TP -MTd -Gm  -Zi -Od -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
+COUTOPT  = -Fo
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) $(BOOSTINCLUDES) \
 $(GETOPTINCLUDES) $(REGEXINCLUDES)
 LOCALINCLUDES = -I. -I.. -I$(top_srcdir) 
@@ -56,11 +56,11 @@ STLINCLUDES   = -I $(STLDIR)/stlport
 BOOSTINCLUDES = -I $(BOOSTDIR)
 GETOPTINCLUDES = -I$(top_srcdir)/getopt/src
 REGEXINCLUDES = -I$(top_srcdir)/regex/src
-DEFINES = -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
+DEFINES = -DWIN32=1 -D_WINDOWS=1 -D_DEBUG=1  -D_DG_CPP_FILE_=1 $(BOOSTDEFINES)
 BOOSTDEFINES =
 
-LIBEXT = a
-OBJEXT = o
+LIBEXT = lib
+OBJEXT = obj
 
 SUBDIRS = 
 TARGET = dgd.$(LIBEXT)

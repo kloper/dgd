@@ -2,6 +2,8 @@
 Depression Glass Debug Library NEWS
 ===================================
 
+11/01/2002:	Ported DGD to Cygwin and Linux. Using gcc 2.95.
+
 28/09/2002:	Added subdirectory msvc-prj which contains VC++ 
 projects for DGD. People who have no cygwin installed can use these
 to build DGD. Note that I am planning to update VC++ projects

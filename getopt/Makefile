@@ -33,18 +33,18 @@ VPATH += :$(srcdir):$(srcdir)/src:$(BUILDDIR)
 
 RM  = rm -f
 MKDIR = mkdir -p
-CC = gcc
-LD  = ld
+CC = cl
+LD  = link
 AR  = ar
 RANLIB = ranlib
-CFLAGS =  -Wall
-LDFLAGS  =   -g
-LDOUTOPT = -o
-COUTOPT  = -o
+CFLAGS =  -nologo -W3 -GR -GX -MTd -Fd$(BUILDDIR)/$(PDBFILE) -Fp$(BUILDDIR)/$(PCHFILE)
+LDFLAGS  = /lib  /nologo /machine:I386 /NODEFAULTLIB:LIBC /NODEFAULTLIB:LIBCMT /debugtype:cv
+LDOUTOPT = /out:
+COUTOPT  = -Fo
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
-LIBEXT = a
-OBJEXT = o
+LIBEXT = lib
+OBJEXT = obj
 
 SUBDIRS =
 TARGETS = getopt.$(LIBEXT)

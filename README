@@ -9,19 +9,19 @@ Available from http://sourceforge.net/projects/dgd
 About
 =====
 
-Depression Glass Debug (DGD) is a simple, easy to use C++ ostream
+Depression Glass Debug (DGD) is simple, easy to use C++ ostream
 extension for debugging output. DGD is created with a goal to produce 
 nice, readable and easy to understand trace logs.
 
-Current release is implemented on and for Win32, but it is designed
-with portability in mind. 
+DGD is developed for Win32, but every stable release is ported to Cygwin 
+and Linux.
 
 Features list:
 
  * Provides simple extension for std::ostream which allows 
    post-formatting of the output stream. The output stream is treated as
    text log with optional maximum and minimum line width, indentation,
-   character and word wrapping, etc...
+   character and word wrapping.
 
  * Provides custom channels and channel factory.
 
@@ -44,7 +44,7 @@ Features list:
 License terms
 =============
 
-See COPYING file in the DGD root directory.
+GNU Public License. See COPYING file in the DGD root directory.
 
 Required libraries
 ==================
@@ -53,16 +53,15 @@ Required libraries
    need boost 1.25.0 or later to compile DGD.
 
  * STLPort 4.5 (http://www.stlport.com) was used during DGD
-   developing. It is recommended but not required. In fact DGD works well
-   with the native VC++ version of STL.
+   developing. It is recommended but not required. 
 
 Required build tools
 ====================
 
-DGD comes with precompiled .lib file and set of headers. 
+DGD comes with precompiled libraries and set of headers. 
 
-If you want to build DGD by yourself you need cygwin build tools and
-VC++ 6.0 installed. Refer to INSTALL file for more information.
+If you want to build DGD by yourself please refer to INSTALL file for 
+more information.
 
 Installation
 ============
