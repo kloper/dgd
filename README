@@ -23,7 +23,11 @@ Features list:
    text log with optional maximum and minimum line width, indentation,
    character and word wrapping.
 
+ * Can be used as general purpose output formatter.
+
  * Provides custom channels and channel factory.
+
+ * Provides multifile logs a-la Unix /var/log
 
  * Provides simple, yet powerful mechanism for synchronizing all streams
    upon application exit or crash.
@@ -50,7 +54,7 @@ Required libraries
 ==================
 
  * DGD makes extensive use of C++ boost (http://www.boost.org). You
-   need boost 1.25.0 or later to compile DGD.
+   need boost 1.25.0 or later to compile DGD. 
 
  * STLPort 4.5 (http://www.stlport.com) was used during DGD
    developing. It is recommended but not required. 
