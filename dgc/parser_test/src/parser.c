@@ -39,10 +39,10 @@ int main( int argc, char** argv ) {
    for( i = 1; i < argc; i++ ) {
       printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
       printf( "> %s\n", argv[i] );
-      result = dgd_format_parser( argv[i] );
+      result = dgd_format_parse( argv[i] );
       
       if( result != NULL ) {
-	 dgd_dump_parser_bytecode( stdout, result->value.hash.ring, 0 );
+	 dgd_dump_parser_bytecode( stdout, result->value.chain.ring, 0 );
          printf( "free cache: %u\n", dgd_ring_size( cache->free_ring ) );
       }
    }

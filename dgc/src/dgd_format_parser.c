@@ -368,7 +368,7 @@ short *yyss;
 short *yysslim;
 YYSTYPE *yyvs;
 int yystacksize;
-#line 772 "src/dgd_format_parser.y"
+#line 744 "src/dgd_format_parser.y"
 
 static 
 int yylex() {
@@ -392,7 +392,7 @@ cache_t *dgd_format_parser_cache() {
    return (cache_t*)&parser_cache;
 }
 
-cache_item_t *dgd_format_parser( char* format_string ) {
+cache_item_t *dgd_format_parse( char* format_string ) {
    cache_item_t *result;
 
    if( !parser_init ) {
@@ -626,15 +626,14 @@ case 2:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type            = PARS_T_SET_ARG;
-                       ring->value.num       = yyvsp[0].lex.value.num;
-		       ring->cache.flags     = 0;
+                       ring->type              = PARS_T_SET_ARG;
+                       ring->value.set_arg.num = yyvsp[0].lex.value.num;
 
                        yyval.ring = ring;                       
                      }
 break;
 case 3:
-#line 137 "src/dgd_format_parser.y"
+#line 136 "src/dgd_format_parser.y"
 { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
@@ -645,13 +644,12 @@ case 3:
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = yyvsp[0].lex.value.lexeme;
                        ring->value.call.num_param = 0;
-		       ring->cache.flags     = 0;
 
                        yyval.ring = ring;                       
                      }
 break;
 case 4:
-#line 152 "src/dgd_format_parser.y"
+#line 150 "src/dgd_format_parser.y"
 { 
                        cache_item_t *args_ring = yyvsp[0].ring; 
                        cache_item_t *ring      = dgd_cache_alloc( cache, 1 );
@@ -661,7 +659,6 @@ case 4:
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = yyvsp[-2].lex.value.lexeme;
                        ring->value.call.num_param = dgd_ring_size( args_ring );
-		       ring->cache.flags     = 0;
 
                        dgd_ring_push_front( &args_ring, ring );
 
@@ -669,31 +666,31 @@ case 4:
                      }
 break;
 case 5:
-#line 171 "src/dgd_format_parser.y"
+#line 168 "src/dgd_format_parser.y"
 { 
                        yyval.ring = yyvsp[0].ring;  
                      }
 break;
 case 6:
-#line 175 "src/dgd_format_parser.y"
+#line 172 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[0].ring;  
                      }
 break;
 case 7:
-#line 179 "src/dgd_format_parser.y"
+#line 176 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[-2].ring;
                      }
 break;
 case 8:
-#line 183 "src/dgd_format_parser.y"
+#line 180 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[-2].ring;
                      }
 break;
 case 9:
-#line 190 "src/dgd_format_parser.y"
+#line 187 "src/dgd_format_parser.y"
 { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
@@ -702,14 +699,13 @@ case 9:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_LEXEME;
-                       ring->value.lexeme = yyvsp[0].lex.value.lexeme;
-		       ring->cache.flags  = 0;
+                       ring->value.lexeme.lexeme = yyvsp[0].lex.value.lexeme;
 
                        yyval.ring = ring;
                      }
 break;
 case 10:
-#line 204 "src/dgd_format_parser.y"
+#line 200 "src/dgd_format_parser.y"
 { 
                        cache_item_t *ring = dgd_cache_alloc( cache, 1 );
 
@@ -718,13 +714,12 @@ case 10:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_NEXT_ARG;
-		       ring->cache.flags  = 0;
 
                        yyval.ring = ring;
                      }
 break;
 case 11:
-#line 220 "src/dgd_format_parser.y"
+#line 215 "src/dgd_format_parser.y"
 {
                        cache_item_t *key_ring   = yyvsp[-2].ring;
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
@@ -732,7 +727,6 @@ case 11:
                        if( ring == NULL ) YYERROR;
 
                        ring->type         = PARS_T_PAIR;
-		       ring->cache.flags  = 0;
 
                        dgd_ring_push_front( &key_ring, ring );
 
@@ -740,7 +734,7 @@ case 11:
                      }
 break;
 case 12:
-#line 237 "src/dgd_format_parser.y"
+#line 231 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -749,14 +743,13 @@ case 12:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type               = PARS_T_DEC;
-		       ring->cache.flags        = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        yyval.ring = ring;  
                      }
 break;
 case 13:
-#line 251 "src/dgd_format_parser.y"
+#line 244 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -765,14 +758,13 @@ case 13:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_OCT;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        yyval.ring = ring;  
                      }
 break;
 case 14:
-#line 265 "src/dgd_format_parser.y"
+#line 257 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -781,14 +773,13 @@ case 14:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_UNSIGNED;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        yyval.ring = ring;  
                      }
 break;
 case 15:
-#line 279 "src/dgd_format_parser.y"
+#line 270 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -797,14 +788,13 @@ case 15:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_HEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
                        yyval.ring = ring;  
                      }
 break;
 case 16:
-#line 293 "src/dgd_format_parser.y"
+#line 283 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -813,7 +803,6 @@ case 16:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_HEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -821,7 +810,7 @@ case 16:
                      }
 break;
 case 17:
-#line 308 "src/dgd_format_parser.y"
+#line 297 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -830,14 +819,13 @@ case 17:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_REP;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        yyval.ring = ring;  
                      }
 break;
 case 18:
-#line 325 "src/dgd_format_parser.y"
+#line 313 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -846,7 +834,6 @@ case 18:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCI;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
 
@@ -854,7 +841,7 @@ case 18:
                      }
 break;
 case 19:
-#line 340 "src/dgd_format_parser.y"
+#line 327 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -863,7 +850,6 @@ case 19:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCI;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -871,6 +857,22 @@ case 19:
                      }
 break;
 case 20:
+#line 341 "src/dgd_format_parser.y"
+{
+                       cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
+
+                       if( ring == NULL ) YYERROR;
+
+                       dgd_ring_push_back( &start_ring, ring );
+
+                       ring->type         = PARS_T_FLOAT;
+                       dgd_call_attr_set_default( &(ring->value.call.attr) );
+                       ring->value.call.attr.capital = 0;
+
+                       yyval.ring = ring;  
+                     }
+break;
+case 21:
 #line 355 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
@@ -880,24 +882,6 @@ case 20:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_FLOAT;
-		       ring->cache.flags  = 0;
-                       dgd_call_attr_set_default( &(ring->value.call.attr) );
-                       ring->value.call.attr.capital = 0;
-
-                       yyval.ring = ring;  
-                     }
-break;
-case 21:
-#line 370 "src/dgd_format_parser.y"
-{
-                       cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
-
-                       if( ring == NULL ) YYERROR;
-
-                       dgd_ring_push_back( &start_ring, ring );
-
-                       ring->type         = PARS_T_FLOAT;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -905,7 +889,7 @@ case 21:
                      }
 break;
 case 22:
-#line 385 "src/dgd_format_parser.y"
+#line 369 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -916,13 +900,12 @@ case 22:
                        ring->type         = PARS_T_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
-		       ring->cache.flags  = 0;
 
                        yyval.ring = ring;  
                      }
 break;
 case 23:
-#line 400 "src/dgd_format_parser.y"
+#line 383 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -933,13 +916,12 @@ case 23:
                        ring->type         = PARS_T_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
-		       ring->cache.flags  = 0;
 
                        yyval.ring = ring;  
                      }
 break;
 case 24:
-#line 415 "src/dgd_format_parser.y"
+#line 397 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -948,7 +930,6 @@ case 24:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCIHEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
 
@@ -956,7 +937,7 @@ case 24:
                      }
 break;
 case 25:
-#line 430 "src/dgd_format_parser.y"
+#line 411 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -965,7 +946,6 @@ case 25:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCIHEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -973,7 +953,7 @@ case 25:
                      }
 break;
 case 27:
-#line 448 "src/dgd_format_parser.y"
+#line 428 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -982,14 +962,13 @@ case 27:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_CHAR;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        yyval.ring = ring;  
                      }
 break;
 case 28:
-#line 462 "src/dgd_format_parser.y"
+#line 441 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -998,14 +977,13 @@ case 28:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_STR;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        yyval.ring = ring;  
                      }
 break;
 case 29:
-#line 479 "src/dgd_format_parser.y"
+#line 457 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1014,88 +992,87 @@ case 29:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_PTR;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        yyval.ring = ring;  
                      }
 break;
 case 30:
-#line 497 "src/dgd_format_parser.y"
+#line 474 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[-1].ring;
                      }
 break;
 case 31:
-#line 504 "src/dgd_format_parser.y"
+#line 481 "src/dgd_format_parser.y"
 {
                        yyval.attr.byte_count = sizeof(dgd_char_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 32:
-#line 509 "src/dgd_format_parser.y"
+#line 486 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_short_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 33:
-#line 514 "src/dgd_format_parser.y"
+#line 491 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_longlong_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 34:
-#line 519 "src/dgd_format_parser.y"
+#line 496 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_long_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 35:
-#line 524 "src/dgd_format_parser.y"
+#line 501 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_intmax_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 36:
-#line 529 "src/dgd_format_parser.y"
+#line 506 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_size_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 37:
-#line 534 "src/dgd_format_parser.y"
+#line 511 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(dgd_ptrdiff_t);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 38:
-#line 539 "src/dgd_format_parser.y"
+#line 516 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_set_default( &(yyval.attr) );
                      }
 break;
 case 39:
-#line 546 "src/dgd_format_parser.y"
+#line 523 "src/dgd_format_parser.y"
 {  
                        yyval.attr.byte_count = sizeof(long double);
                        yyval.attr.valid_mask = CALL_ATTR_BYTECOUNT;
                      }
 break;
 case 40:
-#line 551 "src/dgd_format_parser.y"
+#line 528 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_set_default( &(yyval.attr) );
                      }
 break;
 case 41:
-#line 558 "src/dgd_format_parser.y"
+#line 535 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyvsp[0].ring->value.call.attr),
                                              &(yyvsp[-1].attr) );
@@ -1103,7 +1080,7 @@ case 41:
                      }
 break;
 case 42:
-#line 567 "src/dgd_format_parser.y"
+#line 544 "src/dgd_format_parser.y"
 {
 
                        dgd_call_attr_assign( &(yyvsp[0].ring->value.call.attr),
@@ -1112,117 +1089,117 @@ case 42:
                      }
 break;
 case 48:
-#line 585 "src/dgd_format_parser.y"
+#line 562 "src/dgd_format_parser.y"
 {
                        yyval.attr.zero_pad   = 1;
                        yyval.attr.valid_mask = CALL_ATTR_ZERO_PAD;
                      }
 break;
 case 49:
-#line 590 "src/dgd_format_parser.y"
+#line 567 "src/dgd_format_parser.y"
 {
                        yyval.attr.alternate  = 1;
                        yyval.attr.valid_mask = CALL_ATTR_ALTERNATE;
                      }
 break;
 case 50:
-#line 595 "src/dgd_format_parser.y"
+#line 572 "src/dgd_format_parser.y"
 {
                        yyval.attr.left_adjust = 1;
                        yyval.attr.valid_mask  = CALL_ATTR_LEFT_ADJUST;
                      }
 break;
 case 51:
-#line 600 "src/dgd_format_parser.y"
+#line 577 "src/dgd_format_parser.y"
 {
                        yyval.attr.blank      = 1;
                        yyval.attr.valid_mask = CALL_ATTR_BLANK;
                      }
 break;
 case 52:
-#line 605 "src/dgd_format_parser.y"
+#line 582 "src/dgd_format_parser.y"
 {
                        yyval.attr.sign       = 1;
                        yyval.attr.valid_mask = CALL_ATTR_SIGN;
                      }
 break;
 case 53:
-#line 613 "src/dgd_format_parser.y"
+#line 590 "src/dgd_format_parser.y"
 {
                        yyval.attr.width      = yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_WIDTH;
                      }
 break;
 case 54:
-#line 618 "src/dgd_format_parser.y"
+#line 595 "src/dgd_format_parser.y"
 {
                        yyval.attr.width      = 0;
                        yyval.attr.valid_mask = CALL_ATTR_WIDTH;
                      }
 break;
 case 55:
-#line 623 "src/dgd_format_parser.y"
+#line 600 "src/dgd_format_parser.y"
 {
                        yyval.attr.width      = -(int)yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_WIDTH;
                      }
 break;
 case 56:
-#line 632 "src/dgd_format_parser.y"
+#line 609 "src/dgd_format_parser.y"
 {
                        yyval.attr.valid_mask = 0;
                      }
 break;
 case 57:
-#line 636 "src/dgd_format_parser.y"
+#line 613 "src/dgd_format_parser.y"
 {
                        yyval.attr.precision  = yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_PRECISION;
                      }
 break;
 case 58:
-#line 641 "src/dgd_format_parser.y"
+#line 618 "src/dgd_format_parser.y"
 {
                        yyval.attr.precision  = 0;
                        yyval.attr.valid_mask = CALL_ATTR_PRECISION;
                      }
 break;
 case 59:
-#line 646 "src/dgd_format_parser.y"
+#line 623 "src/dgd_format_parser.y"
 {
                        yyval.attr.precision  = -(int)yyvsp[0].lex.value.num;
                        yyval.attr.valid_mask = CALL_ATTR_PRECISION;
                      }
 break;
 case 60:
-#line 654 "src/dgd_format_parser.y"
+#line 631 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[0].attr) );
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[-1].attr) );
                      }
 break;
 case 61:
-#line 659 "src/dgd_format_parser.y"
+#line 636 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[0].attr) );
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[-1].attr) );
                      }
 break;
 case 62:
-#line 664 "src/dgd_format_parser.y"
+#line 641 "src/dgd_format_parser.y"
 {
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[0].attr) );
                        dgd_call_attr_assign( &(yyval.attr), &(yyvsp[-1].attr) );
                      }
 break;
 case 63:
-#line 669 "src/dgd_format_parser.y"
+#line 646 "src/dgd_format_parser.y"
 {
                        yyval.attr.valid_mask = 0;
                      }
 break;
 case 64:
-#line 676 "src/dgd_format_parser.y"
+#line 653 "src/dgd_format_parser.y"
 {
 
                        dgd_call_attr_assign( &(yyvsp[0].ring->value.call.attr),
@@ -1237,16 +1214,15 @@ case 64:
 	             }
 break;
 case 65:
-#line 689 "src/dgd_format_parser.y"
+#line 666 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
                        dgd_cache_free( cache, &start_ring, -1 );
 
                        if( ring != NULL ) {
-                         ring->type         = PARS_T_ERROR;
-                         ring->value.lexeme = lexer_state.lexeme;
-			 ring->cache.flags  = 0;
+                         ring->type               = PARS_T_ERROR;
+                         ring->value.error.lexeme = lexer_state.lexeme;
                        }
 
                        yyval.ring = ring;
@@ -1255,48 +1231,46 @@ case 65:
                      }
 break;
 case 66:
-#line 709 "src/dgd_format_parser.y"
+#line 685 "src/dgd_format_parser.y"
 {
                        yyval.ring = yyvsp[0].ring;
                      }
 break;
 case 67:
-#line 713 "src/dgd_format_parser.y"
+#line 689 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
                        if( ring == NULL ) YYERROR;
 
                        ring->type         = PARS_T_WORD;
-		       ring->cache.flags  = 0;
-                       ring->value.lexeme = yyvsp[0].lex.value.lexeme;
+                       ring->value.word.lexeme = yyvsp[0].lex.value.lexeme;
 
                        yyval.ring = ring;  
                      }
 break;
 case 68:
-#line 725 "src/dgd_format_parser.y"
+#line 700 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
                        if( ring == NULL ) YYERROR;
 
-                       ring->type         = PARS_T_BACKSLASH;
-                       ring->value.ch     = yyvsp[0].lex.value.ch;
-		       ring->cache.flags  = 0;
+                       ring->type               = PARS_T_BACKSLASH;
+                       ring->value.backslash.ch = yyvsp[0].lex.value.ch;
 
                        yyval.ring = ring;  
                      }
 break;
 case 69:
-#line 737 "src/dgd_format_parser.y"
+#line 711 "src/dgd_format_parser.y"
 {
                        dgd_ring_push_back( &(yyvsp[-1].ring), yyvsp[0].ring );
                        yyval.ring = yyvsp[-1].ring;
                      }
 break;
 case 70:
-#line 742 "src/dgd_format_parser.y"
+#line 716 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1304,15 +1278,14 @@ case 70:
 
                        dgd_ring_push_back( &(yyvsp[-1].ring), ring );
 
-                       ring->type             = PARS_T_WORD;
-                       ring->value.lexeme     = yyvsp[0].lex.value.lexeme;
-		       ring->cache.flags  = 0;
+                       ring->type              = PARS_T_WORD;
+                       ring->value.word.lexeme = yyvsp[0].lex.value.lexeme;
 
                        yyval.ring = yyvsp[-1].ring;
                      }
 break;
 case 71:
-#line 756 "src/dgd_format_parser.y"
+#line 729 "src/dgd_format_parser.y"
 {
                        cache_item_t *ring       = dgd_cache_alloc( cache, 1 );
 
@@ -1320,14 +1293,13 @@ case 71:
 
                        dgd_ring_push_back( &(yyvsp[-1].ring), ring );
 
-                       ring->type         = PARS_T_BACKSLASH;
-                       ring->value.ch     = yyvsp[0].lex.value.ch;
-		       ring->cache.flags  = 0;
+                       ring->type               = PARS_T_BACKSLASH;
+                       ring->value.backslash.ch = yyvsp[0].lex.value.ch;
 
                        yyval.ring = yyvsp[-1].ring;
                      }
 break;
-#line 1331 "src/dgd_format_parser.c"
+#line 1303 "src/dgd_format_parser.c"
     }
     yyssp -= yym;
     yystate = *yyssp;

@@ -43,6 +43,10 @@
 #define EVAL_ERR_BAD_CALL  3
 #define EVAL_ERR_CONT_ARGS 4
 
+#define EVAL_T_INT         20
+#define EVAL_T_DOUBLE      21
+#define EVAL_T_PTR         22
+
 #define EVAL_FLAG_CACHE_CALLS 0x00000001
 #define EVAL_FLAG_CACHE_STDS  0x00000002
 #define EVAL_ESTIMATE         0x00000004
@@ -67,8 +71,6 @@ typedef struct _dgd_eval_t {
       unsigned int  flags;
       unsigned int  error;
       unsigned int  argn;
-      va_list       first_arg;
-      va_list       next_arg;
       cache_item_t *chain;
       cache_item_t *next_item;
       void         *user_data;

@@ -32,31 +32,20 @@
 #define DGD_HEX_ACTION 2
 #define DGD_FREE_ACTION 2
 
-#define DGD_CACHE_ARG_FLAG    0x00000001
-#define DGD_CACHE_WIDTH_FLAG  0x00000002
-#define DGD_CACHE_PREC_FLAG   0x00000004
-#define DGD_CACHE_ARGP_FLAG   0x00000008
-#define DGD_CACHE_WIDTHP_FLAG 0x00000010
-#define DGD_CACHE_PRECP_FLAG  0x00000020
-
 typedef struct _dgd_action_lookup_t {
       char *name;
       dgd_action_callback_t action;
 } dgd_action_lookup_t;
 
 dgd_action_lookup_t dgd_action_lookup_table[EVAL_ACTION_LOOKUP_SIZE] = {
-   { "int", dgd_int },
-   { "oct", dgd_oct },
-   { "hex", dgd_hex }
+   { NULL, NULL }
 };
-
-dgd_action_lookup_t *dgd_free_action = 
-                                 dgd_action_lookup_table + DGD_FREE_ACTION + 1;
 
 static
 dgd_action_callback_t* lookup( char* name ) {
    for( dgd_action_lookup_t *curr = dgd_action_lookup_table;
-	curr < dgd_free_action;
+	curr->name != NULL &&
+	   curr < dgd_action_lookup_table + EVAL_ACTION_LOOKUP_SIZE;
 	curr++ ) {
       if( strcmp( name, curr->name ) == 0 )
 	 return curr->action;
@@ -69,20 +58,17 @@ dgd_eval_init( dgd_eval_t   *eval,
 	       unsigned int  flags,
 	       cache_item_t *chain,
 	       void         *user_data,
-	       unsigned int  flags;
-	       va_arg        arg ) {
+	       unsigned int  flags) {
    memset( (char*)eval, '\0', sizeof( dgd_eval_t ) );
    eval->state     = EVAL_STATE_INIT;
    eval->flags     = flags;
-   eval->first_arg = arg;
-   eval->next_arg  = arg;
    eval->chain     = chain;
-   eval->next_item = chain->value.hash.ring;
+   eval->next_item = chain->value.chain.ring;
    eval->user_data = user_data;   
 }
 
 int 
-dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str ) {
+dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str, va_list arg ) {
    cache_item_t *eval_item;
    int res = EVAL_RES_DONE;
    str_range_t *lexeme;
@@ -100,23 +86,13 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str ) {
       return EVAL_RES_ERROR;
    }
 
-   if( EVAL_STATE_INIT ) {
-      dgd_format_setle_argn( eval );
-      if( eval->argn > 0 ) {
-	 rc = dgd_format_setle_argp( eval );
-	 if( rc == EVAL_RES_ERROR )
-	    return rc;
-      }
-      eval->state = EVAL_STATE_NORMAL;
-   }
+
+   eval->state = EVAL_STATE_NORMAL;
 
    eval_item = eval->next_item;
 
    do {
       switch( eval_item->type ) {
-	 case PARS_T_SET_ARG:
-	    
-	    break;
 	 case PARS_T_WORD:
 	    if( eval->state == EVAL_STATE_RANGED ) 
 	       lexeme = (lexeme*)data;
@@ -136,7 +112,8 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str ) {
 	       *(lexeme*)data = lexeme;
 	       res = EVAL_RES_RANGE;
 	       goto finish;
-	    }
+	    } 
+	    eval->state = EVAL_STATE_NORMAL;
 
 	    break;
 	 case PARS_T_BACKSLASH:
@@ -145,16 +122,17 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str ) {
 	    if(size > 0 ) {
 	       *str->end = eval_item->value.ch;
 	       str->end++;
+	       eval->state = EVAL_STATE_NORMAL;
 	    } else {
 	       res = EVAL_RES_RANGE;
 	       goto finish;
 	    }
 
+	    eval->state = EVAL_STATE_NORMAL;
+
 	    break;
 	 default:
-	    eval->error = EVAL_ERR_BAD_CACHE;
-	    res = EVAL_RES_ERROR;
-	    goto finish;
+	    break;
       }
       dgd_ring_forward(eval_item);
    } while( eval_item != eval->chain->hash.ring );
@@ -165,146 +143,142 @@ dgd_format_eval( dgd_eval_t *eval, str_bounded_range_t *str ) {
 }
 
 static
-void
-dgd_format_settle_argn( dgd_eval_t *eval ) {
-   cache_item_t *eval_item;
+void dgd_ring_push_and_sort( cache_item_t **ring, cache_item_t *item ) {
+   cache_item_t *prev;
 
-   unsigned argn = 0;
+   prev = (*ring)->prev;   
 
-   eval_item = eval->chain->value.hash.ring;
+   if( *ring == prev )
+      return;
 
    do {
+      if( prev->value.argload.index >= item->value.argload.index )
+	 break;
+      prev = prev->prev;
+   } while( prev != *ring );
+	
+   if( prev == *ring && 
+       prev->value.argload.index < item->value.argload.index ) {
+      dgd_ring_push_front( ring, item );
+   } else {
+      dgd_ring_push_back( &prev, item );
+   }
+}
 
+cache_item_t*
+dgd_format_settle_args( cache_t *cache, cache_item_t *parse_ring ) {
+   cache_item_t *eval_item;
+   cache_item_t *parse_prefix = NULL;
+   cache_item_t *ring = NULL;
+   unsigned argn = 0;
+
+   eval_item = parse_ring;
+
+   do {
       switch( eval_item->type ) {
 	 case PARS_T_SET_ARG:
-	    argn = eval_item->value.num;
+	    argn = eval_item->value.set_arg.num;
 	    break;
 	 case PARS_T_NEXT_ARG:
-	    eval_item->cache.flags |= DGD_CACHE_ARG_FLAG;
-	    eval_item->cache.argn[0] = argn++;
+	    if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+	       goto error;
+	    
+	    ring->type = EVAL_T_PTR;
+	    ring->value.argload.index = argn++;
+	    ring->value.argload.attr.valid_mask = 0;
+
+	    dgd_ring_push_and_sort( &parse_prefix, ring );
+	    
+	    eval_item->value.next_arg.arg = ring;
 	    break;
 	 case PARS_T_DEC:
 	 case PARS_T_OCT:
 	 case PARS_T_UNSIGNED:
 	 case PARS_T_HEX:
-	 case PARS_T_REP:
+	 case PARS_T_CHAR:
+
 	 case PARS_T_SCI:
 	 case PARS_T_FLOAT:
 	 case PARS_T_SCIORFLOAT:
 	 case PARS_T_SCIHEX:
-	 case PARS_T_CHAR:
+
 	 case PARS_T_STR:
 	 case PARS_T_PTR:
-	    eval_item->cache.flags |= DGD_CACHE_ARG_FLAG;
-	    eval_item->cache.argn[0] = argn++;
+	 case PARS_T_REP:
+	    break;
 
-	    if( eval_item->value.hash.attr.width == 0 ) {
-	       eval_item->cache.flags |= DGD_CACHE_WIDTH_FLAG;
-	       eval_item->cache.argn[1] = argn++;
-	    } else if(  eval_item->value.hash.attr.width < 0 ) {
-	       argn = -eval_item->value.hash.attr.width;
-	       eval_item->cache.flags |= DGD_CACHE_WIDTH_FLAG;
-	       eval_item->cache.argn[1] = argn++;
+	    if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+	       goto error;
+	    
+	    switch( eval_item->type ) {
+	       	 case PARS_T_SCI:
+	       case PARS_T_FLOAT:
+	       case PARS_T_SCIORFLOAT:
+	       case PARS_T_SCIHEX:
+		  ring->type = EVAL_T_DOUBLE;
+		  break;
+	       case PARS_T_STR:
+	       case PARS_T_PTR:
+	       case PARS_T_REP:
+		  ring->type = EVAL_T_PTR;
+		  break;
+	       default:
+		  ring->type = EVAL_T_INT;
+		  break;
 	    }
 
-	    if( eval_item->value.hash.attr.precision == 0 ) {
-	       eval_item->cache.flags |= DGD_CACHE_PREC_FLAG;
-	       eval_item->cache.argn[2] = argn++;
-	    } else if(  eval_item->value.hash.attr.precision < 0 ) {
-	       argn = -eval_item->value.hash.attr.precision;
-	       eval_item->cache.flags |= DGD_CACHE_PREC_FLAG;
-	       eval_item->cache.argn[2] = argn++;
+	    ring->value.argload.index = argn++;
+	    dgd_call_attr_assign( &(ring->value.argload.attr),
+				  &(eval_item->value.call.attr) );
+
+	    dgd_ring_push_and_sort( &parse_prefix, ring );
+	    
+	    eval_item->value.call.arg = ring;
+
+
+	    if( eval_item->value.call.attr.width <= 0 ) {
+	       if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+		  goto error;
+	       
+	       ring->type = EVAL_T_INT;
+	       if( eval_item->value.call.attr.width < 0 ) 
+		  argn = -eval_item->value.call.attr.width;
+	       ring->value.argload.index = argn++;
+	       ring->value.argload.attr.valid_mask = 0;
+
+	       dgd_ring_push_and_sort( &parse_prefix, ring );
+	       
+	       eval_item->value.call.width = ring;	       
+	    }
+
+	    if( eval_item->value.call.attr.precision <= 0 ) {
+	       if( (ring = dgd_cache_alloc( cache, 1 )) == NULL ) 
+		  goto error;
+	       
+	       ring->type = EVAL_T_INT;
+	       if( eval_item->value.call.attr.precision < 0 ) 
+		  argn = -eval_item->value.call.attr.precision;
+	       ring->value.argload.index = argn++;
+	       ring->value.argload.attr.valid_mask = 0;
+
+	       dgd_ring_push_and_sort( &parse_prefix, ring );
+	       
+	       eval_item->value.call.precision = ring;	       
 	    }	       
+
+	    break;
 	 default:
 	    break;
       }
 
       dgd_ring_forward(eval_item);
-   } while( eval_item != eval->chain->hash.ring );
+   } while( eval_item != parse_ring );
 
-   eval->argn = argn;
-}
-
-static
-int 
-dgd_format_settle_argp( dgd_eval_t *eval ) {
-   cache_item_t *eval_item, *first_item;
-   int res = EVAL_RES_DONE;
-   unsigned int i;
-   va_list next_arg;
-   bool_t found_arg;
-
-   next_arg = eval->first_arg;
-   eval_item = eval->chain->value.hash.ring;
-
-   for( i = 0; i < eval->argn; i++ ) {
-      found_arg = FALSE;
-      first_item = eval_item;
-      do {
-
-	 if( (eval_item->cache.flags & DGD_CACHE_ARG_FLAG) &&
-	     eval_item->cache.argn[0] == i ) {
-	    eval_item->cache.flags |= DGD_CACHE_ARGP_FLAG;
-	    eval_item->cache.argp[0] = next_arg;
-	    switch( eval_item ) {
-	       case PARS_T_PTR:
-	       case PARS_T_STR:
-	       case PARS_T_NEXT_ARG:
-		  va_arg( next_arg, char* );
-		  break;
-	       case PARS_T_DEC:
-	       case PARS_T_OCT:
-	       case PARS_T_UNSIGNED:
-	       case PARS_T_HEX:
-	       case PARS_T_WRITE_REP:
-	       case PARS_T_CHAR:
-		  /* bytecount does not make sense since compiler will 
-		     expand short and char values to int */
-		  va_arg( next_arg, int );
-		  break;
-	       case PARS_T_SCI:
-	       case PARS_T_FLOAT:
-	       case PARS_T_SCIORFLOAT:
-	       case PARS_T_SCIHEX:
-		  va_arg( next_arg, double );
-		  break;
-	       default:
-		  res = EVAL_RES_ERROR;
-		  eval->error = EVAL_ERR_BAD_CACHE;
-		  goto finish;
-	    }
-
-	    found_arg = TRUE;
-	 } else if( (eval_item->cache.flags & DGD_CACHE_WIDTH_FLAG) &&
-		    eval_item->cache.argn[1] == i ) {
-	    eval_item->cache.flags |= DGD_CACHE_WIDTHP_FLAG;
-	    eval_item->cache.argp[1] = next_arg;
-	    va_arg( next_arg, int );
-	    found_arg = TRUE;
-	 } else if( (eval_item->cache.flags & DGD_CACHE_PREC_FLAG) &&
-		    eval_item->cache.argn[2] == i ) {
-	    eval_item->cache.flags |= DGD_CACHE_PRECP_FLAG;
-	    eval_item->cache.argp[2] = next_arg;
-	    va_arg( next_arg, int );
-	    found_arg = TRUE;
-	 }
-
-	 dgd_ring_forward(eval_item);
-      } while( !found_arg && eval_item != first_item );
-
-      if( !found_arg ) {
-	 res = EVAL_RES_ERROR;
-	 eval->error = EVAL_ERR_CONT_ARGS;
-	 goto finish;
-      }
-   }
   finish:
-   return res;   
+   dgd_ring_push_front( &parse_ring, parse_prefix );
+   return parse_ring;
+
+  error:
+   dgd_cache_free( cache, &parse_prefix, -1 );
+   return NULL;
 }
-
-/* 
- * Local Variables:
- * compile-command: "make dgd_format_eval.obj"
- * End:
- */
-

@@ -35,35 +35,49 @@
 typedef struct _cache_item_t {
       unsigned int type;
       union {
-	    unsigned int          num;
-	    double                dnum;
-	    void                 *vptr;
-	    char                 *cptr;
-	    struct _cache_item_t *ring;
-	    void                 *(*func)();
-	    char                  ch;
-	    str_range_t           lexeme;
-	    struct {
-		  char           *key;
-		  char           *value;
-	    } arg;
 	    struct {
 		  str_range_t           name;
 		  call_attr_t           attr;
 		  unsigned int          num_param;
+		  struct _cache_item_t *arg;
+		  struct _cache_item_t *width;
+		  struct _cache_item_t *precision;
 	    } call;
 	    struct {
 		  char                 *key;
 		  struct _cache_item_t *ring;
-		  struct _cache_item_t *lru;
-	    } hash;
+		  struct _cache_item_t *lru;		  
+	    } chain;
+	    struct {
+		  struct _cache_item_t *ring;
+	    } lru;
+	    struct {
+		  unsigned int          num;
+	    } set_arg;
+	    struct {
+		  struct _cache_item_t *arg;
+	    } next_arg;
+	    struct {
+		  str_range_t           lexeme;
+	    } lexeme;
+	    struct {
+		  str_range_t           lexeme;
+	    } error;
+	    struct {
+		  str_range_t           lexeme;
+	    } word;
+	    struct {
+		  char                  ch;
+	    } backslash;
+	    struct {
+		  unsigned int          index;
+		  int                   num;
+		  double                dnum;
+		  void                 *ptr;
+		  char                  ch;
+		  call_attr_t           attr;
+	    } argload;
       } value;
-
-      struct {
-	    unsigned int             flags;
-	    unsigned int             argn[CACHE_ITEM_CSIZE];
-	    struct   _cache_item_t * argp[CACHE_ITEM_CSIZE];
-      } cache;
 
       struct _cache_item_t *next;
       struct _cache_item_t *prev;

@@ -87,12 +87,13 @@ void dgd_dump_parser_bytecode( FILE *stream,
 	    fprintf( stream, "next arg\n" );
 	    break;
 	 case PARS_T_SET_ARG:
-	    fprintf( stream, "set argument: %u\n", next->value.num );
+	    fprintf( stream, "set argument: %u\n", next->value.set_arg.num );
 	    break;
 	 case PARS_T_LEXEME:
 	    fprintf( stream, "lexeme: %.*s\n", 
-		     next->value.lexeme.end - next->value.lexeme.begin,
-		     next->value.lexeme.begin );
+		     next->value.lexeme.lexeme.end - 
+		     next->value.lexeme.lexeme.begin,
+		     next->value.lexeme.lexeme.begin );
 	    break;
 	 case PARS_T_CALL_BY_NAME:
 	    fprintf( stream, "call by name: %.*s\n", 
@@ -150,11 +151,12 @@ void dgd_dump_parser_bytecode( FILE *stream,
 	    break;
 	 case PARS_T_WORD:
 	    fprintf( stream, "word: %.*s\n", 
-		     next->value.lexeme.end - next->value.lexeme.begin,
-		     next->value.lexeme.begin );
+		     next->value.word.lexeme.end - 
+		     next->value.word.lexeme.begin,
+		     next->value.word.lexeme.begin );
 	    break;
 	 case PARS_T_BACKSLASH:
-	    fprintf( stream, "backslash: %c\n", next->value.ch );
+	    fprintf( stream, "backslash: %c\n", next->value.backslash.ch );
 	    break;
 	 default:
 	    break;

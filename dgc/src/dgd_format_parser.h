@@ -100,7 +100,7 @@
 #define LEX_T_PTR 300
 #define LEX_T_REPORT 301
 
-cache_item_t *dgd_format_parser();
+cache_item_t *dgd_format_parse( char* format_string );
 cache_t      *dgd_format_parser_cache();
 
 #endif /* _dgd_format_parser_h_ */

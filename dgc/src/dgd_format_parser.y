@@ -124,9 +124,8 @@ cmdbegin:
 
                        dgd_ring_push_back( &start_ring, ring );
 
-                       ring->type            = PARS_T_SET_ARG;
-                       ring->value.num       = $2.lex.value.num;
-		       ring->cache.flags     = 0;
+                       ring->type              = PARS_T_SET_ARG;
+                       ring->value.set_arg.num = $2.lex.value.num;
 
                        $$.ring = ring;                       
                      }
@@ -144,7 +143,6 @@ subcmd:
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = $1.lex.value.lexeme;
                        ring->value.call.num_param = 0;
-		       ring->cache.flags     = 0;
 
                        $$.ring = ring;                       
                      }
@@ -158,7 +156,6 @@ subcmd:
                        ring->type                 = PARS_T_CALL_BY_NAME;
                        ring->value.call.name      = $1.lex.value.lexeme;
                        ring->value.call.num_param = dgd_ring_size( args_ring );
-		       ring->cache.flags     = 0;
 
                        dgd_ring_push_front( &args_ring, ring );
 
@@ -195,8 +192,7 @@ identifier:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_LEXEME;
-                       ring->value.lexeme = $1.lex.value.lexeme;
-		       ring->cache.flags  = 0;
+                       ring->value.lexeme.lexeme = $1.lex.value.lexeme;
 
                        $$.ring = ring;
                      }
@@ -209,7 +205,6 @@ identifier:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_NEXT_ARG;
-		       ring->cache.flags  = 0;
 
                        $$.ring = ring;
                      }           
@@ -224,7 +219,6 @@ pair:
                        if( ring == NULL ) YYERROR;
 
                        ring->type         = PARS_T_PAIR;
-		       ring->cache.flags  = 0;
 
                        dgd_ring_push_front( &key_ring, ring );
 
@@ -242,7 +236,6 @@ intformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type               = PARS_T_DEC;
-		       ring->cache.flags        = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -256,7 +249,6 @@ intformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_OCT;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -270,7 +262,6 @@ intformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_UNSIGNED;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -284,7 +275,6 @@ intformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_HEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
                        $$.ring = ring;  
@@ -298,7 +288,6 @@ intformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_HEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -313,7 +302,6 @@ intformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_REP;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -330,7 +318,6 @@ doubleformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCI;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
 
@@ -345,7 +332,6 @@ doubleformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCI;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -360,7 +346,6 @@ doubleformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_FLOAT;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
 
@@ -375,7 +360,6 @@ doubleformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_FLOAT;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -392,7 +376,6 @@ doubleformat:
                        ring->type         = PARS_T_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
-		       ring->cache.flags  = 0;
 
                        $$.ring = ring;  
                      }
@@ -407,7 +390,6 @@ doubleformat:
                        ring->type         = PARS_T_SCIORFLOAT;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
-		       ring->cache.flags  = 0;
 
                        $$.ring = ring;  
                      }
@@ -420,7 +402,6 @@ doubleformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCIHEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 0;
 
@@ -435,7 +416,6 @@ doubleformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_SCIHEX;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
                        ring->value.call.attr.capital = 1;
 
@@ -453,7 +433,6 @@ stringformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_CHAR;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -467,7 +446,6 @@ stringformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_STR;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -484,7 +462,6 @@ ptrformat:
                        dgd_ring_push_back( &start_ring, ring );
 
                        ring->type         = PARS_T_PTR;
-		       ring->cache.flags  = 0;
                        dgd_call_attr_set_default( &(ring->value.call.attr) );
 
                        $$.ring = ring;  
@@ -692,9 +669,8 @@ cmd:
                        dgd_cache_free( cache, &start_ring, -1 );
 
                        if( ring != NULL ) {
-                         ring->type         = PARS_T_ERROR;
-                         ring->value.lexeme = lexer_state.lexeme;
-			 ring->cache.flags  = 0;
+                         ring->type               = PARS_T_ERROR;
+                         ring->value.error.lexeme = lexer_state.lexeme;
                        }
 
                        $$.ring = ring;
@@ -716,8 +692,7 @@ fmt:
                        if( ring == NULL ) YYERROR;
 
                        ring->type         = PARS_T_WORD;
-		       ring->cache.flags  = 0;
-                       ring->value.lexeme = $1.lex.value.lexeme;
+                       ring->value.word.lexeme = $1.lex.value.lexeme;
 
                        $$.ring = ring;  
                      }
@@ -727,9 +702,8 @@ fmt:
 
                        if( ring == NULL ) YYERROR;
 
-                       ring->type         = PARS_T_BACKSLASH;
-                       ring->value.ch     = $1.lex.value.ch;
-		       ring->cache.flags  = 0;
+                       ring->type               = PARS_T_BACKSLASH;
+                       ring->value.backslash.ch = $1.lex.value.ch;
 
                        $$.ring = ring;  
                      }
@@ -746,9 +720,8 @@ fmt:
 
                        dgd_ring_push_back( &($1.ring), ring );
 
-                       ring->type             = PARS_T_WORD;
-                       ring->value.lexeme     = $2.lex.value.lexeme;
-		       ring->cache.flags  = 0;
+                       ring->type              = PARS_T_WORD;
+                       ring->value.word.lexeme = $2.lex.value.lexeme;
 
                        $$.ring = $1.ring;
                      }
@@ -760,9 +733,8 @@ fmt:
 
                        dgd_ring_push_back( &($1.ring), ring );
 
-                       ring->type         = PARS_T_BACKSLASH;
-                       ring->value.ch     = $2.lex.value.ch;
-		       ring->cache.flags  = 0;
+                       ring->type               = PARS_T_BACKSLASH;
+                       ring->value.backslash.ch = $2.lex.value.ch;
 
                        $$.ring = $1.ring;
                      }
@@ -792,7 +764,7 @@ cache_t *dgd_format_parser_cache() {
    return (cache_t*)&parser_cache;
 }
 
-cache_item_t *dgd_format_parser( char* format_string ) {
+cache_item_t *dgd_format_parse( char* format_string ) {
    cache_item_t *result;
 
    if( !parser_init ) {

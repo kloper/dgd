@@ -201,11 +201,11 @@ cache_item_t *dgd_cache_alloc( cache_t *cache, unsigned int size ) {
       if( cache->lru_ring == NULL )
 	 return NULL;
 
-      hash_ring = cache->lru_ring->value.ring;
+      hash_ring = cache->lru_ring->value.lru.ring;
 
       dgd_cache_free( cache, &(cache->lru_ring), 1  );      
 
-      data_ring = hash_ring->value.hash.ring;
+      data_ring = hash_ring->value.chain.ring;
 
       dgd_cache_free( cache, &hash_ring, 1  );
 
@@ -277,7 +277,7 @@ cache_item_t *dgd_cache_find( cache_t *cache, char *str ) {
    chain_ring = NULL;
    
    for( next = chain->next; next != chain; next = next->next ) {
-      if( next->value.hash.key == str ) {
+      if( next->value.chain.key == str ) {
 	 chain_ring = next;
 	 break;
       }
@@ -307,11 +307,11 @@ cache_item_t *dgd_cache_new( cache_t *cache, char *str, cache_item_t *data ) {
    if( chain_ring == NULL || lru_ring == NULL ) 
       return NULL;
 
-   chain_ring->value.hash.key = str;
-   chain_ring->value.hash.ring = data;
-   chain_ring->value.hash.lru = lru_ring;
+   chain_ring->value.chain.key  = str;
+   chain_ring->value.chain.ring = data;
+   chain_ring->value.chain.lru  = lru_ring;
 
-   lru_ring->value.ring = chain_ring;
+   lru_ring->value.lru.ring = chain_ring;
 
    dgd_ring_push_back( &chain, chain_ring );
    dgd_ring_push_back( &(cache->lru_ring), lru_ring );
@@ -329,8 +329,8 @@ void dgd_cache_delete( cache_t *cache, char *str ) {
    if( chain_ring == NULL )
       return;
 
-   lru_ring = chain_ring->value.hash.lru;
-   data_ring = chain_ring->value.hash.ring;
+   lru_ring  = chain_ring->value.chain.lru;
+   data_ring = chain_ring->value.chain.ring;
 
    reset_cache_lru = ( cache->lru_ring == lru_ring );
    dgd_cache_free( cache, &lru_ring,   1 );
