@@ -77,15 +77,6 @@ class option_filter {
 	    
       typedef std::vector<option_set_type> option_set_container;
 
-      /**
-       * This operator takes <argc,argv> as received by main function,
-       * then it takes a set of regular expressions defined by <filtc, filtv>
-       * and returns a set (vector) of option subsets. First set is generated
-       * by the first filter, second set by the second filter and so on, 
-       * the last set contains options which were not selected by any filter.
-       * so the following is always true result->size() == filtc + 1
-       * @see DGD::Debug
-       */
       option_set_container* operator () ( int argc, char** argv,
 					  int filtc, char** filtv );
 };
