@@ -77,9 +77,9 @@ bool channel::is_open() const {
 
 /**
  * Return channel open/close status. This operator is used for 
- * @verbatim
+ * @code
  * if( channel ) { .... }
- * @endverbatim
+ * @endcode
  * expressions.
  */
 channel::operator bool () const {

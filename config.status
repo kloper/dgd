@@ -73,7 +73,7 @@ $as_unset CDPATH || test "${CDPATH+set}" != set || { CDPATH=:; export CDPATH; }
 
 exec 6>&1
 
-config_files=" Makefile doc/Makefile doc/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile"
+config_files=" Makefile doc/Makefile doc/html/dgd.wmk doc/doxygen/dgd.doxy getopt/Makefile regex/Makefile dgd/Makefile dgd/src/dgConfig.h dgd/src/dgDebugOpt.gge test/Makefile util/bin/mkdis util/bin/copytree"
 
 ac_cs_usage="\
 \`$as_me' instantiates files from templates according to the
@@ -183,7 +183,7 @@ do
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
-  "doc/dgd.wmk" ) CONFIG_FILES="$CONFIG_FILES doc/dgd.wmk" ;;
+  "doc/html/dgd.wmk" ) CONFIG_FILES="$CONFIG_FILES doc/html/dgd.wmk" ;;
   "doc/doxygen/dgd.doxy" ) CONFIG_FILES="$CONFIG_FILES doc/doxygen/dgd.doxy" ;;
   "getopt/Makefile" ) CONFIG_FILES="$CONFIG_FILES getopt/Makefile" ;;
   "regex/Makefile" ) CONFIG_FILES="$CONFIG_FILES regex/Makefile" ;;
@@ -191,7 +191,9 @@ do
   "dgd/src/dgConfig.h" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgConfig.h" ;;
   "dgd/src/dgDebugOpt.gge" ) CONFIG_FILES="$CONFIG_FILES dgd/src/dgDebugOpt.gge" ;;
   "test/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
-  *) { { echo "$as_me:3367: error: invalid argument: $ac_config_target" >&5
+  "util/bin/mkdis" ) CONFIG_FILES="$CONFIG_FILES util/bin/mkdis" ;;
+  "util/bin/copytree" ) CONFIG_FILES="$CONFIG_FILES util/bin/copytree" ;;
+  *) { { echo "$as_me:3369: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -281,8 +283,8 @@ s,@target_cpu@,i686,;t t
 s,@target_vendor@,pc,;t t
 s,@target_os@,cygwin,;t t
 s,@CVS@,cvs.exe,;t t
-s,@DGD_VERSION@,dgd-0.17 Sun Sep 22 00:47:46  2002,;t t
-s,@DGD_SHORT_VERSION@,0.17,;t t
+s,@DGD_VERSION@,dgd-0.18 Sat Sep 28 01:56:23  2002,;t t
+s,@DGD_SHORT_VERSION@,0.18,;t t
 s,@BUILDDIR@,Debug,;t t
 s,@TARGETS@,,;t t
 s,@CXX_DYNAMIC_FLAGS@,,;t t
@@ -425,7 +427,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:3609: creating $ac_file" >&5
+    { echo "$as_me:3611: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -443,7 +445,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:3627: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:3629: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -456,7 +458,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:3640: error: cannot find input file: $f" >&5
+           { { echo "$as_me:3642: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;

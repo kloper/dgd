@@ -44,21 +44,21 @@ namespace DGD {
  * Simple formatting std::streambuf. This is a core class of DGD. Here
  * actual output formatting takes place. Please refer to DGD::channel
  * for general explanation on the channel formatting
- * capabilities. Later discussion here is focused on technical aspects
+ * capabilities. The discussion below is focused on technical aspects
  * of the formatting.
  *
  * DGD::channelbuf has it's own memory buffer which can be controlled
  * by channelbuf::setbuf(char_type*,std::streamsize) method. All
  * channel input (see DGD::channel for the terminology) formatted by
- * std::ostream operators is put into this buffer. DGD::channelbuf
- * scans this buffer (see channelbuf::overflow(int_type)) and makes
+ * std::ostream operators is put into it. DGD::channelbuf
+ * scans the buffer (see channelbuf::overflow(int_type)) and makes the
  * additional formatting.
  *
- * DGD::channelbuf acts as stream multiplexor. It maintains a list of
- * DGD::stream objects which are "associated" with this channel (see
- * channelbuf::assoc(const stream&)) buffer. If the list is empty no
- * output is produced. All objects on the list will get the same
- * channelbuf output when it is ready.
+ * DGD::channelbuf acts as a stream multiplexor. It maintains a list of
+ * DGD::stream objects which are "associated" with this channel  buffer 
+ * (see channelbuf::assoc(const stream&)). If the list is empty no
+ * output is produced. The channelbuf output is copied to all objects 
+ * on the list when it is ready.
  * 
  * DGD::stream object can be associated with DGD::channelbuf by
  * calling channelbuf::assoc(const stream&) method, but it is more

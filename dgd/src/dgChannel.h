@@ -63,11 +63,11 @@ namespace DGD {
  * allowing virtually infinite lines.
  *
  * If the character wrapping is enabled DGD::channel tracks maximum
- * line width. Line longer then maximum width (amount of indentation
- * spaces at the beginning of line considered as part of the line!) is
+ * line width. Line longer then maximum width (indentation spaces at
+ * the beginning of line are considered as part of the line!) is
  * broken into two lines. The first one has at most maximum width. See
  * word wrapping section for more info. The second one is processed in
- * recursive manner.
+ * a recursive manner.
  *
  * <li> Maximum line width. Controlled by void
  * channel::max_width(unsigned int). State is received by unsigned int

@@ -2,4 +2,15 @@
 Depression Glass Debug Library NEWS
 ===================================
 
+28/09/2002:	Added subdirectory msvc-prj which contains VC++ 
+projects for DGD. People who have no cygwin installed can use these
+to build DGD. Note that I am planning to update VC++ projects
+for stable releases only. 
+I have written a perl script which allowed me to integrate doxygen 
+output and webmake generated site.
+
+22/09/2002:	Please fill [[the online survey [basic_feedback]].
+
 21/09/2002:	Created a web site for DGD using WebMake.
+
+[basic_feedback]: http://sourceforge.net/survey/survey.php?group_id=62230&survey_id=13594

@@ -63,16 +63,22 @@ depend: $(SUBDIRS)
 Makefile: Makefile.in $(top_srcdir)/config.status
 	cd $(top_srcdir) && ./config.status
 
+html/dgd.wmk: html/dgd.wmk.in
+	cd $(top_srcdir) && ./config.status
+
+doxygen/dgd.doxy: doxygen/dgd.doxy.in
+	cd $(top_srcdir) && ./config.status
+
 $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
                              $(top_srcdir)/configure.ac
 	cd $(top_srcdir) && $(MAKE) config.status
 
-doxygen:
-	cd doxygen; $(DOXYGEN) dgd.doxy
+doxygen: doxygen/dgd.doxy
+	cd doxygen && $(DOXYGEN) dgd.doxy
 
-webmake:
-	$(PERL) $(WEBMAKE) -f dgd.wmk
+html/doxygen_html.wmk: html/doxygen/html/*.html  
+	cd html && $(PERL) ../../util/bin/html2wmk doxygen/html 
 
-
-
+webmake: html/dgd.wmk html/doxygen_html.wmk doxygen/dgd.doxy
+	cd html && $(PERL) $(WEBMAKE) -f dgd.wmk
 

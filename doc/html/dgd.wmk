@@ -1,7 +1,7 @@
 <webmake>
 
 <{!--
-   --  $Id: dgd\\doc\\Attic\\dgd.wmk.in,v 1.1 2002/09/21 22:42:44 dimka Exp $
+   --  $Id: dgd\\doc\\html\\Attic\\dgd.wmk,v 1.1 2002/09/28 20:49:44 dimka Exp $
    -- 
    --  This program is free software; you can redistribute it and/or modify
    --  it under the terms of the GNU General Public License as published by
@@ -25,19 +25,21 @@
    --  dgd.wmk -- DGD documantation temlate for WEbMake
    --}>
 
+
 <attrdefault name="map" value="false" />
 
-<contents src=".." name="README" format="text/et" />
-<contents src=".." name="INSTALL" format="text/et" />
-<contents src=".." name="NEWS"  format="text/et" />
-<contents src=".." name="COPYING" format="text/html" />
-<contents src="." name="*.html" format="text/html" namesubst="s/.html?//" />
+<include file="doxygen_html.wmk" />
+<contents src="../.." name="README" format="text/et" />
+<contents src="../.." name="INSTALL" format="text/et" />
+<contents src="../.." name="NEWS"  format="text/et" />
+<contents src="../.." name="COPYING" format="text/html" />
+<contents src=".." name="*.html" format="text/html" namesubst="s/.html?//" />
 <media src="images" name="*.jpg"  namesubst="s/\.jpe?g//" />
 <media src="images" name="*.gif" namesubst="s/\.gif//" />
 <media src="style" name="*.css"  namesubst="s/\.css//" />
 
 <template name="dgd_version" format="text/html">
-@DGD_SHORT_VERSION@
+0.18
 </template>
 
 <template name="sfhome" format="text/html">
@@ -50,10 +52,6 @@ http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/dgd
 
 <template name="download" format="text/html">
 http://sourceforge.net/project/showfiles.php?group_id=62230
-</template>
-
-<template name="doc.code" format="text/html">
-$(TOP/)/doxygen/html/index.html
 </template>
 
 <template name="page_header" format="text/html">
@@ -74,8 +72,26 @@ $(TOP/)/doxygen/html/index.html
            <tr>
               <td><br></td>
            </tr>
-           <tr>
-              <td align="center" class="webapptext">
+	   <tr>
+	      <table border="0" cellpadding="0" cellspacing="0" align="center">
+	         <tr>
+	         <td width="50%" align="center">
+	            <a href="http://sourceforge.net">
+		       <img src="http://sourceforge.net/sflogo.php?group_id=62230&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo">
+		    </a>
+	         </td>
+	         <td width="50%" align="center">
+	            <a href="http://webmake.taint.org/">
+		       <img src="$(wmlogo)" width="88" height="31" 
+		            border="0" alt="WebMake Logo">
+		    </a>
+	         </td>
+		 </tr>
+	      </table>
+	   </tr>
+           <tr>	      
+              <td align="center" class="webapptext" >
+	      <small>
               This web site was made with <a href="http://webmake.taint.org/" 
               class="webapplink">WebMake ${WebMake.Version}</a>, a web site 
               generation system.<br>
@@ -83,6 +99,9 @@ $(TOP/)/doxygen/html/index.html
               <a href="http://www.web-app.org/cgi-bin/index.cgi" 
               class="webapplink">WebAPP v0.9.7</a>, a web portal system 
               written in Perl<br>
+	      This site is hosted by <a href="http://sourceforge.net">
+	      SourceForge.net</a><br>
+	      </small>
               </td>
 	      <br> 
            </tr>
@@ -151,14 +170,14 @@ $(TOP/)/doxygen/html/index.html
 </template>
 
 <template name="box" format="text/html">
-   <table width="$[${item}.width?100%]">       
+   <table width="${width}">       
       <tr>                                                	       
          <td>                                             	       
             <table border="0" cellpadding="0" cellspacing="0"   	       
                    width="100%" class="menutable"               	       
                    background="$(sidebox_title_bg)">            	       
                <tr>                                             	       
-                  <td>&nbsp;$[${item}.boxname?$[crumbs]]</td>          	       
+                  <td>&nbsp;${title}</td>          	       
                </tr>                                            	       
             </table>                                            	       
             <table border="0" cellpadding="1" cellspacing="0"               
@@ -170,7 +189,7 @@ $(TOP/)/doxygen/html/index.html
                          class="menubackcolor">    
 		     <tr>
 		        <td>             	       
-			${${item}} 
+			${${text}} 
 			</td>
 		     </tr>
                   </table>                                      	       
@@ -180,12 +199,10 @@ $(TOP/)/doxygen/html/index.html
 	    <{!-- put bottom img here if needed --}>
          </td>                                                  	       
       </tr>                                                     	       
-   </table>                                                     	       
+   </table>         
 </template>
 
 <content name="box_home" format="text/html">
-   <wmmeta name=boxname value="Home" />
-   <wmmeta name=width value="150" />
    <table cellspacing="0" cellpadding="3">
       <tr class="cat">
          &nbsp;&middot;&nbsp;<a href="$(home)">Home</a>      
@@ -212,8 +229,6 @@ $(TOP/)/doxygen/html/index.html
 </content>
 
 <content name="box_doc" format="text/html">
-   <wmmeta name=boxname value="Documentation" />
-   <wmmeta name=width value="150" />
    <table cellspacing="0" cellpadding="3">
       <tr class="cat">
          &nbsp;&middot;&nbsp;<a href="$(readme)">README</a>      
@@ -225,7 +240,7 @@ $(TOP/)/doxygen/html/index.html
          &nbsp;&middot;&nbsp;<a href="$(news)">NEWS</a>      
       </tr>
       <tr class="cat">
-         &nbsp;&middot;&nbsp;<a href="${doc.code}">Code Doc</a>      
+         &nbsp;&middot;&nbsp;<a href="$(doxygen_html_index)">Code&nbsp;Documentation</a>      
       </tr>
       <tr class="cat">
          &nbsp;&middot;&nbsp;<a href="$(tutorial)">Tutorial</a>      
@@ -236,6 +251,18 @@ $(TOP/)/doxygen/html/index.html
       <tr class="cat">
          &nbsp;&middot;&nbsp;<a href="$(todo)">Bugs/Features</a>      
       </tr>
+   </table>
+</content>
+
+<content name="box_codedoc" format="text/html">
+   <table cellspacing="0" cellpadding="3">
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_namespaces)">Namespaces</a>
+      </tr>
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_annotated)">Compounds</a></tr>
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_files)">Files</a></tr>
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_namespacemembers)">Namespace&nbsp;Members</a></tr>
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_functions)">Compound&nbsp;Members</a></tr>
+      <tr class="cat">&nbsp;&middot;&nbsp;<a href="$(doxygen_html_globals)">File&nbsp;Members</a></tr>
    </table>
 </content>
 
@@ -250,10 +277,10 @@ $(TOP/)/doxygen/html/index.html
       <table class="pagetable">
          <tr>
 	    <td valign="top">
-               ${box: item="box_home"}
+               ${box: width=170 title="Home" text="box_home"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: item="NEWS"}
+               ${box: width="100%" title=$[crumbs] text="NEWS"}
             </td>
 	 </tr>
       </table>
@@ -273,11 +300,11 @@ $(TOP/)/doxygen/html/index.html
       <table class="pagetable">
          <tr>
 	    <td valign="top">
-               ${box: item="box_home"}
-               ${box: item="box_doc"}
+               ${box: width=170 title="Home" text="box_home"}
+               ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: item="README"}
+               ${box: width="100%" title="$[crumbs]" text="README"}
             </td>
 	 </tr>
       </table>
@@ -297,11 +324,11 @@ $(TOP/)/doxygen/html/index.html
       <table class="pagetable">
          <tr>
 	    <td valign="top">
-               ${box: item="box_home"}
-               ${box: item="box_doc"}
+               ${box: width=170 title="Home" text="box_home"}
+               ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: item="INSTALL"}
+               ${box: width="100%" title="$[crumbs]" text="INSTALL"}
             </td>
 	 </tr>
       </table>
@@ -321,11 +348,11 @@ $(TOP/)/doxygen/html/index.html
       <table class="pagetable">
          <tr>
 	    <td valign="top">
-               ${box: item="box_home"}
-               ${box: item="box_doc"}
+               ${box: width=170 title="Home" text="box_home"}
+               ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: item="dgd_todo"}
+               ${box: width="100%" title="$[crumbs]" text="dgd_todo"}
             </td>
 	 </tr>
       </table>
@@ -345,11 +372,11 @@ $(TOP/)/doxygen/html/index.html
       <table class="pagetable">
          <tr>
 	    <td valign="top">
-               ${box: item="box_home"}
-               ${box: item="box_doc"}
+               ${box: width=170 title="Home" text="box_home"}
+               ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: item="dgd_faq"}
+               ${box: width="100%" title="$[crumbs]" text="dgd_faq"}
             </td>
 	 </tr>
       </table>
@@ -369,11 +396,11 @@ $(TOP/)/doxygen/html/index.html
       <table class="pagetable">
          <tr>
 	    <td valign="top">
-               ${box: item="box_home"}
-               ${box: item="box_doc"}
+               ${box: width=170 title="Home" text="box_home"}
+               ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: item="NEWS"}
+               ${box: width="100%" title="$[crumbs]" text="NEWS"}
             </td>
 	 </tr>
       </table>
@@ -393,11 +420,11 @@ $(TOP/)/doxygen/html/index.html
       <table class="pagetable">
          <tr>
 	    <td valign="top">
-               ${box: item="box_home"}
-               ${box: item="box_doc"}
+               ${box: width=170 title="Home" text="box_home"}
+               ${box: width=170 title="Documentation" text="box_doc"}
             </td>
 	    <td valign="top" width="100%">
-               ${box: item="construction"}
+               ${box: width="100%" title="$[crumbs]" text="construction"}
             </td>
 	 </tr>
       </table>
@@ -409,18 +436,18 @@ $(TOP/)/doxygen/html/index.html
 
 <content name=sitemapnode map=false>
   <li>
-      <a href=$(url)>$[${name}.brief]</a>
+      <a href=$(url)>$[${name}.brief?None]</a>
       <ul> ${list} </ul>
   </li>
 </content>
 
 <content name=sitemapleaf map=false>
   <li>
-      <a href=$(url)>$[${name}.brief]</a>
+      <a href=$(url)>$[${name}.brief?None]</a>
   </li>
 </content>
 
-<sitemap name=mainsitemap node=sitemapnode leaf=sitemapleaf />
+<sitemap name=mainsitemap node=sitemapnode leaf=sitemapleaf /> 
 
 <template name=btop>
   	<a class="boxlink" href=${url}>$[${name}.brief]</a>
@@ -435,33 +462,76 @@ $(TOP/)/doxygen/html/index.html
   	top=btop tail=btail level=blevel />
                       
 
-<out name="home" file="html/index.html">
+<out name="home" file="index.html">
    ${home}
 </out>
-<out name="readme" file="html/readme.html" >
+<out name="readme" file="readme.html" >
    ${readme}
 </out>
-<out name="install" file="html/install.html" >
+<out name="install" file="install.html" >
    ${install}
 </out>
-<out name="news" file="html/news.html" >
+<out name="news" file="news.html" >
    ${news}
 </out>
-<out name="todo" file="html/todo.html" >
+<out name="todo" file="todo.html" >
    ${todo}
 </out>
-<out name="faq" file="html/faq.html" >
+<out name="faq" file="faq.html" >
    ${faq}
 </out>
-<out name="tutorial" file="html/tutorial.html" >
+<out name="tutorial" file="tutorial.html" >
    ${tutorial}
 </out>
 
-<out name="sitemap" file="html/sitemap.html" >
+<out name="sitemap" file="sitemap.html" >
    ${mainsitemap}
 </out>
 
+<for name="ctx" values="${doxygen_html_content_list}">
+<content name="codedoc_${ctx}" format="text/html" up="home" map="true">
+<{set tmp="${ctx}" }>
+<{perl 
+  my $name = get_content( 'tmp' );
+  my $c = get_content_object( $name );
+  print $name . "\n";
+  my $title = $c->get_title();
+  set_content( 't', $title );
+  '';
+}>
+  <wmmeta name="title" value="${t}" />
+  <wmmeta name="brief" value="${t}" />
+
+  ${page_header}
+  ${page_titlebar}
+  ${page_navbar}
+   <div align="center">
+      <table class="pagetable">
+         <tr>
+	    <td valign="top">
+               ${box: width=170 title="Home" text="box_home"}
+               ${box: width=170 title="Documentation" text="box_doc"}
+               ${box: width=170 title="Code Documentation" text="box_codedoc"}
+            </td>
+	    <td valign="top" width="100%">
+               ${box: width="100%" title="$[crumbs]" text="${ctx}"}
+            </td>
+	 </tr>
+      </table>
+   </div>
+  ${page_navbar}
+  ${page_footer}
+</content>
+</for>
+
+<for name="ctx" values="${doxygen_html_content_list}">
+   <out name="${ctx}" file="${ctx}.html">
+	${codedoc_${ctx}}
+   </out>
+</for>
+
 </webmake>
+
 
 
 

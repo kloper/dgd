@@ -6,7 +6,7 @@ use File::Copy;
 
 my $exe_name = $0;
 my $localdir = dirname($exe_name);
-my $ignore_pattern = '~$|CVS|xml$|Debug'; #'
+my $ignore_pattern = '~$|CVS|xml$|/Debug/'; #'
 my $root = "d:/dgd";
 my $datadir  = "c:/dimka/mkdis";
 my $filelist = "$datadir/filelist.log";
