@@ -46,7 +46,7 @@ namespace DGD {
 template <class First_type, class Second_type>
 inline channel& operator << ( channel& cnl,
 			      const std::pair<First_type, Second_type>& p ) {
-   cnl << "[" << p.first << " " << p.second << "]";
+   cnl << "[" << dgd << p.first << " " << dgd << p.second << "]";
    return cnl;
 }
 
@@ -79,7 +79,7 @@ inline channel& operator << ( channel& cnl,
 template <class Item_type>
 inline channel& operator << ( channel& cnl, 
 			      const std::list<Item_type>& l ) {
-   cnl << "{" << incr << std::endl;
+   cnl << "{" << dgd << incr << std::endl;
    for( std::list<Item_type>::const_iterator i = l.begin(); 
 	i != l.end(); 
 	++i ) {
@@ -102,7 +102,7 @@ inline channel& operator << ( channel& cnl,
 template <class Item_type>
 inline channel& operator << ( channel& cnl, 
 			      const std::vector<Item_type>& v ) {
-   cnl << "{" << incr << std::endl;
+   cnl << "{" << dgd << incr << std::endl;
    for( std::vector<Item_type>::const_iterator i = v.begin(); 
 	i != v.end(); 
 	++i ) {
@@ -126,7 +126,7 @@ inline channel& operator << ( channel& cnl,
 template <class Key_type, class Value_type>
 inline channel& operator << ( channel& cnl, 
 			      const std::map<Key_type, Value_type>& m ) {
-   cnl << "{" << incr << std::endl;
+   cnl << "{" << dgd << incr << std::endl;
    for( std::map<Key_type, Value_type>::const_iterator i = m.begin(); 
 	i != m.end(); 
 	++i ) {
