@@ -69,6 +69,14 @@ Installation
 Please refer to installation instructions in INSTALL file in DGD root
 directory. 
 
+Similar libraries
+=================
+
+libcwd <http://libcwd.sourceforge.net/> -- full-featured debugging
+support library for C++ developers. This is a good library, but
+unfortunately it has no Windows port. Right now DGD has the same set
+of features for debug tracing. 
+
 Bug reports
 ===========
 
