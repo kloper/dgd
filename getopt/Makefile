@@ -43,11 +43,12 @@ LDOUTOPT = -o
 COUTOPT  = -o
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
+LIBPREFIX = lib
 LIBEXT = a
 OBJEXT = o
 
 SUBDIRS =
-TARGETS = getopt.$(LIBEXT)
+TARGETS = $(LIBPREFIX)getopt.$(LIBEXT)
 PDBFILE = getopt.pdb
 PCHFILE = getopt.pch
 

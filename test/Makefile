@@ -42,7 +42,7 @@ SED = sed
 CXXFLAGS =   -Wall -g
 LDFLAGS  =   -g
 EXTRA_LDFLAGS =  
-LDLIBS = ../dgd/$(BUILDDIR)/dgd.a ../getopt/$(BUILDDIR)/getopt.a ../regex/$(BUILDDIR)/regex.a
+LDLIBS = ../dgd/$(BUILDDIR)/libdgd.a ../getopt/$(BUILDDIR)/libgetopt.a ../regex/$(BUILDDIR)/libregex.a
 LDOUTOPT = -o
 COUTOPT  = -o
 INCLUDES = $(LOCALINCLUDES) $(STLINCLUDES) \
@@ -55,6 +55,7 @@ DGDINCLUDES    = -I $(top_srcdir)/dgd/src
 
 DEFINES = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DCYGWIN=1 -D_CYGWIN=1 -D_DEBUG=1  -D_TRACE $(BOOSTDEFINES)
 
+LIBPREFIX = lib
 LIBEXT = a
 OBJEXT = o
 EXEEXT = 
@@ -100,7 +101,7 @@ $(top_srcdir)/config.status: $(top_srcdir)/configure $(top_srcdir)/aclocal.m4 \
 	cd $(top_srcdir) && $(MAKE) config.status
 
 
-$(TARGET): $(OBJECTS) ../dgd/$(BUILDDIR)/dgd.$(LIBEXT)
+$(TARGET): $(OBJECTS) ../dgd/$(BUILDDIR)/$(LIBPREFIX)dgd.$(LIBEXT)
 ifeq ($(LIBEXT),lib)
 	$(LD) $(LDFLAGS) /pdb:$(BUILDDIR)/$(PDBFILE) /debug $(EXTRA_LDFLAGS) $(LDLIBS) ${patsubst %.$(OBJEXT), $(BUILDDIR)/%.$(OBJEXT), $(OBJECTS)}  $(LDOUTOPT)$(BUILDDIR)/$@
 else

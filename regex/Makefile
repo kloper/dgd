@@ -43,11 +43,12 @@ LDOUTOPT = -o
 COUTOPT  = -o
 INCLUDES = -I. -I.. -I$(top_srcdir)
 
+LIBPREFIX = lib
 LIBEXT = a
 OBJEXT = o
 
 SUBDIRS =
-TARGETS = regex.$(LIBEXT)
+TARGETS = $(LIBPREFIX)regex.$(LIBEXT)
 PDBFILE = regex.pdb
 PCHFILE = regex.pch
 

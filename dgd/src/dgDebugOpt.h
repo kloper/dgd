@@ -19,7 +19,7 @@ extern "C" {
 #endif
 
 #ifndef DGD_CMDLINE_PARSER_VERSION
-#define DGD_CMDLINE_PARSER_VERSION "dgd-0.25 Sun Jun 29 00:13:38 IDT 2003"
+#define DGD_CMDLINE_PARSER_VERSION "Unknown"
 #endif
 
 struct dgd_gengetopt_args_info

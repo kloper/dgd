@@ -187,15 +187,18 @@ if test "x$with_msvc" = "xyes"; then
 -libpath:\$(top_srcdir)/regex/$BUILDDIR \
 -libpath:\$(top_srcdir)/getopt/$BUILDDIR"
    LDLIBS="getopt.lib regex.lib dgd.lib"
+   LIBPREFIX=""
 else 
    EXTRA_LDFLAGS="$EXTRA_LDFLAGS"
-   LDLIBS="../dgd/\$(BUILDDIR)/dgd.a \
-../getopt/\$(BUILDDIR)/getopt.a \
-../regex/\$(BUILDDIR)/regex.a"
+   LDLIBS="../dgd/\$(BUILDDIR)/libdgd.a \
+../getopt/\$(BUILDDIR)/libgetopt.a \
+../regex/\$(BUILDDIR)/libregex.a"
+   LIBPREFIX="lib"
 fi
 
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(LDLIBS)
+AC_SUBST(LIBPREFIX)
 
 AC_PROG_MAKE_SET
 AC_CHECK_PROG(RM, rm, [rm -f], del,,)

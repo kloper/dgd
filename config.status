@@ -485,8 +485,8 @@ s,@target_cpu@,i686,;t t
 s,@target_vendor@,pc,;t t
 s,@target_os@,linux-gnu,;t t
 s,@CVS@,cvs,;t t
-s,@DGD_VERSION@,dgd-0.25 Sun Jun 29 00:13:38 IDT 2003,;t t
-s,@DGD_SHORT_VERSION@,0.25,;t t
+s,@DGD_VERSION@,Unknown,;t t
+s,@DGD_SHORT_VERSION@,,;t t
 s,@LD@,ld,;t t
 s,@CXX@,g++,;t t
 s,@CXXFLAGS@, -Wall -g,;t t
@@ -509,7 +509,8 @@ s,@LIBEXT@,a,;t t
 s,@STLDIR@,.,;t t
 s,@BOOSTDIR@,./../boost_1_26_0,;t t
 s,@EXTRA_LDFLAGS@,,;t t
-s,@LDLIBS@,../dgd/$(BUILDDIR)/dgd.a ../getopt/$(BUILDDIR)/getopt.a ../regex/$(BUILDDIR)/regex.a,;t t
+s,@LDLIBS@,../dgd/$(BUILDDIR)/libdgd.a ../getopt/$(BUILDDIR)/libgetopt.a ../regex/$(BUILDDIR)/libregex.a,;t t
+s,@LIBPREFIX@,lib,;t t
 s,@SET_MAKE@,,;t t
 s,@RM@,rm -f,;t t
 s,@MV@,mv,;t t
