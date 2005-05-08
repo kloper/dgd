@@ -155,9 +155,8 @@ inline channel& operator << ( channel& cnl,
 template <class InputIter>
 channel &dgd_copy( InputIter begin, InputIter end,  
 		   channel &ch, const char* sep = NULL ) {
-   typedef boost::pointee<InputIter>::type value_type;
-   std::copy( begin, end, 
-	      std::ostream_iterator<value_type>( ch, (sep ? sep : " ") ) );
+   while( begin != end ) 
+      ch << *begin++ << sep;
    return ch;
 }
 
@@ -326,7 +325,7 @@ inline std::ostream& operator << ( std::ostream& cnl,
       cnl << "(" << typeid(T).name() << "*)";
    }
    std::ostream::fmtflags flags = cnl.flags();
-   cnl << hex << "0x" << (void*)ptr.m_pointer;
+   cnl << std::hex << (void*)ptr.m_pointer;
 
    if( ptr.m_size > 0 ) {
       channel* dgd_cnl = dynamic_cast< channel* > ( &cnl );
@@ -343,7 +342,8 @@ inline std::ostream& operator << ( std::ostream& cnl,
       unsigned int bytes_written = 0, i;
       unsigned char* mem = (unsigned char*)ptr.m_pointer;
       
-      cnl << dec << " " << ptr.m_size << hex << " bytes" << std::endl;
+      cnl << std::dec << " " << ptr.m_size 
+	  << std::hex << " bytes" << std::endl;
       while(bytes_written < ptr.m_size) {
 	 cnl << (unsigned long)( mem + bytes_written ) << " ";
 	 
@@ -367,6 +367,45 @@ inline std::ostream& operator << ( std::ostream& cnl,
    }
 
    cnl.flags( flags );
+   return cnl;
+}
+
+/**
+ * Safe pointer wrapper. This class is used to print objects referenced by
+ * pointers safely. If pointer is null the appropriate info will be written
+ * to the stream instead of dereferencyng the pointer directly.
+ */
+template <class T>
+struct dgd_safe_ptr {
+      const T* const m_pointer;
+      
+      dgd_safe_ptr() : m_pointer(NULL) {}
+      explicit dgd_safe_ptr( const T* const p ) : m_pointer( p ) {}
+
+      dgd_safe_ptr( const dgd_reference& peer ) : 
+	 m_pointer( peer.m_pointer ) {};
+};
+
+/**
+ * Safe pointer manipulator.
+ */
+template <class T> 
+inline dgd_safe_ptr<T> ptr( const T* const p ) {
+   return dgd_safe_ptr<T>(p);
+}
+
+/**
+ * Output operator for safe pointer
+ */
+template <class T> 
+inline channel& operator << ( channel& cnl,
+			      const dgd_safe_ptr<T>& ptr ) {
+   if( ptr.m_pointer == NULL ) {
+      cnl << "(" << typeid(T).name() << "*)NULL";
+   } else {
+      cnl << (const T&)(*ptr.m_pointer);
+   }
+
    return cnl;
 }
 

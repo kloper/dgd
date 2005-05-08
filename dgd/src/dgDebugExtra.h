@@ -45,6 +45,14 @@
  */
 #define dgd_expand(s) #s " = " << DGD::dgd << (s)
 
+/** 
+ * Expands into expression in form "s = " << *s assuming that the parameter is
+ * a pointer or iterator.
+ *
+ * @param s any pointer or iterator expression
+ */
+#define dgd_expandp(s) #s " = " << DGD::dgd << DGD::ptr(s)
+
 /**
  * Expands into expression which is able to dump a sequence denoted 
  * by iterators b and e. All elements of the dumped sequence are separated by
