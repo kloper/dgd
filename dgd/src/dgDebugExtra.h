@@ -116,6 +116,16 @@ if(DGD::Debug::debug_factory) { \
 #endif 
 
 /**
+ * Flush all channels and files.
+ */
+#if defined(_TRACE)
+#define dgd_flush_all \
+   if(DGD::Debug::debug_factory) DGD::Debug::debug_factory->flush();
+#else
+#define dgd_flush_all
+#endif
+
+/**
  * Start global indented output scope. This macro in conjunction with
  * dgd_end_scope, dgd_echo, dgd_scope and dgd_end_scope_text is used
  * to simplify use of DGD channels. Here indented scope is a indented

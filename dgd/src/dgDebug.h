@@ -108,12 +108,14 @@ class Debug {
 
       stream create_file ( const std::string& name );
       stream append_file ( const stream& file );
+      stream prepend_file ( const stream& file );
       stream main_file() const;
       channel& create_channel( const std::string& name );
       operator channel_ref () const;
       channel_ptr operator[] ( const std::string& name );
       void current( const std::string& name );
       channel_ptr current() const;
+      void flush();
 
    public:
       static Debug* debug_factory;

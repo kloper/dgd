@@ -88,9 +88,8 @@ int channelbuf::sync() {
 }
 
 /**
- * Called when there is no write position.  This function overrides
- * the same function in std::streambuf. This function is called
- * every time there is no enough space in the internal buffer. 
+ * Called every time there is no enough space in the internal buffer.   
+ * This function overrides the same function in std::streambuf. 
  *
  * Once called, this function processes the content of the buffer,
  * makes formatting decisions and then propagates the formatted output

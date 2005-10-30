@@ -273,6 +273,13 @@ void Debug::apply_options( channel_ptr& chnl ) {
  * @see Debug::Debug()
  */
 Debug::~Debug() {
+   this->flush();
+}
+
+/**
+ * Flush all channels and files. 
+ */
+void Debug::flush() {
    for( Channel_iterator i = m_channels.begin(); i != m_channels.end(); ++i ) 
       (*i)->flush();
    for( File_list::iterator f = m_files.begin(); f != m_files.end(); ++f )
@@ -327,6 +334,20 @@ stream Debug::append_file( const stream& file ) {
    }
 
    m_files.push_back( file );
+   return file;
+}
+
+/**
+ * Prepend a file stream to the stream list. This one is used when the
+ * application must create the stream by itself. Note that the stream
+ * will be deallocated by the smart pointer.
+ */
+stream Debug::prepend_file( const stream& file ) {
+   if( file.get() == NULL ) {
+      return file;
+   }
+
+   m_files.push_front( file );
    return file;
 }
 
