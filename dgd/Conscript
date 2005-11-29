@@ -62,7 +62,8 @@ Library $buildenv $TARGET,
 	   dgOptionFilter.cpp ) );
 
 Install $buildenv "$BLIB/include", 
-  map( "$BUILD/$_", qw(dgChannel.h
+  map( "$BUILD/$_", qw(dgBoost.h
+		       dgChannel.h
 		       dgChannelBuf.h
 		       dgChannelManip.h
 		       dgConfig.h

@@ -1,5 +1,12 @@
 #!/bin/sh
 
+
+#
+# Fudya's tribute :-)
+#
+# mv $1 $1.old && cat $1.old | perl -e 'while (<STDIN>) {chomp(); print "$_\n";}' | cat > $1
+#
+
 pname=$0
 binname=`dirname $pname`/unixify.bin
 
