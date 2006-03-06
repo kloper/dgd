@@ -382,7 +382,7 @@ struct dgd_safe_ptr {
       dgd_safe_ptr() : m_pointer(NULL) {}
       explicit dgd_safe_ptr( const T* const p ) : m_pointer( p ) {}
 
-      dgd_safe_ptr( const dgd_reference& peer ) : 
+      dgd_safe_ptr( const dgd_reference<T>& peer ) : 
 	 m_pointer( peer.m_pointer ) {};
 };
 
