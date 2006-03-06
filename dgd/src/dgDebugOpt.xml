@@ -19,7 +19,7 @@
 
  dgDevugOpt.xml - clo++ option configuration file. clo++ must be run
  on this file in order to obtain dgDebugOpt.cpp and dgDebugOpt.h. Note
- also that this file is NOT optional for DGD build, sice generated 
+ also that this file is optional for DGD build, sice generated 
  dgDebugOpt.[cpp,h] are provided with DGD sources.
 -->
 <cloxx>
@@ -83,8 +83,7 @@
 	    <comment>Enable word wrap</comment>
 	</option>
         <option id="trace_space_characters" type="string" strict="yes"
-                mandatory="no"
-	        default=" \t">
+                mandatory="no">
 	    <name>trace-space-characters</name>
 	    <comment>Word Separator Characters</comment>
 	</option>
