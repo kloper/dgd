@@ -44,6 +44,11 @@ namespace DGD {
  */
 channelbuf::Parent* 
 channelbuf::setbuf( char_type* ptr , std::streamsize size) {
+#ifdef DGD_INTERNAL_DEBUG
+   std::cerr << "channelbuf::setbuf( " << std::hex 
+	     << (unsigned)ptr << " " << std::dec << size << ")" << std::endl;
+#endif
+
    if( pbase() != NULL ) {
       delete pbase();
    }
@@ -64,6 +69,11 @@ channelbuf::setbuf( char_type* ptr , std::streamsize size) {
    }
 
    setp( buffer, buffer + bsize );
+
+#ifdef DGD_INTERNAL_DEBUG
+   std::cerr << "channelbuf::setbuf( end )" << std::endl;
+#endif
+
    return this;
 }
 
@@ -73,7 +83,17 @@ channelbuf::setbuf( char_type* ptr , std::streamsize size) {
  */
 
 int channelbuf::sync() {
+#ifdef DGD_INTERNAL_DEBUG
+   std::cerr << "channelbuf::sync()" << std::endl;
+#endif
+
    overflow( traits_type::eof() );
+
+#ifdef DGD_INTERNAL_DEBUG
+   std::cerr << std::hex << "pptr(): " << (unsigned)pptr() << std::endl
+	     << "pbase(): " << (unsigned)pbase()  << std::endl
+	     << std::dec;
+#endif
 
    if( pptr() != pbase() ) {
       propagate( pbase(), pptr() );
@@ -83,6 +103,10 @@ int channelbuf::sync() {
    }
 
    post_process();
+
+#ifdef DGD_INTERNAL_DEBUG
+   std::cerr << "channelbuf::sync(end)" << std::endl;
+#endif
 
    return 0;
 }
@@ -102,11 +126,26 @@ int channelbuf::sync() {
  * @see DGD::channel
  */
 channelbuf::int_type channelbuf::overflow( int_type ch ) {   
+#ifdef DGD_INTERNAL_DEBUG
+   std::cerr << "channelbuf::overflow( " << ch << ")" << std::endl;
+#endif
+
    const char_type* pos = pbase();
    bool run_flag = true;
 
    do {
       unsigned int indent = std::min( m_indent, m_max_width - m_min_width );
+
+#ifdef DGD_INTERNAL_DEBUG
+      std::cerr << "indent " << indent << std::endl
+		<< "m_column " << m_column << std::endl
+		<< std::hex
+		<< "pbase(): " << (unsigned)pbase() << std::endl
+		<< "pos: " << (unsigned)pos << std::endl
+		<< "pptr(): " << (unsigned)pptr() << std::dec << std::endl
+		<< "(char*)pos: " << (char*)pos << std::endl;
+#endif
+
       if( m_column < indent && pos < pptr() ) {
 	 propagate( ' ', indent - m_column );
 	 m_column = indent;	 
@@ -117,6 +156,12 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 						m_spaces.c_str() );
       const char_type* nl_pos    = find_one_of( pos, pptr()-pos, "\r\n" );
       
+#ifdef DGD_INTERNAL_DEBUG
+      std::cerr << std::hex
+		<< "space_pos: " << (unsigned)space_pos << std::endl
+		<< "nl_pos: " << (unsigned)nl_pos << std::dec << std::endl;
+#endif
+
       bool space_nearest = ( 
 	 ( space_pos != NULL ) &&
 	 ( nl_pos == NULL || space_pos < nl_pos ) );
@@ -126,8 +171,20 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	 ( nl_pos != NULL ) &&
 	 ( space_pos == NULL || nl_pos < space_pos ) );
       if( nl_nearest ) nearest = nl_pos;
+
+#ifdef DGD_INTERNAL_DEBUG
+      std::cerr << std::hex
+		<< "nearest: " << (unsigned)nearest << std::dec << std::endl;
+#endif
       
       if( nearest != NULL ) {
+
+#ifdef DGD_INTERNAL_DEBUG
+	 std::cerr << "m_column: " << m_column << std::endl
+		   << "nearest-pos+1: " << (nearest-pos+1) << std::endl
+		   << "m_max_width: " << m_max_width << std::endl;
+#endif
+
 	 if( m_column + (nearest-pos+1) < m_max_width ) {
 	    propagate( pos, nearest+1 );
 	    if( nl_nearest ) {
@@ -138,6 +195,15 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	       m_column += nearest-pos+1 + ((*nearest=='\t')?7:0);
 	    }
 	    pos = nearest + (is_dos_eol( nearest )?2:1);
+
+#ifdef DGD_INTERNAL_DEBUG
+	    std::cerr << "m_column: " << m_column << std::endl
+		      << "m_line: " << m_line << std::endl
+		      << std::hex
+		      << "m_word_pos: " << (unsigned)m_word_pos << std::endl
+		      << "pos: " << (unsigned)pos << std::endl
+		      << std::dec << std::endl;
+#endif
 	 } else if( m_column + (nearest-pos+1) == m_max_width ) {
 	    propagate( pos, nearest );
 	    if( m_wrap ) {	       
@@ -156,6 +222,16 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	       pos = nearest + (is_dos_eol( nearest )?2:1);
 	    }
 	    m_word_pos = pos;
+
+#ifdef DGD_INTERNAL_DEBUG
+	    std::cerr << "m_column: " << m_column << std::endl
+		      << "m_line: " << m_line << std::endl
+		      << std::hex
+		      << "m_word_pos: " << (unsigned)m_word_pos << std::endl
+		      << "pos: " << (unsigned)pos << std::endl
+		      << std::dec << std::endl;
+#endif
+
 	 } else { // m_column + (nearest-pos+1) > m_max_width
 	    if( m_wrap ) {
 	       if( m_column >= m_max_width ) {
@@ -192,8 +268,25 @@ channelbuf::int_type channelbuf::overflow( int_type ch ) {
 	       pos = nearest + (is_dos_eol( nearest )?2:1);
 	    }
 	 }
+#ifdef DGD_INTERNAL_DEBUG
+	 std::cerr << "m_column: " << m_column << std::endl
+		   << "m_line: " << m_line << std::endl
+		   << std::hex
+		   << "m_word_pos: " << (unsigned)m_word_pos << std::endl
+		   << "pos: " << (unsigned)pos << std::endl
+		   << std::dec << std::endl;
+#endif
       } else {
 	 unsigned int remaining_len = pptr()-pos;
+
+#ifdef DGD_INTERNAL_DEBUG
+	 std::cerr << "remaining_len: " << remaining_len << std::endl
+		   << std::hex 
+		   << "epptr(): " << (unsigned)epptr() << std::endl
+		   << "pbase(): " << (unsigned)pbase() << std::endl
+		   << "pos: " << (unsigned)pos << std::endl
+		   << std::dec;
+#endif
 	 if( remaining_len < (unsigned)(epptr()-pbase()) ) {
 	    if( remaining_len > 0 ) {
 	       if( pos > pbase() )
@@ -544,6 +637,13 @@ channelbuf::char_type* channelbuf::find_one_of( const char_type* s,
 {
    const char_type* res = NULL;
 
+#ifdef DGD_INTERNAL_DEBUG
+   std::cerr << "channelbuf::find_one_of()" << std::endl
+	     << "s: " << s << std::endl 
+	     << "n: " << n << std::endl
+	     << "c_set: " << c_set << std::endl;
+#endif
+
    while( *c_set != '\0' ) {
       const char_type* local_res = traits_type::find( s, n, *c_set );
       if( res == NULL )
@@ -557,7 +657,7 @@ channelbuf::char_type* channelbuf::find_one_of( const char_type* s,
 }
 
 bool channelbuf::is_dos_eol( const char_type* p ) const {
-   if( (*p == '\n' && *(p+1) == '\r') || (*p == '\r' && *(p+1) == '\n') )
+   if( *p == '\r' && *(p+1) == '\n' )
       return true;
    return false;
 }
