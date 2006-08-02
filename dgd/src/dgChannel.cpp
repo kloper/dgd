@@ -360,8 +360,8 @@ void assoc( std::ostream& s, channel& cnl, const Assoc_type action ) {
 void assoc( std::ostream* s, 
 	    const std::string& name, 
 	    const Assoc_type action ) {
-   Debug* factory = Debug::factory();
-   if( factory != NULL ) {
+   Debug::debug_factory_ref factory = Debug::factory();
+   if( factory.get() != NULL ) {
       Debug::channel_ptr c = factory->operator[]( name );
       if( c.get() != NULL && s != NULL ) {
 	 channelbuf& buf = c->rdbuf();

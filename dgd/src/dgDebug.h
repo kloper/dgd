@@ -118,8 +118,8 @@ class Debug {
       void flush();
 
    public:
-      static Debug* debug_factory;
-      static Debug* factory();
+      static debug_factory_ref debug_factory;
+      static debug_factory_ref factory();
       static debug_factory_ref create_factory( int argc, char** argv );
       static debug_factory_ref create_factory( 
 	 const option_filter::option_set_type& options  );

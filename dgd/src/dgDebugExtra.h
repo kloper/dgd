@@ -106,9 +106,9 @@
  * output operation, as well as closed channel output.
  */
 #if defined(_TRACE)
-#define dgd_trace(name, arg) \
-if(DGD::Debug::debug_factory) { \
-  DGD::Debug::channel_ptr __cnl = dgd_channel(name); \
+#define dgd_trace(name, arg)                                       \
+   if(DGD::Debug::debug_factory.get() != NULL) {	           \
+  DGD::Debug::channel_ptr __cnl = dgd_channel(name);               \
   (void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << arg ) ); \
 }
 #else 
@@ -120,7 +120,8 @@ if(DGD::Debug::debug_factory) { \
  */
 #if defined(_TRACE)
 #define dgd_flush_all \
-   if(DGD::Debug::debug_factory) DGD::Debug::debug_factory->flush();
+   if(DGD::Debug::debug_factory.get() != NULL ) \
+                        DGD::Debug::debug_factory->flush();
 #else
 #define dgd_flush_all
 #endif
@@ -136,10 +137,10 @@ if(DGD::Debug::debug_factory) { \
  * can contain any number of local scopes opened by dgd_scope.
  */
 #if defined(_TRACE)
-#define dgd_start_scope(c, text) \
-DGD::Debug::channel_ptr __cnl; \
-if(DGD::Debug::debug_factory) __cnl = dgd_channel(c); \
-(void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << text << " {" << std::endl << DGD::incr) )
+#define dgd_start_scope(c, text)                                       \
+DGD::Debug::channel_ptr __cnl;                                         \
+   if(DGD::Debug::debug_factory.get() != NULL) __cnl = dgd_channel(c); \
+      (void)( __cnl.get() && __cnl->is_open() && ((*__cnl) << text << " {" << std::endl << DGD::incr) )
 #else
 #define dgd_start_scope(c, text) 
 #endif

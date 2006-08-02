@@ -47,7 +47,7 @@ namespace DGD {
  * @see Debug::create_factory(int,char**)
  * @see Debug::factory()
  */
-Debug* Debug::debug_factory = NULL;
+Debug::debug_factory_ref Debug::debug_factory;
 
 /**
  * Bad command line option exception. This exception is thrown when
@@ -421,25 +421,21 @@ Debug::channel_ptr Debug::current() const {
  * @see Debug::factory()
  */
 Debug::debug_factory_ref Debug::create_factory( int argc, char** argv ) {
-   if( debug_factory != NULL )
-      return debug_factory_ref( debug_factory );
+   if( debug_factory.get() != NULL )
+      return debug_factory;
    
-   debug_factory_ref df;
    try {
-      debug_factory = new Debug();
-      df.reset( debug_factory );
-      df->process_options( argc, argv );
+      debug_factory.reset( new Debug() );
+      debug_factory->process_options( argc, argv );
    } catch( bad_params& ) {
-      debug_factory = NULL;
-      df.reset();
+      debug_factory.reset();
    } catch( debug_disabled& ) {
-      debug_factory = NULL;
-      df.reset();
+      debug_factory.reset();
    } catch( exit_required& ) {
       exit(0);
    }
 
-   return df;
+   return debug_factory;
 }
 
 /**
@@ -456,7 +452,7 @@ Debug::debug_factory_ref Debug::create_factory(
  * Return pointer to the global Debug factory.
  * @see Debug::create_factory(int,char**)
  */
-Debug* Debug::factory() {
+Debug::debug_factory_ref Debug::factory() {
    return Debug::debug_factory;
 }
 
