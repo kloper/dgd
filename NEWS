@@ -1,6 +1,12 @@
 
 Depression Glass Debug Library NEWS
 ===================================
+10/08/2006:	This is small bug fix release. Main changes are:
+  - I have created dgcons at http://sf.net/projects/dgcons. 
+    From now on, this is the primary build environment for DGD. Please
+    send me an email if you don't like it.
+  - Migrated to Subversion
+
 05/06/2004:	After long period of silence I am releasing DGD-0.1.0. This is 
 development version. Main changes are:
   - migrated from GNU autoconf and make to Cons 

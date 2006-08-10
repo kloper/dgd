@@ -2,7 +2,7 @@
 DGD Library README
 =====================================
 
-Copyright (c) 2002. Dimitry Kloper <kloper@users.sourceforge.net>
+Copyright (c) 2002-2006. Dimitry Kloper <kloper@users.sourceforge.net>
 
 Available from http://sourceforge.net/projects/dgd
 
@@ -11,10 +11,12 @@ About
 
 DGD (Depression Glass Debug) is simple, easy to use C++ ostream
 extension created with a goal to produce nice, readable and easy to 
-understand trace logs.
+understand trace logs. DGD has well-defined, layered architecture 
+that allows using only parts of code in other projects. 
 
-DGD is tested on Linux (gcc-2.96 to gcc-3.2) and Win32 platforms (VC++
-6.0, cygwin with gcc-2.96 and gcc-3.3).
+
+DGD is tested on Linux (gcc-2.96 to gcc-3.4) and Win32 platforms (VC++
+6.0, 7.0, cygwin and mingw with gcc-2.96 to gcc-3.4).
 
 Features list:
 
@@ -51,7 +53,7 @@ Differences between DGD and other similar libraries:
 
  * DGD is not focused on specific type of output (e.g. syslog), nor on
    precedence of messages (e.g. NOTICE, WARNING, ERROR,
-   etc...). Instead, DGD provides a flexible framework which allows
+   etc...). Instead, DGD provides a flexible framework that allows
    easy implementation of the log streams, trace streams, xxd(1)-like 
    dumps, etc...
 
@@ -69,8 +71,8 @@ GNU Public License. See COPYING file in the DGD root directory.
 Required libraries
 ==================
 
- * DGD makes extensive use of C++ boost (http://www.boost.org). You
-   need boost 1.25.0 or later to compile DGD. 
+ * Some layers of DGD make extensive use of C++ boost (http://www.boost.org).
+   You need boost 1.25.0 or later to compile DGD. 
 
  * STLPort 4.5 (http://www.stlport.com) was used during DGD
    developing. It is recommended but not required. 
@@ -102,9 +104,8 @@ http://sourceforge.net/tracker/?group_id=62230&atid=499876
 Mailing lists
 =============
 
-No mailing lists are opened for DGD. This is due to increased level of
-spam messages. For discussions, suggestions, bug reports, etc... 
-please refer sourceforge.net DGD home page http://sourceforge.net/projects/dgd.
+Please refer to the mailing list of the project at
+http://sourceforge.net/projects/dgd.
 
 
 

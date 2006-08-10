@@ -4,17 +4,19 @@ my $config;
 
 <%init>
 
+# last change: 10/08/2006 
+
 $config = {
     "name"       => "dgd",
     "long_name"  => "DGD Library",
     "logo"       => "dgd_logo.gif",
-    "version"    => "0.1.0.2",
+    "version"    => "0.1.0.14",
     "page"       => "/dgd/page",
     "image_dir"  => "images",
     "style_dir"  => "style",
     "html_dir"   => "html",
     "style_comp" => "/dgd/style.css",
-    "colorscheme" => "sky-blue",
+    "colorscheme" => "#eeffff",
     "copy_asis"  => { "images/*" => "html/images/\$basename" },
     "sitemap"  => [ "/dgd/home",
 		    "/dgd/news",
@@ -24,14 +26,14 @@ $config = {
                     "/dgd/todo",
 		    "/dgd/sourceforge",
                     "/dgd/download", 
-		    "/dgd/cvs_on_sf",
+		    "/dgd/svn_on_sf",
 		    "/dgd/style.css" ],
     "navitems" => [ "/dgd/home", 
                     "/dgd/doc",
                     "/dgd/faq",
 		    "/dgd/download", 
 		    "/dgd/sourceforge", 
-		    "/dgd/cvs_on_sf" ]
+		    "/dgd/svn_on_sf" ]
     };
 
 </%init>

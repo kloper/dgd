@@ -17,7 +17,8 @@ $config->{"copy_asis"} = {
 my @sitemaps = $m->comp("/doxy/generate", config => $config );
 
 $config->{"sitemap"} = [ @{$sitemaps[0]},
-			 [ "/dgd/doc",
+			 [
+	                   "/dgd/doc",
 			   "/doxy/namespaces",
 			   "/doxy/hierarchy",
 			   "/doxy/classes",

@@ -2,21 +2,25 @@
 DGD Library INSTALL
 ======================================
 
-Copyright (c) 2002. Dimitry Kloper <kloper@users.sourceforge.net>
+Copyright (c) 2002-2006. Dimitry Kloper <kloper@users.sourceforge.net>
 
 Available from http://sourceforge.net/projects/dgd
 
 Building DGD
 ============
 
-DGD makes extensive use of C++ boost (http://www.boost.org). You
-need boost 1.25.0 or later to compile DGD. 
+If you are planning import DGD source files directly into your
+project, don't forget to define DGD_WITHOUT_BOOST in case you are
+not compiling with C++ boost library.
+
+Higher layers of DGD make extensive use of the C++ boost 
+(http://www.boost.org). You need boost 1.25.0 or later to compile DGD. 
 
 STLPort (http://www.stlport.com) was used during DGD
 developing. It is recommended but not required. In fact DGD works well
-with the native VC++ version of STL.
+with the native VC++/gcc version of STL.
 
-From version 0.1.0.0 DGD uses Cons (http://www.gnu.org/software/cons/)
+From version 0.1.0.0 DGD uses dgcons (http://www.sf.net/projects/dgcons/)
 as its primary build system. Thus, you need perl (tested with perl 5.6.1) 
 to build DGD. 
 

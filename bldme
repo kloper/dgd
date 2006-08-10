@@ -8,7 +8,7 @@ perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo --build=Release -v
 (win-release)
 /d/perl/bin/perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost,clo  --build=Release -v3 ;;
 (doc)
-/d/perl/bin/perl -I cons ./cons/cons.pl doc -- --toolset=doxygen -v3 && cd doc/docsys && ./docsys dgd && ./docsys doxy ;;
+/d/perl/bin/perl -I cons ./cons/cons.pl doc -- --toolset=doxygen --doxygen-root-dir=d:/doxygen-1.3 -v3 && cd doc/docsys && ./docsys dgd && ./docsys doxy ;;
 (clean)
 /d/perl/bin/perl -I cons ./cons/cons.pl -- clean ;;
 (win|win-debug|*)
