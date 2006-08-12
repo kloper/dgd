@@ -1,0 +1,8 @@
+<%attr>
+short => "SVN"
+brief => "Subversion"
+title => "Subversion repository at Sourceforge.net"
+dummy => 1
+</%attr>
+
+http://sourceforge.net/svn/?group_id=62230
