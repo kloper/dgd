@@ -15,9 +15,11 @@ $config
 <&/dgd/readme&>
 </td>
 
+<!--
 <td valign="top" width="210">
 <& /lib/newsbox, config => $config, comp_name => "/dgd/news", max_news => 5 &>
 </td>
+-->
 
 </tr>
 </table>

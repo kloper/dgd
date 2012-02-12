@@ -1,58 +1,113 @@
 # -*- mode:cperl -*-
-#
-# $Id$
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#
-# This file is part of Depression Glass library.
-#
-# Copyright (c) 2003-2006. Dimitry Kloper <kloper@users.sf.net>
-#
+# 
+# Copyright (c) Dimitry Kloper <kloper@users.sf.net> 2002-2012
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+# 
+# This file is part of dgd library (http://dgd.sf.net).
+# 
 # Conscript -- build file for dgd library
 #
 
 use Data::Dumper;
 Import qw(BLIB toolset version);
+
+sub test_1 {}
     
 my $ruleset  = $toolset->env();
 
+$ruleset->{'LDFLAGS'} .= q( -mthreads -mconsole);
+$ruleset->{'CXXFLAGS'} .= q( -mthreads -DBOOST_TEST_DYN_LINK -isystem %BOOST_INCLUDE);
+
 die if( !defined( $ruleset ) );
 
-our $BUILD      = $toolset->option( 'build' );
-our $INCLUDE    = [ "%STLPORT_INCLUDE", "%BOOST_INCLUDE", "$BLIB/include" ];
-our $LIBPATH    = [ "$BLIB/lib", "%STLPORT_LIB", "%BOOST_LIB" ];
-our $LIBS       = "-ldgd";
+my $BUILD      = $toolset->option( 'build' );
+my $INCLUDE    = [ "$BLIB/include" ];
+my $LIBPATH    = [ "$BLIB/lib", "%STLPORT_LIB", "%BOOST_LIB" ];
+my $LIBS       = join( " ", qw(-lboost_regex%BOOST_LIB_SUFFIX 
+                               -lboost_unit_test_framework%BOOST_LIB_SUFFIX
+                               -lboost_filesystem%BOOST_LIB_SUFFIX
+                               -lboost_system%BOOST_LIB_SUFFIX
+                               -lboost_thread%BOOST_LIB_SUFFIX
+                               -lboost_program_options%BOOST_LIB_SUFFIX));
 
 Link $BUILD => 'src';
 
-my $buildenv   = new cons( %{$ruleset},
+our $dllbuildenv   = new cons( %{$ruleset},
+                               'CPPPATH'  => $INCLUDE,
+                               'LIBPATH'  => $LIBPATH,
+                               'LIBS'     => $LIBS);
+
+my $DLLTGT = "$BUILD/dgdtest%{SUFDLL}";
+my $LIBTGT = "$BUILD/%{PREFLIB}dgdtest%{SUFLIB}";
+
+my @srclist = 
+  map( "$BUILD/$_",
+       qw( dg_parser.cpp 
+           dg_parser_sane.cpp 
+           dg_parser_str.cpp
+           dg_parser_verifier.cpp
+           dg_temp_file.cpp
+           dg_file_verifier.cpp) );
+
+Modules $dllbuildenv [$DLLTGT, $LIBTGT], @srclist, 
+  qq(%CXX -shared %LDFLAGS -o ) . 
+  FilePathEnv($dllbuildenv,$DLLTGT) . 
+  qq( -Wl,--out-implib,) . 
+  FilePathEnv($dllbuildenv,$LIBTGT) . 
+  qq( %< %_LDIRS %LIBS);
+
+Install $dllbuildenv "$BLIB/lib", $LIBTGT;
+Install $dllbuildenv "$BLIB/bin", $DLLTGT;
+
+our $buildenv   = new cons( %{$ruleset},
 			   'CPPPATH'  => $INCLUDE,
 			   'LIBPATH'  => $LIBPATH,
-			   'LIBS'     => $LIBS );
+			   'LIBS'     => $LIBS . " -ldgdtest");
 
-my $TARGET = "$BUILD/dgdtest%SUFEXE";
+my $DGWRAPPERFILTEREXE = "$BUILD/dg_wrapper_filter%SUFEXE";
+my $DGJOURNALFILTEREXE = "$BUILD/dg_journal_filter%SUFEXE";
+my $DGCHANNELEXE = "$BUILD/dg_channel%SUFEXE";
+my $DGCTRLEXE = "$BUILD/dg_controller%SUFEXE";
+my $DGPARSEREXE = "$BUILD/dg_parser%SUFEXE";
 
-KeepPrecious $buildenv $TARGET;
-AfterBuild $buildenv $TARGET, q( 
+KeepPrecious $buildenv $DGWRAPPERFILTEREXE;
+KeepPrecious $buildenv $DGJOURNALFILTEREXE;
+KeepPrecious $buildenv $DGCHANNELEXE;
+KeepPrecious $buildenv $DGCTRLEXE;
+KeepPrecious $buildenv $DGPARSEREXE;
+
+AfterBuild $buildenv 
+  $DGWRAPPERFILTEREXE,
+  $DGJOURNALFILTEREXE,
+  $DGCHANNELEXE,
+  $DGCTRLEXE,
+  $DGPARSEREXE, 
+  q( 
   if( $status eq 'built' ) {
      $version->save();
      print "AfterBuild: version incremented to " . $version->string() . "...\n"
   }
 );
 
-Program $buildenv $TARGET,
-  map( "$BUILD/$_", qw( dgTest.cpp ) );
+Program $buildenv $DGWRAPPERFILTEREXE,
+  map( "$BUILD/$_", qw(dg_test_wrapper_filter.cpp) );
 
-Install $buildenv "$BLIB/bin", $TARGET;
+Program $buildenv $DGJOURNALFILTEREXE,
+  map( "$BUILD/$_", qw(dg_test_journal_filter.cpp) );
+
+Program $buildenv $DGCHANNELEXE,
+  map( "$BUILD/$_", qw(dg_test_channel.cpp) );
+
+Program $buildenv $DGCTRLEXE,
+  map( "$BUILD/$_", qw(dg_test_controller.cpp) );
+
+Program $buildenv $DGPARSEREXE,
+  map( "$BUILD/$_", qw(dg_test_parser.cpp) );
+
+Install $buildenv "$BLIB/bin", $DGWRAPPERFILTEREXE;
+Install $buildenv "$BLIB/bin", $DGJOURNALFILTEREXE;
+Install $buildenv "$BLIB/bin", $DGCHANNELEXE;
+Install $buildenv "$BLIB/bin", $DGCTRLEXE;
+Install $buildenv "$BLIB/bin", $DGPARSEREXE;

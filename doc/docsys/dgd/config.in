@@ -4,8 +4,6 @@ my $config;
 
 <%init>
 
-# last change: 10/08/2006 
-
 $config = {
     "name"       => "dgd",
     "long_name"  => "DGD Library",
@@ -16,20 +14,18 @@ $config = {
     "style_dir"  => "style",
     "html_dir"   => "html",
     "style_comp" => "/dgd/style.css",
-    "colorscheme" => "#eeffff",
+    "colorscheme" => "#ffffff",
     "copy_asis"  => { "images/*" => "html/images/\$basename" },
     "sitemap"  => [ "/dgd/home",
 		    "/dgd/news",
                     "/dgd/faq",
-                    "/dgd/doc",
 		    "/dgd/install",
-                    "/dgd/todo",
 		    "/dgd/sourceforge",
                     "/dgd/download", 
 		    "/dgd/svn_on_sf",
+                    "/dgd/dgdv1",
 		    "/dgd/style.css" ],
     "navitems" => [ "/dgd/home", 
-                    "/dgd/doc",
                     "/dgd/faq",
 		    "/dgd/download", 
 		    "/dgd/sourceforge", 

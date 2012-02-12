@@ -1,4 +1,4 @@
-#!/d/perl/bin/perl
+#!/c/perl64/bin/perl
 
 use HTML::Mason;
 use Cwd;

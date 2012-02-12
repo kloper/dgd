@@ -24,7 +24,7 @@ PROJECT_NAME           = "DGD Library"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = "0.1.0.14 (Thu Aug 10 01:04:53 2006)"
+PROJECT_NUMBER         = "0.2.1.208 (Thu Jan 19 15:26:25 2012)"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -904,7 +904,7 @@ EXTERNAL_GROUPS        = YES
 # The PERL_PATH should be the absolute path and name of the perl script 
 # interpreter (i.e. the result of `which perl').
 
-PERL_PATH              = d:\perl\bin\perl.exe 
+PERL_PATH              = C:\Perl64\bin\perl.exe 
 
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool   

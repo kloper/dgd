@@ -1,7 +1,0 @@
-<%attr>
-short => "Todo"
-brief => "Bugs-n-Features"
-title => "DGD Known Bugs and Feature List"
-</%attr>
-
-<& /lib/import_html, file => "../dgd_todo.html" &>

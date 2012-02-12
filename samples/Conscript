@@ -1,24 +1,11 @@
 # -*- mode:cperl -*-
-#
-# $Id$
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#
-# This file is part of Depression Glass library.
-#
-# Copyright (c) 2003-2006. Dimitry Kloper <kloper@users.sf.net>
+# 
+# Copyright (c) Dimitry Kloper <kloper@users.sf.net> 2002-2012
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+# 
+# This file is part of dgd library (http://dgd.sf.net).
 #
 # Conscript -- build file for dgd samples
 #
@@ -30,10 +17,16 @@ my $ruleset  = $toolset->env();
 
 die if( !defined( $ruleset ) );
 
+$ruleset->{'LDFLAGS'} .= q( -mthreads -mconsole);
+$ruleset->{'CXXFLAGS'} .= q( -mthreads -isystem %BOOST_INCLUDE);
+
 our $BUILD      = $toolset->option( 'build' );
-our $INCLUDE    = [ "%STLPORT_INCLUDE", "%BOOST_INCLUDE", "$BLIB/include" ];
-our $LIBPATH    = [ "$BLIB/lib", "%STLPORT_LIB", "%BOOST_LIB" ];
-our $LIBS       = "-ldgd";
+our $INCLUDE    = [ "%BOOST_INCLUDE", "$BLIB/include" ];
+our $LIBPATH    = [ "$BLIB/lib", "%BOOST_LIB" ];
+our $LIBS       =  join( " ", qw(-lboost_filesystem%BOOST_LIB_SUFFIX
+                               -lboost_system%BOOST_LIB_SUFFIX
+                               -lboost_thread%BOOST_LIB_SUFFIX
+                               -lboost_program_options%BOOST_LIB_SUFFIX));
 
 Link $BUILD => 'src';
 
@@ -42,8 +35,7 @@ my $buildenv   = new cons( %{$ruleset},
 			   'LIBPATH'  => $LIBPATH,
 			   'LIBS'     => $LIBS );
 
-for my $sample (qw(example1_simple1 formatting list_of_lists mult_assoc
-		   stand_alone_channelbuf)) {
+for my $sample (qw(stack)) {
     my $TARGET = "$BUILD/$sample%SUFEXE";
 
     KeepPrecious $buildenv $TARGET;

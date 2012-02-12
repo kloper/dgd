@@ -1,6 +1,6 @@
 <%attr>
 short => "News"
-brief => "DGD News"
+brief => "News"
 title => "DGD News and Changelog"
 </%attr>
 

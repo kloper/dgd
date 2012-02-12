@@ -34,7 +34,7 @@ $config
 
 <table cellspacing="0" cellpadding="0" border="0" >
 <tr>
-<td valign="top" width="210" 
+<td valign="top" width="250" 
     style="padding-left: 20px; padding-top: 20px; padding-bottom: 20px;">
 <& /lib/sidebar, config => $config, path => $path &>
 </td>

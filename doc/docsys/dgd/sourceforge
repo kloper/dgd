@@ -1,6 +1,6 @@
 <%attr>
 short => "Sourceforge"
-brief => "DGD at Sourceforge.net"
+brief => "Sourceforge"
 title => "DGD at Sourceforge.net"
 dummy => 1
 </%attr>

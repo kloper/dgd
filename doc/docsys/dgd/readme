@@ -1,6 +1,6 @@
 <%attr>
 short => "Readme"
-brief => "DGD Readme"
+brief => "Readme"
 title => "About DGD"
 </%attr>
 

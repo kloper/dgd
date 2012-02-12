@@ -1,6 +1,6 @@
 <%attr>
 short => "Install"
-brief => "DGD Installation Guide"
+brief => "Install DGD"
 title => "DGD Installation and Build Guide"
 </%attr>
 

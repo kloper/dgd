@@ -1,0 +1,8 @@
+<%attr>
+short => "DGDv1"
+brief => "DGDv1"
+title => "DGD v1 documentation"
+dummy => 1
+</%attr>
+
+http://dgd.sourceforge.net/v1/

@@ -2,63 +2,47 @@
 DGD Library INSTALL
 ======================================
 
-Copyright (c) 2002-2006. Dimitry Kloper <kloper@users.sourceforge.net>
+Copyright (c) 2002-2012. Dimitry Kloper <kloper@users.sourceforge.net>
 
 Available from http://sourceforge.net/projects/dgd
 
-Building DGD
-============
+Building DGD source
+===================
 
-If you are planning import DGD source files directly into your
-project, don't forget to define DGD_WITHOUT_BOOST in case you are
-not compiling with C++ boost library.
+DGD is a template library, there are no static or shared libraries that 
+must be built for using it. Just include DGD headers in your source. But 
+this is only half of the truth. DGD does depend on boost.
 
-Higher layers of DGD make extensive use of the C++ boost 
-(http://www.boost.org). You need boost 1.25.0 or later to compile DGD. 
+You will need to include boost headers and link with boost libraries.
 
-STLPort (http://www.stlport.com) was used during DGD
-developing. It is recommended but not required. In fact DGD works well
-with the native VC++/gcc version of STL.
+DGD header files come without a single include statement inside. 
+There is no explicit list of boost headers that must be included before 
+each DGD header. Instead common header *dgd.h* can be used.
 
-From version 0.1.0.0 DGD uses dgcons (http://www.sf.net/projects/dgcons/)
-as its primary build system. Thus, you need perl (tested with perl 5.6.1) 
-to build DGD. 
+You will need to link with the following boost libraries:
+ 1. boost_filesystem
+ 2. boost_system
+ 3. boost_thread
+ 4. boost_program_options
+
+Building DGD test suite and samples
+===================================
+
+You need perl (tested with perl 5.6.1 and up) to build DGD. 
 
 The following steps are required to build DGD:
 
- 1. Download and build C++ boost and (optionally) STLPort libraries.
+ 1. Download and build C++ boost.
  2. Download DGD distribution (dgd-XXX.tar.gz from
     http://sourceforge.net/projects/dgd, here XXX refers to the package
     version). 
- 3.  gzip -dc dgd-XXX.tar.gz | tar -xf - 
+ 3. gzip -dc dgd-XXX.tar.gz | tar -xf - 
     Do this in the same directory where boost library is installed or in
     directory one or two levels behind. DGD configure script will
     search for boost library.
- 4. On Win32 built with VC++ run:
-    perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost
- 5. For cygwin and Linux
-    perl -I cons ./cons/cons.pl -- --toolset=gcc,boost
+ 4. Go to DGD root directory and run:
 
-Important Cons Options
-======================
+    perl -I cons ./cons/cons.pl -- --toolset=mingw,cygwin,boost -v3 --cygwin-root-dir=c:/cygwin --mingw-root-dir=c:/mingw --boost-root-dir=c:/boost-1.47
 
-  * --verbose=int - defines verbosity level. 0 means quiet mode. 
-  * --build=[Debug|Release] - used to trigger the build type. Default is Debug.
-  * --toolset=toolset_list - defines which toolsets will be used for build.
-    Currently the following toolsets are supported: msvc70, gcc, cygwin, clo,
-    boost, stlport, doxygen.
-  * --[toolset]-root-dir=string - overrides the root directory of particular 
-    toolset. By default Cons will try to guess the location. 
-
-Additional packages
-===================
-
-You will need some additional programs if you want to change DGD. 
-
- * clo++ -  (http://pmade.org/software/clo++/) generates command line parser. 
-   Use this if you want to change dgd/src/dgDebugOpt.xml. 
-   
-
-
-
+    Before running this, specify a valid root directory path for each component. 
 

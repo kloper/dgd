@@ -12,48 +12,11 @@
 <body>
 
 <h1>Depression Glass Debug Library FAQ</h1>
-<p>Q: What is &quot;Depression Glass&quot;? </p>
-<p>A: Find exact references on the web, for example
-<a href="http://www.dgshopper.com/whatis.html">here is the original explanation:</a></p>
-<p><cite><i>Technically, Depression Glass is the cheap, sometimes less than perfect 
-glassware that was mass produced in America during the Great Depression. It was 
-often given away for buying something like a sack of flour. The cheerful colors 
-of Depression glass helped to brighten up a bleak point in American history. In 
-the years to follow the Depression, many people got rid of their Depression 
-glass. For some, it was a reminder of hard times and it symbolized being poor. 
-Because so much glass was discarded, what's left behind has become very 
-collectible. </i></cite></p>
-<p>Q: Anyway, what is DGD good for?</p>
-<p>A: DGD is a library for algorithm debugging. Usually, implementation of any 
-algorithm with complexity above  trivial&nbsp; (implementation complexity, 
-not the algorithm complexity!)&nbsp; requires some tracing being included in the 
-code. Most of the time this tracing is a form of printf() statements or similar. DGD 
-is supposed to be easily extended C++ ostream (or so) wrapper, with a handy set 
-of tools allowing readable and precise output.</p>
-<p>Q: What platforms DGD supports?</p>
-<p>A: I am intended to keep DGD as portable as possible, while developing on and 
-for Windows. There is
-<a href="http://www.cygwin.com">cygwin</a> and Linux port which will be 
-maintained for stable DGD releases.</p>
 
-<p>Q: Is DGD multi-thread safe? </p>
-
-<p>A: No. DGD is as multithread safe as std::ostream is. If two threads write 
-into same DGD::channel it is good chance that the output will be messed. But 
-nothing will fail and no deadlocks will occur. Thus, DGD certainly <b>can be used</b> in 
-multi-threaded applications, but it is good practice to write output of each 
-thread to separate file/channel.</p>
-
-<p>Q: Is boost library absolutely needed? </p>
-
-<p>A: No. If you want just a stream formatting solution - import files 
-dgChannel.[h|cpp] and dgChannelBuf.[h|cpp] into your project. Compile with -DDGD_WITHOUT_BOOST.<br>
-Alternatively, you can leave the whole DGD as is, but import parts of boost. You 
-will need boost/smart_ptr.hpp and all its included files (directly and 
-indirectly). No boost libraries must be compiled.</p>
-
-<p>&nbsp;</p>
-
+<p>
+There are no FAQ ready for DGD v2.
+Send your question to <a href="mailto:dgd-devel@lists.sourceforge.net">DGD mailing list</a>
+</p>
 </body>
 
 </html>
