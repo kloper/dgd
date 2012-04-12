@@ -73,8 +73,6 @@ public:
       return deref_val<T>(val); }
 };
 
-} // end of namespace dgd
-
 template<typename T, typename char_type>
 std::basic_ostream<char_type> &operator<<(std::basic_ostream<char_type> &ostr, 
                                           const dgd::deref_val<T> &val) 
@@ -96,6 +94,9 @@ std::basic_ostream<char_type> &operator<<(std::basic_ostream<char_type> &ostr,
 
    return ostr;
 }
+
+} // end of namespace dgd
+
 #endif /* _dg_expand_h_ */
 
 /* 

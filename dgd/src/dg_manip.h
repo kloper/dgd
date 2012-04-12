@@ -248,7 +248,8 @@ restore(const typename wrapper_filter<char_type>::wrapper_config& state)
 
 const wrapper_manip_pos position = wrapper_manip_pos();
 
-wrapper_manip_indent_step indentstep(unsigned int step) {
+
+inline wrapper_manip_indent_step indentstep(unsigned int step) {
    return wrapper_manip_indent_step(step);
 }
 
@@ -256,27 +257,27 @@ const wrapper_manip_incr_indent incr = wrapper_manip_incr_indent();
 
 const wrapper_manip_decr_indent decr = wrapper_manip_decr_indent();
 
-wrapper_manip_indent indent(unsigned int value) {
+inline wrapper_manip_indent indent(unsigned int value) {
    return wrapper_manip_indent(value);
 }
 
-wrapper_manip_min_width minwidth(unsigned int value) {
+inline wrapper_manip_min_width minwidth(unsigned int value) {
    return wrapper_manip_min_width(value);
 }
 
-wrapper_manip_max_width maxwidth(unsigned int value) {
+inline wrapper_manip_max_width maxwidth(unsigned int value) {
    return wrapper_manip_max_width(value);
 }
 
-wrapper_manip_wrap wrap(bool value) {
+inline wrapper_manip_wrap wrap(bool value) {
    return wrapper_manip_wrap(value);
 }
 
-wrapper_manip_word_wrap wordwrap(bool value) {
+inline wrapper_manip_word_wrap wordwrap(bool value) {
    return wrapper_manip_word_wrap(value);
 }
 
-wrapper_manip_spaces spaces(const char* value) {
+inline wrapper_manip_spaces spaces(const char* value) {
    return wrapper_manip_spaces(value);
 }
 

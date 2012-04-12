@@ -1,4 +1,4 @@
-// 
+// -*- c++ -*-
 // 
 // Copyright (c) Dimitry Kloper <kloper@users.sf.net> 2002-2012
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,7 +7,7 @@
 // 
 // This file is part of dgd library (http://dgd.sf.net).
 // 
-// stack.cpp -- linked list with dgd tracing
+// stack.cpp -- simple stack with dgd tracing
 // 
 
 #include <boost/exception/diagnostic_information.hpp> 

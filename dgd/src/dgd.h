@@ -54,6 +54,11 @@ T* component(int n) {
 #include <dg_scope.h>
 #include <dg_expand.h>
 
+#if defined(QT_CORE_LIB)
+#include <QtCore/QString>
+#include <dg_qt4.h>
+#endif
+
 #endif /* _dgd_h_ */
 
 /* 

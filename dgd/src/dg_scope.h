@@ -129,12 +129,10 @@ class basic_scope {
 typedef basic_scope<char> scope;
 typedef basic_scope<wchar_t> wscope;
 
-}; // end of namespace dgd
-
 template<typename T, typename char_type>
-dgd::basic_scope<char_type> &operator << (dgd::basic_scope<char_type> &s, const T& data) {
-   typename dgd::basic_scope<char_type>::controller_type *ctrl = 
-      dgd::basic_scope<char_type>::controller_type::get();
+basic_scope<char_type> &operator << (basic_scope<char_type> &s, const T& data) {
+   typename basic_scope<char_type>::controller_type *ctrl = 
+      basic_scope<char_type>::controller_type::get();
    if(ctrl == NULL || !ctrl->enabled() || 
       !ctrl->filter(s.filter_value()) ||
       !ctrl->get_channel().is_open()) {
@@ -146,10 +144,10 @@ dgd::basic_scope<char_type> &operator << (dgd::basic_scope<char_type> &s, const 
 }
 
 template<typename char_type>
-dgd::basic_scope<char_type> &operator << (dgd::basic_scope<char_type> &s, 
-                                          std::basic_ostream<char_type> &(*manip)(std::basic_ostream<char_type>&)) {
-   typename dgd::basic_scope<char_type>::controller_type *ctrl = 
-      dgd::basic_scope<char_type>::controller_type::get();
+basic_scope<char_type> &operator << (basic_scope<char_type> &s, 
+                                     std::basic_ostream<char_type> &(*manip)(std::basic_ostream<char_type>&)) {
+   typename basic_scope<char_type>::controller_type *ctrl = 
+      basic_scope<char_type>::controller_type::get();
    if(ctrl == NULL ||  !ctrl->enabled() || 
       !ctrl->filter(s.filter_value()) ||
       !ctrl->get_channel().is_open()) {
@@ -159,6 +157,9 @@ dgd::basic_scope<char_type> &operator << (dgd::basic_scope<char_type> &s,
    ctrl->get_channel() << manip;
    return s;
 }
+
+
+}; // end of namespace dgd
 
 #endif /* _dg_scope_h_ */
 

@@ -43,5 +43,6 @@ Install $buildenv "$BLIB/include",
                        dg_exception.h
                        dg_scope.h
                        dg_expand.h
-                       dg_filter.h) );
+                       dg_filter.h
+                       dg_qt4.h) );
 
