@@ -30,94 +30,14 @@ class controller {
       typedef typename filter_traits::value_type  filter_value_type;
 
    public:
-      static void init(int argc, char **argv) {
-         namespace po = boost::program_options;
-         po::options_description desc("DGD Tracing Options");
-         desc.add_options()
-            ("trace-help", "show tracing command line help")
-            ("trace-journal-size", po::value<unsigned int>(), 
-             "trace journal size")
-            ("trace-log", po::value<std::string>(), "trace log file name")
-            ("trace-indent-step", po::value<unsigned int>(), "indentation step")
-            ("trace-min-width", po::value<unsigned int>(), 
-             "minium width of pre-indented line in the log")
-            ("trace-max-width", po::value<unsigned int>(), 
-             "maximum width of post-indented line in the log")
-            ("trace-wrap", po::value<bool>(), 
-             "enable/disable line wrapping in log")
-            ("trace-word-wrap", po::value<bool>(), 
-             "enable/disable word wrapping in log")
-            ("trace-spaces", po::value<std::string>(), 
-             "affects which characters are considered as spaces between words")
-            ("trace-filter", po::value<std::string>(), 
-             "define which trace message will be really logged");
+      static std::vector<std::string> init(int argc, char **argv) {
+         boost::program_options::command_line_parser parser(argc, argv);
+         return init(parser);
+      }
 
-         po::variables_map vm;
-         po::store(po::parse_command_line(argc, argv, desc), vm);
-         po::notify(vm);    
-
-         if(vm.count("trace-help") > 0) {
-            std::ostringstream ostr;
-            ostr << desc << std::endl;
-            throw dgd::exception(ostr.str());
-         }
-
-         if(vm.count("trace-log") > 0) {
-            m_log_file_name = vm["trace-log"].as<std::string>();
-            m_enabled = true;
-         }
-
-         if(vm.count("trace-journal-size") > 0) {
-            m_journal_size = vm["trace-journal-size"].as<unsigned int>();
-         } else {
-            m_journal_size = journal_filter<char_type>::DefaultJournalSize;
-         }
-
-         if(vm.count("trace-indent-step") > 0) {
-            m_wrapper_config.indent_step(
-               vm["trace-indent-step"].as<unsigned int>()
-            );
-         } 
-
-         if(vm.count("trace-min-width") > 0) {
-            m_wrapper_config.min_width(
-               vm["trace-min-width"].as<unsigned int>()
-            );
-         } 
-
-         if(vm.count("trace-max-width") > 0) {
-            m_wrapper_config.max_width(
-               vm["trace-max-width"].as<unsigned int>()
-            );
-         } 
-
-         if(vm.count("trace-wrap") > 0) {
-            m_wrapper_config.wrap(
-               vm["trace-wrap"].as<bool>()
-            );
-         } 
-
-         if(vm.count("trace-word-wrap") > 0) {
-            m_wrapper_config.word_wrap(
-               vm["trace-word-wrap"].as<bool>()
-            );
-         } 
-
-         if(vm.count("trace-strings") > 0) {
-            m_wrapper_config.spaces(
-               literal<char_type>(
-                  vm["trace-strings"].as<std::string>().c_str()
-               ).value
-            );
-         } 
-
-         if(vm.count("trace-filter") > 0) {
-            m_filter = filter_traits::parse(
-               vm["trace-filter"].as<std::string>()
-            );
-         } else {
-            m_filter = filter_traits::allow_all();            
-         }
+      static std::vector<std::string> init(std::vector<std::string> args) {
+         boost::program_options::command_line_parser parser(args);
+         return init(parser);
       }
 
       static self_type *get() {
@@ -194,6 +114,100 @@ class controller {
 
       void enabled(bool val) {
          m_local_enabled = val;
+      }
+
+      static std::vector<std::string> init(boost::program_options::command_line_parser& parser) {
+         namespace po = boost::program_options;
+         po::options_description desc("DGD Tracing Options");
+         desc.add_options()
+            ("trace-help", "show tracing command line help")
+            ("trace-journal-size", po::value<unsigned int>(), 
+             "trace journal size")
+            ("trace-log", po::value<std::string>(), "trace log file name")
+            ("trace-indent-step", po::value<unsigned int>(), "indentation step")
+            ("trace-min-width", po::value<unsigned int>(), 
+             "minium width of pre-indented line in the log")
+            ("trace-max-width", po::value<unsigned int>(), 
+             "maximum width of post-indented line in the log")
+            ("trace-wrap", po::value<bool>(), 
+             "enable/disable line wrapping in log")
+            ("trace-word-wrap", po::value<bool>(), 
+             "enable/disable word wrapping in log")
+            ("trace-spaces", po::value<std::string>(), 
+             "affects which characters are considered as spaces between words")
+            ("trace-filter", po::value<std::string>(), 
+             "define which trace message will be really logged");
+
+         po::variables_map vm;
+         po::parsed_options parsed_options = parser.options(desc).allow_unregistered().run();
+         po::store( parsed_options, vm);
+         po::notify(vm);    
+
+         if(vm.count("trace-help") > 0) {
+            std::ostringstream ostr;
+            ostr << desc << std::endl;
+            throw dgd::exception(ostr.str());
+         }
+
+         if(vm.count("trace-log") > 0) {
+            m_log_file_name = vm["trace-log"].as<std::string>();
+            m_enabled = true;
+         }
+
+         if(vm.count("trace-journal-size") > 0) {
+            m_journal_size = vm["trace-journal-size"].as<unsigned int>();
+         } else {
+            m_journal_size = journal_filter<char_type>::DefaultJournalSize;
+         }
+
+         if(vm.count("trace-indent-step") > 0) {
+            m_wrapper_config.indent_step(
+               vm["trace-indent-step"].as<unsigned int>()
+            );
+         } 
+
+         if(vm.count("trace-min-width") > 0) {
+            m_wrapper_config.min_width(
+               vm["trace-min-width"].as<unsigned int>()
+            );
+         } 
+
+         if(vm.count("trace-max-width") > 0) {
+            m_wrapper_config.max_width(
+               vm["trace-max-width"].as<unsigned int>()
+            );
+         } 
+
+         if(vm.count("trace-wrap") > 0) {
+            m_wrapper_config.wrap(
+               vm["trace-wrap"].as<bool>()
+            );
+         } 
+
+         if(vm.count("trace-word-wrap") > 0) {
+            m_wrapper_config.word_wrap(
+               vm["trace-word-wrap"].as<bool>()
+            );
+         } 
+
+         if(vm.count("trace-strings") > 0) {
+            m_wrapper_config.spaces(
+               literal<char_type>(
+                  vm["trace-strings"].as<std::string>().c_str()
+               ).value
+            );
+         } 
+
+         if(vm.count("trace-filter") > 0) {
+            m_filter = filter_traits::parse(
+               vm["trace-filter"].as<std::string>()
+            );
+         } else {
+            m_filter = filter_traits::allow_all();            
+         }
+
+         return po::collect_unrecognized(parsed_options.options, 
+                                         po::include_positional);
       }
 
    private:
