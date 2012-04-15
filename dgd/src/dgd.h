@@ -20,6 +20,7 @@
 
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/device/file.hpp>
 
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
@@ -45,7 +46,6 @@ T* component(int n) {
 
 #include <dg_filter.h>
 #include <dg_exception.h>
-#include <dg_flushable_sink.h>
 #include <dg_journal_filter.h>
 #include <dg_wrapper_filter.h>
 #include <dg_channel.h>

@@ -57,15 +57,15 @@ class controller {
             std::ostringstream ostr;
             fs::path log_file_path(m_log_file_name);
             std::string extension = log_file_path.extension().string();
-            
-            ostr << "." << boost::this_thread::get_id() << extension
+            log_file_path.replace_extension();
+
+            ostr << log_file_path.string() << "." << boost::this_thread::get_id() << extension
                  << std::flush;
          
-            log_file_path.replace_extension(ostr.str());
 
             local_controller = new self_type();
             local_controller->get_channel().open( 
-               log_file_path.string(),
+               ostr.str(),
                m_journal_size > 0 ? channel_type::mode::journal : 0,
                m_journal_size,
                m_wrapper_config

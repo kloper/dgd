@@ -21,6 +21,7 @@ class temp_file
   public:
 
    temp_file(const std::string &basename, const std::string& ext);
+   temp_file(const boost::filesystem::path& path);
    ~temp_file();
 
    boost::filesystem::path path() const { return m_temp_path; }

@@ -48,6 +48,7 @@ class channel:
                  const wrapper_config& config = wrapper_config() ) 
       {
          namespace fs = boost::filesystem;
+         namespace io = boost::iostreams;
 
          if(log_file_name.empty()) {
             throw dgd::exception("empty log file name");
@@ -57,9 +58,9 @@ class channel:
             throw dgd::exception("log file cannot be directory");
          }
 
-         basic_flushable_sink<char_type> logfile(log_file_name, 
-                                                 std::ios_base::out |
-                                                 std::ios_base::ate);
+         io::basic_file_sink<char_type> logfile(log_file_name,
+                                                std::ios_base::out |
+                                                std::ios_base::ate);
 
          if(!logfile.is_open()) {
             throw dgd::exception("can't open log file for writing");

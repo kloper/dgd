@@ -32,6 +32,15 @@ temp_file::temp_file(const std::string &basename, const std::string& ext) :
    m_temp_path = fs::unique_path(pattern);      
 }
 
+temp_file::temp_file(const boost::filesystem::path& path)
+{
+   boost::filesystem::path p(path);
+//   m_ext = p.extension();
+   p.replace_extension();
+   m_basename = p.string();
+   m_temp_path = path;
+}
+
 temp_file::~temp_file()
 {
    namespace fs = boost::filesystem;

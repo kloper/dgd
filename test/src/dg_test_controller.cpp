@@ -24,6 +24,7 @@
 #include <boost/iostreams/concepts.hpp> 
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/device/file.hpp>
 
 #include <boost/program_options.hpp>
 
@@ -103,7 +104,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( simple_controller, char_type )
          indented_line_glob glob =
             make_glob(arg_indent == 0 && strlen_(arg_text) == val(test_string.target.length()));
 
-         sane(log, ch.wrapper()->indent_step(), glob);
+         temp_file real_log(ch.log_file_name());
+         sane(real_log, ch.wrapper()->indent_step(), glob);
 
          dgd::controller<char_type>::reset();
       }
@@ -145,7 +147,7 @@ void controller_main(const literal<char_type> &test_string,
    BOOST_CHECK( ch.journal() != NULL );
    
    *journal_path = ch.journal()->journal_file();
-   
+
    BOOST_CHECK( fs::exists(*journal_path) );
    BOOST_CHECK_GT( fs::file_size(*journal_path), 0 );
 
@@ -154,7 +156,9 @@ void controller_main(const literal<char_type> &test_string,
    indented_line_glob glob =
       make_glob(arg_indent == 0 && strlen_(arg_text) == val(test_string.target.length()));
 
-   sane(log, ch.wrapper()->indent_step(), glob);
+   temp_file real_log(ch.log_file_name());
+
+   sane(real_log, ch.wrapper()->indent_step(), glob);
 }
 
 BOOST_TEST_CASE_TEMPLATE_FUNCTION( controller_in_thread, char_type )
@@ -279,7 +283,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( simple_scope, char_type )
                       arg_text == val(std::string("caught: test throw"))) +
             make_glob(arg_scope == 0 && arg_indent == val(0*indent_step));
          
-         sane(log, indent_step, glob);
+         temp_file real_log(ctrl->get_channel().log_file_name());
+         sane(real_log, indent_step, glob);
 
          dgd::controller<char_type>::reset();
       }
@@ -355,7 +360,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( scope_char, char_type )
             make_glob(arg_scope == 1 && arg_indent == val(1*indent_step)) * 2 +
             make_glob(arg_scope == 0 && arg_indent == val(0*indent_step));
 
-         sane(log, indent_step, glob);
+         temp_file real_log(ctrl->get_channel().log_file_name());
+         sane(real_log, indent_step, glob);
 
          dgd::controller<char>::reset();
       }
@@ -452,7 +458,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( scope_macros, char_type )
             make_glob(arg_scope == 1 && arg_indent == val(1*indent_step)) * 5 +
             make_glob(arg_scope == 0 && arg_indent == val(0*indent_step));
 
-         sane(log, indent_step, glob);
+         temp_file real_log(ctrl->get_channel().log_file_name());
+         sane(real_log, indent_step, glob);
 
          dgd::controller<char>::reset();
       }
@@ -556,7 +563,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( expand_macros, char_type )
 
          unsigned int indent_step = ctrl->get_channel().wrapper()->indent_step();
 
-         sane(log, indent_step);
+         temp_file real_log(ctrl->get_channel().log_file_name());
+         sane(real_log, indent_step);
 
          dgd::controller<char>::reset();
       }
@@ -611,7 +619,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( manip, char_type )
 
          unsigned int indent_step = ctrl->get_channel().wrapper()->indent_step();
 
-         sane(log, indent_step);
+         temp_file real_log(ctrl->get_channel().log_file_name());
+         sane(real_log, indent_step);
 
          dgd::controller<char>::reset();
       }

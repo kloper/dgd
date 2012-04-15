@@ -26,6 +26,7 @@ extern "C" {
 
 #include <boost/iostreams/concepts.hpp> 
 #include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/device/file.hpp>
 
 #include <boost/phoenix/core.hpp>
 #include <boost/phoenix/function.hpp>

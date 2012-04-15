@@ -37,7 +37,6 @@ Install $buildenv "$BLIB/include",
                        dg_wrapper_filter.h
                        dg_journal_filter.h
                        dg_channel.h
-                       dg_flushable_sink.h
                        dg_manip.h
                        dg_controller.h
                        dg_exception.h
