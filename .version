@@ -1,5 +1,5 @@
 my $version = {
-'build' => '2',
+'build' => '3',
 'compile' => '312',
 'major' => '2',
 'stable' => '0',
