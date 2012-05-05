@@ -71,8 +71,6 @@ class basic_scope {
             ctrl->filter(m_filter_value)) {
             channel_type &ch = ctrl->get_channel();
             if(ch.is_open()) {
-               ch.flush();
-
                if(ch.wrapper()->column() > 
                      ch.wrapper()->indent() * ch.wrapper()->indent_step()) {
                   ch << std::endl;
@@ -114,8 +112,7 @@ class basic_scope {
                }
                ch << dgd::decr 
                   << dgd::literal<char_type>("}").value
-                  << std::endl
-                  << std::flush;
+                  << std::endl;
             }
          }
       }
@@ -139,7 +136,7 @@ basic_scope<char_type> &operator << (basic_scope<char_type> &s, const T& data) {
       return s;
    }
 
-   ctrl->get_channel() << data << std::flush;
+   ctrl->get_channel() << data;
    return s;
 }
 

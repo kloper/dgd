@@ -154,6 +154,7 @@ class wrapper_filter:
          const char_type* current = s;
          const char_type* endpos = s + n;         
          std::streamsize chars_written = 0;
+         const char_type* eolpos = NULL;
 
          while(current < endpos) 
          {
@@ -165,9 +166,11 @@ class wrapper_filter:
             const char_type* breakpos = NULL;         
             bool require_eol = false;
 
-            const char_type* eolpos = 
-               std::find_first_of( current, endpos, 
-                                   m_eol.begin(), m_eol.end() );
+            if(eolpos == NULL || current > eolpos) {
+               eolpos = 
+                  std::find_first_of( current, endpos, 
+                                      m_eol.begin(), m_eol.end() );
+            }
 
             breakpos = find_word_break(current, eolpos);
             if(breakpos == NULL)
