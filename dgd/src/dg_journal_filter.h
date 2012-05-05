@@ -107,8 +107,23 @@ class journal_filter:
       template<typename Sink>
       void close(Sink& dest)
       {
-         m_buffer->flush();
          close();
+      }
+
+      void close() {
+         if(m_buffer != NULL) {
+            m_buffer->flush();
+            
+            circular_buffer *buffer = (circular_buffer*)m_buffer->get_address();
+            bool journal_delete = (buffer->head == buffer->tail);
+            
+            delete m_buffer;
+            delete m_journal;
+
+            if( journal_delete ) {
+               boost::filesystem::remove( m_journal_name);
+            }            
+         }
       }
 
       std::string journal_file() const { return m_journal_name; }
@@ -186,17 +201,6 @@ class journal_filter:
          cbuffer->tail = 0;         
       }
 
-      void close() {
-         circular_buffer *buffer = (circular_buffer*)m_buffer->get_address();
-         bool journal_delete = (buffer->head == buffer->tail);
-
-         delete m_buffer;
-         delete m_journal;
-
-         if( journal_delete ) {
-            boost::filesystem::remove( m_journal_name);
-         }
-      }
 
    private:
       std::string m_journal_name;

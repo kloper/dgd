@@ -89,6 +89,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( simple_channel, char_type )
          BOOST_CHECK( fs::exists(journal_path) );
          BOOST_CHECK_GT( fs::file_size(journal_path), 0u );
 
+         ch.force_sync();
+
          indented_line_glob glob = 
             make_glob(arg_indent <= 1u && arg_indent + strlen_(arg_text) <= val(max_width)) * 3;
 
@@ -141,6 +143,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( channel_manip, char_type )
          BOOST_CHECK( ch.journal() != NULL );
 
          journal_path = ch.journal()->journal_file();
+
+         ch.force_sync();
 
          indented_line_glob glob = 
             make_glob(arg_indent <= 1u && arg_indent + strlen_(arg_text) <= val(max_width_1)) * 3 +
@@ -236,6 +240,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( struct_example, char_type )
 
          BOOST_CHECK( fs::exists(journal_path) );
          BOOST_CHECK_GT( fs::file_size(journal_path), 0u );
+
+         ch.force_sync();
 
          indented_line_glob glob = 
             (make_glob

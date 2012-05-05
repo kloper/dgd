@@ -26,6 +26,7 @@ class channel:
 
       typedef journal_filter<char_type> journal_filter_type;
       typedef wrapper_filter<char_type> wrapper_filter_type;
+      typedef fake_flushable_sink<char_type> sink_type;
       typedef typename wrapper_filter_type::wrapper_config wrapper_config;
       typedef typename wrapper_config::string_type string_type;
 
@@ -39,6 +40,10 @@ class channel:
          m_journal_filter(NULL),
          m_wrapper_filter(NULL),
          m_is_open(false) {
+      }
+
+      ~channel() {
+         force_sync();
       }
 
       void open( const std::string& log_file_name, 
@@ -58,11 +63,10 @@ class channel:
             throw dgd::exception("log file cannot be directory");
          }
 
-         io::basic_file_sink<char_type> logfile(log_file_name,
-                                                std::ios_base::out |
-                                                std::ios_base::ate);
-
-         if(!logfile.is_open()) {
+         m_log_file.open(log_file_name, std::ios_base::out |
+                                        std::ios_base::ate);
+         
+         if(!m_log_file.is_open()) {
             throw dgd::exception("can't open log file for writing");
          }
 
@@ -77,7 +81,7 @@ class channel:
 
          m_log_file_name = log_file_name;
 
-         this->push(logfile);
+         this->push(m_log_file);
 
          m_is_open = true;
       }
@@ -88,6 +92,12 @@ class channel:
       journal_filter_type* journal() const { return m_journal_filter; }
 
       std::string log_file_name() const { return m_log_file_name; }
+
+      void force_sync()
+      {
+         this->flush();
+         m_log_file.sync();
+      }
 
    private:
       std::string journal_name(std::string log_file_name) {
@@ -109,6 +119,7 @@ class channel:
    private:
       journal_filter_type *m_journal_filter;
       wrapper_filter_type *m_wrapper_filter;
+      sink_type            m_log_file;
       std::string m_log_file_name;
       bool m_is_open;
 };

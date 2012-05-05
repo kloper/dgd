@@ -34,6 +34,7 @@ AfterBuild $buildenv $DLLTGT, q(
 
 Install $buildenv "$BLIB/include", 
   map( "$BUILD/$_", qw(dgd.h
+                       dg_flushable_sink.h
                        dg_wrapper_filter.h
                        dg_journal_filter.h
                        dg_channel.h
