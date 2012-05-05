@@ -49,7 +49,6 @@
 #include <dg_flushable_sink.h>
 #include <dg_channel.h>
 #include <dg_manip.h>
-#include <dg_filter.h>
 #include <dg_controller.h>
 #include <dg_scope.h>
 #include <dg_expand.h>

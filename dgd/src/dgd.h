@@ -44,7 +44,6 @@ T* component(int n) {
    throw std::exception("dummy component");
 }
 
-#include <dg_filter.h>
 #include <dg_exception.h>
 #include <dg_flushable_sink.h>
 #include <dg_journal_filter.h>
