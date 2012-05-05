@@ -16,7 +16,7 @@
 
 namespace dgd {
 
-template <typename Ch, typename FTraits = filter_traits>
+template <typename Ch>
 class controller {
    public:      
       typedef controller<Ch> self_type;
@@ -25,9 +25,6 @@ class controller {
       typedef typename channel_type::wrapper_config wrapper_config;
       typedef boost::thread_specific_ptr<self_type> thread_local_ptr_type;
       typedef typename channel_type::string_type string_type;
-      typedef FTraits filter_traits;
-      typedef typename filter_traits::filter_type filter_type;
-      typedef typename filter_traits::value_type  filter_value_type;
 
    public:
       static std::vector<std::string> init(int argc, char **argv) {
@@ -98,8 +95,8 @@ class controller {
          return m_last_error;
       }
 
-      bool filter(const filter_value_type& val) {
-         return (m_local_enabled && filter_traits::match(m_filter, val));
+      bool filter(const unsigned int val) {
+         return (m_local_enabled && (m_filter & val) != 0);
       }
 
    protected:
@@ -199,11 +196,11 @@ class controller {
          } 
 
          if(vm.count("trace-filter") > 0) {
-            m_filter = filter_traits::parse(
-               vm["trace-filter"].as<std::string>()
-            );
+            std::istringstream istr(vm["trace-filter"].as<std::string>());
+            
+            istr >> m_filter;
          } else {
-            m_filter = filter_traits::allow_all();            
+            m_filter = (unsigned int)-1;        
          }
 
          return po::collect_unrecognized(parsed_options.options, 
@@ -216,7 +213,7 @@ class controller {
       static wrapper_config m_wrapper_config;
       static unsigned int m_journal_size;
       static thread_local_ptr_type m_controller;
-      static filter_type m_filter;
+      static unsigned int m_filter;
 
    private:
       channel_type m_channel;
@@ -224,24 +221,24 @@ class controller {
       std::string m_last_error;      
 };
 
-template <typename Ch, typename Tr>
-bool controller<Ch, Tr>::m_enabled = false;
+template <typename Ch>
+bool controller<Ch>::m_enabled = false;
 
-template <typename Ch, typename Tr>
-std::string controller<Ch, Tr>::m_log_file_name;
+template <typename Ch>
+std::string controller<Ch>::m_log_file_name;
 
-template <typename Ch, typename Tr>
-typename controller<Ch, Tr>::wrapper_config controller<Ch, Tr>::m_wrapper_config;
+template <typename Ch>
+typename controller<Ch>::wrapper_config controller<Ch>::m_wrapper_config;
 
-template <typename Ch, typename Tr>
-unsigned int controller<Ch, Tr>::m_journal_size;
+template <typename Ch>
+unsigned int controller<Ch>::m_journal_size;
 
-template <typename Ch, typename Tr>
-typename controller<Ch, Tr>::thread_local_ptr_type 
-controller<Ch, Tr>::m_controller;
+template <typename Ch>
+typename controller<Ch>::thread_local_ptr_type 
+controller<Ch>::m_controller;
 
-template <typename Ch, typename Tr>
-typename controller<Ch, Tr>::filter_type controller<Ch, Tr>::m_filter;
+template <typename Ch>
+unsigned int controller<Ch>::m_filter;
 
 }; // end of namespace dgd
 

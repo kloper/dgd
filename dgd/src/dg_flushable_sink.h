@@ -37,6 +37,11 @@ class fake_flushable_sink {
       {         
          m_file_ptr.reset( new std::basic_ofstream<char_type>( path.c_str(), 
                                                                mode ) );
+         
+         int size = 1024*1024;
+         char_type *buf = new char_type[size];
+         
+         m_file_ptr->rdbuf()->pubsetbuf(buf, size);
       }
       
       std::streamsize write(const char_type* s, std::streamsize n) {

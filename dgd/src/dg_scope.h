@@ -26,15 +26,13 @@
 
 namespace dgd {
 
-template <typename Ch, typename Tr = filter_traits>
+template <typename Ch>
 class basic_scope {
    public:
-      typedef controller<Ch, Tr> controller_type;
+      typedef controller<Ch> controller_type;
       typedef typename controller_type::channel_type channel_type;
       typedef typename channel_type::char_type char_type;
       typedef typename channel_type::string_type string_type;
-      typedef typename controller_type::filter_traits filter_traits;
-      typedef typename controller_type::filter_value_type filter_value_type;
 
    protected:
       typedef boost::iostreams::basic_null_sink<char_type> null_sink_type;
@@ -44,16 +42,14 @@ class basic_scope {
       basic_scope(const char* place,
                   const char* func,
                   const char* text, 
-                  const filter_value_type& filter_value = 
-                                                 filter_traits::value_any()) :
+                  unsigned int filter_value = (unsigned int)-1) :
          m_filter_value(filter_value)
       {
          start(place, func, text);
       }
 
       basic_scope(const char* text, 
-                  const filter_value_type& filter_value = 
-                                                 filter_traits::value_any()) :
+                  unsigned int filter_value = (unsigned int)-1) :
          m_filter_value(filter_value)
       {
          start(text);
@@ -117,10 +113,10 @@ class basic_scope {
          }
       }
 
-      filter_value_type filter_value() const { return m_filter_value; }
+      unsigned int filter_value() const { return m_filter_value; }
 
    private:
-      filter_value_type m_filter_value;
+      unsigned int m_filter_value;
 };
 
 typedef basic_scope<char> scope;
