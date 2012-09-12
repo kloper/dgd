@@ -14,7 +14,7 @@ perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo --build=Release -v
 (win|win-debug)
 /d/perl/bin/perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost,clo --boost-root-dir=d:/boost -v3 ;;
 (ming|mingw|*)
-/c/perl64/bin/perl -I cons ./cons/cons.pl $2 -- --toolset=mingw,cygwin,boost -v3 --cygwin-root-dir=c:/cygwin --mingw-root-dir=c:/personal/mingw --boost-root-dir=c:/personal/boost-1.47 $3 $4 $5 $6;;
+/c/perl/bin/perl -I cons ./cons/cons.pl $2 -- --toolset=mingw,cygwin,boost -v3 --cygwin-root-dir=c:/cygwin --mingw-root-dir=d:/s/mingw --boost-root-dir=d:/s/boost-1.47 $3 $4 $5 $6;;
 esac
 
 # 

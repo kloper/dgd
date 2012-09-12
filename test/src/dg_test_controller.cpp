@@ -449,7 +449,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( scope_macros, char_type )
             }
          }
 
-         unsigned int indent_step = ctrl->get_channel().wrapper()->indent_step();
+         unsigned int indent_step = 
+            ctrl->get_channel().wrapper()->indent_step();
          temp_file real_log(ctrl->get_channel().log_file_name());
 
          dgd::controller<char>::reset();
@@ -584,7 +585,7 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( manip, char_type )
    temp_file log("controller_test", "log");
 
    {
-      BOOST_TEST_MESSAGE("Test dgd::dgd and other manips");
+      BOOST_TEST_MESSAGE("Test dgd manips");
       
       {
          std::string trace_log_arg = 
@@ -621,7 +622,8 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( manip, char_type )
             BOOST_TEST_MESSAGE("output to basic_ostream: " << ostr.str());
          }
 
-         unsigned int indent_step = ctrl->get_channel().wrapper()->indent_step();
+         unsigned int indent_step = 
+            ctrl->get_channel().wrapper()->indent_step();
          temp_file real_log(ctrl->get_channel().log_file_name());
 
          dgd::controller<char>::reset();
@@ -631,6 +633,121 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION( manip, char_type )
    }
 }
 
+#define TEST_SCOPE_A 0x00000001
+#define TEST_SCOPE_B 0x00000002
+#define TEST_SCOPE_C 0x00000004
+#define TEST_SCOPE_D 0x00000008
+
+#undef dgd_default_scope_filter
+#define dgd_default_scope_filter TEST_SCOPE_A
+
+BOOST_TEST_CASE_TEMPLATE_FUNCTION( scope_filter, char_type )
+{
+   namespace fs = boost::filesystem;
+   using namespace dgd::test;
+   using namespace boost::phoenix;
+
+   temp_file log("controller_test", "log");
+
+   {
+      BOOST_TEST_MESSAGE("Test dgd scope filtering");
+      
+      {
+         std::string trace_log_arg = 
+            std::string("--trace-log=") + log.path().string();
+
+         std::ostringstream ostr;
+         ostr << "--trace-filter=" << (int)(TEST_SCOPE_A | 
+                                            TEST_SCOPE_B |
+                                            TEST_SCOPE_C);
+         std::string filter_arg = ostr.str();
+
+         int argc = 3;
+         char *argv[4];
+         argv[0] = (char*)"exe";
+         argv[1] = (char*)trace_log_arg.c_str();
+         argv[2] = (char*)filter_arg.c_str();
+         argv[3] = NULL;
+
+         dgd::controller<char>::init(argc, argv);
+         dgd::controller<char_type> *ctrl = dgd::controller<char_type>::get();
+
+         BOOST_CHECK(ctrl != NULL);
+         BOOST_TEST_MESSAGE("controller error " << ctrl->last_error());
+         BOOST_CHECK(ctrl->last_error().empty());
+
+         {
+            dgd_scope;
+
+            dgd_logger << "inside scope A #1" << std::endl; 
+
+            test_struct ts;
+            
+            ts.a = 7;
+            ts.b = "dgd hello";
+            ts.c = 8.9989;
+            
+            dgd_logger << "ts: " << ts << std::endl;
+
+#undef dgd_default_scope_filter
+#define dgd_default_scope_filter TEST_SCOPE_B
+
+            {
+               dgd_scope;
+
+               dgd_logger << "inside scope B #1" << std::endl;               
+            }
+
+            {
+               dgd_scopef(TEST_SCOPE_B);
+
+               dgd_logger << "inside scope B #2" << std::endl;               
+            }
+
+            {
+               dgd_scopefv(TEST_SCOPE_B, "scope B #3");
+
+               dgd_logger << "inside scope B #3" << std::endl; 
+               
+               {
+                  dgd_scopef(TEST_SCOPE_C);
+                  dgd_logger << "inside scope C #1" << std::endl; 
+               }
+            }
+
+            {
+               dgd_scopef(TEST_SCOPE_C);
+               dgd_logger << "inside scope C #2" << std::endl; 
+
+               {
+                  dgd_scopef(TEST_SCOPE_D);
+                  dgd_logger << "inside scope D" << std::endl; 
+
+                  {
+                     dgd_scopef(TEST_SCOPE_A);
+                     dgd_logger << "inside scope A #2" << std::endl; 
+
+                     {
+                        dgd_scope;
+                        dgd_logger << "inside scope B #4" << std::endl; 
+                     }
+                  }
+
+               }
+            }
+
+         }
+
+         unsigned int indent_step = 
+            ctrl->get_channel().wrapper()->indent_step();
+         temp_file real_log(ctrl->get_channel().log_file_name());
+
+         dgd::controller<char>::reset();
+
+         sane(real_log, indent_step);
+      }
+   }
+}
 
 bool init_test()
 {
@@ -649,7 +766,9 @@ bool init_test()
    ::boost::unit_test::framework::master_test_suite().
         add( BOOST_TEST_CASE_TEMPLATE( scope_macros, boost::mpl::list<char> ) );
    ::boost::unit_test::framework::master_test_suite().
-        add( BOOST_TEST_CASE_TEMPLATE( expand_macros, boost::mpl::list<char> ) );
+        add( BOOST_TEST_CASE_TEMPLATE( expand_macros, boost::mpl::list<char> ));
+   ::boost::unit_test::framework::master_test_suite().
+        add( BOOST_TEST_CASE_TEMPLATE( scope_filter, boost::mpl::list<char> ) );
    ::boost::unit_test::framework::master_test_suite().
         add( BOOST_TEST_CASE_TEMPLATE( manip, boost::mpl::list<char> ) );
  

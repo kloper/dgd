@@ -21,8 +21,19 @@
 #define dgd_logger __dgd_logger
 #endif 
 
-#define dgd_scope dgd::scope dgd_logger(dgd_fileline,__func__,NULL)
-#define dgd_scopev(text) dgd::scope dgd_logger(dgd_fileline,__func__,(text))
+#ifndef dgd_default_scope_filter
+#define dgd_default_scope_filter ((unsigned int)-1)
+#endif 
+
+#define dgd_scope \
+   dgd::scope dgd_logger(dgd_fileline,__func__,NULL,(dgd_default_scope_filter))
+#define dgd_scopev(text) \
+   dgd::scope dgd_logger(dgd_fileline,__func__,(text),\
+                         (dgd_default_scope_filter))
+#define dgd_scopef(filter) \
+   dgd::scope dgd_logger(dgd_fileline,__func__,NULL,(unsigned int)(filter))
+#define dgd_scopefv(filter,text) \
+   dgd::scope dgd_logger(dgd_fileline,__func__,(text),(unsigned int)(filter))
 
 namespace dgd {
 

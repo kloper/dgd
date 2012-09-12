@@ -64,7 +64,8 @@ class fake_flushable_sink {
          }
       }
 
-      // This is a fake flush. The file is never flushed when requested by std::flush
+      // This is a fake flush. The file is never flushed when 
+      // requested by std::flush
       bool flush() { return true; }
 
       void imbue(const std::locale& loc) { 

@@ -56,7 +56,8 @@ class controller {
             std::string extension = log_file_path.extension().string();
             log_file_path.replace_extension();
 
-            ostr << log_file_path.string() << "." << boost::this_thread::get_id() << extension
+            ostr << log_file_path.string() 
+                 << "." << boost::this_thread::get_id() << extension
                  << std::flush;
          
 
@@ -132,11 +133,12 @@ class controller {
              "enable/disable word wrapping in log")
             ("trace-spaces", po::value<std::string>(), 
              "affects which characters are considered as spaces between words")
-            ("trace-filter", po::value<std::string>(), 
+            ("trace-filter", po::value<unsigned int>(), 
              "define which trace message will be really logged");
 
          po::variables_map vm;
-         po::parsed_options parsed_options = parser.options(desc).allow_unregistered().run();
+         po::parsed_options parsed_options = 
+            parser.options(desc).allow_unregistered().run();
          po::store( parsed_options, vm);
          po::notify(vm);    
 
@@ -196,10 +198,9 @@ class controller {
          } 
 
          if(vm.count("trace-filter") > 0) {
-            std::istringstream istr(vm["trace-filter"].as<std::string>());
-            
-            istr >> m_filter;
+            m_filter = vm["trace-filter"].as<unsigned int>();
          } else {
+            // set all bits
             m_filter = (unsigned int)-1;        
          }
 
