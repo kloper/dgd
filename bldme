@@ -1,20 +1,19 @@
 #!/bin/bash
 
+export BLDME_DIRNAME="$( cd "$( dirname "$0" )" && cygpath -a -m `pwd` )"
+export SCONS_LIB_DIR=$BLDME_DIRNAME/scons-2.2.0/engine
+
 case $1 in
-(cyg|cygwin|cygwin-debug)
-perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo --boost-root-dir=/d/boost-1.31.0 -v3 ;;
-(cygwin-release)
-perl -I cons ./cons/cons.pl -- --toolset=gcc,cygwin,boost,clo --build=Release -v3 ;;
 (win-release)
 /d/perl/bin/perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost,clo  --build=Release -v3 ;;
 (doc)
 /c/perl64/bin/perl -I cons ./cons/cons.pl doc -- --toolset=doxygen  -v3 && cd doc/docsys && ./docsys dgd ;;
 (clean)
 /c/s/perl/bin/perl -I cons ./cons/cons.pl -- clean ;;
-(win|win-debug)
-/d/perl/bin/perl -I cons ./cons/cons.pl -- --toolset=msvc70,cygwin,boost,clo --boost-root-dir=d:/boost -v3 ;;
+(consming|consmingw)
+/c/perl64/bin/perl -I cons ./cons/cons.pl $2 -- --toolset=mingw,cygwin,boost -v3 --cygwin-root-dir=c:/cygwin --mingw-root-dir=c:/personal/mingw --boost-root-dir=c:/personal/boost-1.47 $3 $4 $5 $6;;
 (ming|mingw|*)
-/c/perl/bin/perl -I cons ./cons/cons.pl $2 -- --toolset=mingw,cygwin,boost -v3 --cygwin-root-dir=c:/cygwin --mingw-root-dir=d:/s/mingw --boost-root-dir=d:/s/boost-1.47 $3 $4 $5 $6;;
+/c/python-2.7.3/python.exe $BLDME_DIRNAME/scons-2.2.0/script/scons $2 $3 $4 $5 $6 $7 $8 $9;;
 esac
 
 # 

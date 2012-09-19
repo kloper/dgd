@@ -1,0 +1,66 @@
+# -*- mode:python -*-
+# 
+# Copyright (c) Dimitry Kloper <kloper@users.sf.net> 2002-2012
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+# 
+# This file is part of dgd library (http://dgd.sf.net).
+#
+# test/SConscript -- construction file for dgd/test
+#
+
+import os 
+
+Import('env', 'version', 'variant')
+
+env = env.Clone()
+
+env.Append(LDFLAGS = ['-mthreads', '-mconsole'])
+env.Append(CXXFLAGS = ['-mthreads', '-DBOOST_TEST_DYN_LINK', '-isystem', '$BOOSTINCDIR'])
+env.Append(CPPPATH = ['#blib/include'])
+env.Append(LIBPATH = ['#blib/lib', '$BOOSTDIR/lib'])
+
+env.VariantDir(variant, 'src')
+
+srclist = map( lambda fname: os.path.join(variant,fname), 
+               ['dg_parser.cpp',
+                'dg_parser_sane.cpp',
+                'dg_parser_str.cpp',
+                'dg_parser_verifier.cpp',
+                'dg_temp_file.cpp',
+                'dg_file_verifier.cpp'] )
+
+boost_libs = map( lambda lib: lib + '$BOOST_LIB_SUFFIX',
+                              [ 'boost_regex',
+                                'boost_unit_test_framework',
+                                'boost_filesystem',
+                                'boost_system',
+                                'boost_thread',
+                                'boost_program_options' ])
+
+test_src = { 'dg_wrapper_filter': ['dg_test_wrapper_filter.cpp'],
+             'dg_journal_filter': ['dg_test_journal_filter.cpp'],
+             'dg_channel':        ['dg_test_channel.cpp'],
+             'dg_controller':     ['dg_test_controller.cpp'],
+             'dg_parser':         ['dg_test_parser.cpp'] }
+
+dgdtest = env.SharedLibrary(
+    target = os.path.join(variant,'dgdtest'), 
+    source = srclist,
+    LIBS = boost_libs)
+
+env.Install('#blib/bin', dgdtest[0])
+env.Install('#blib/lib', dgdtest[1])
+
+for test, srclist in test_src.iteritems():
+    prog = env.Program(target = os.path.join(variant,test), 
+                       source = map( lambda fname: os.path.join(variant,fname), 
+                                     srclist ),
+                       LIBS = (boost_libs + ['dgdtest']) )
+    env.Install('#blib/bin', prog)
+
+
+
+
+

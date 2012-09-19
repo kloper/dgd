@@ -1,0 +1,33 @@
+# -*- mode:python -*-
+# 
+# Copyright (c) Dimitry Kloper <kloper@users.sf.net> 2002-2012
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+# 
+# This file is part of dgd library (http://dgd.sf.net).
+#
+# dgd/SConscript -- construction file for dgd/dgd
+#
+
+import os 
+
+Import('env', 'version', 'variant')
+
+env.VariantDir(variant, 'src')
+
+env.Install( '#blib/include', 
+             map( lambda fname: os.path.join(variant,fname), 
+                  ['dgd.h',
+                   'dg_flushable_sink.h',
+                   'dg_wrapper_filter.h',
+                   'dg_journal_filter.h',
+                   'dg_channel.h',
+                   'dg_manip.h',
+                   'dg_controller.h',
+                   'dg_exception.h',
+                   'dg_scope.h',
+                   'dg_expand.h',
+                   'dg_qt4.h']) )
+
+

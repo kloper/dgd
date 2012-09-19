@@ -1,7 +1,17 @@
-my $version = {
-'build' => '3',
-'compile' => '330',
-'major' => '2',
-'stable' => '0',
-'timestamp' => '1347458080',
-}
+(dp0
+S'compile'
+p1
+I330
+sS'timestamp'
+p2
+I1347458080
+sS'major'
+p3
+I2
+sS'build'
+p4
+I3
+sS'stable'
+p5
+I0
+s.
