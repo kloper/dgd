@@ -11,7 +11,15 @@
 #
 
 import os
+import sys
 import pickle
+import atexit
+
+dgscons_path=os.path.join('.', 'dgscons')
+sys.path.append(dgscons_path)
+
+import dgscons.version
+import dgscons.build_status
 
 env = DefaultEnvironment(tools = ['mingw'])
 
@@ -21,9 +29,9 @@ variant = 'Debug'
 system_root = os.environ['SystemRoot']
 system32_root = os.path.join(system_root, 'System32')
 
-mingw_root = 'c:/personal/mingw'
+mingw_root = 'd:/s/mingw'
 
-boost_root = 'c:/personal/boost-1.47'
+boost_root = 'd:/s/boost-1.47'
 
 env.Append(CCFLAGS = compile_mode, 
            CXXFLAGS = compile_mode, 
@@ -41,19 +49,15 @@ env['ENV'] = {
     'TMP':  os.environ['TMP'],
 }
 
-#  version = { 'build': 3, 'compile': 330, 'major': 2, 
-#              'stable': 0, 'timestamp': 1347458080 }
-# >>> with open('.version', 'wb') as vfile:
-# ...     pickle.dump(version, vfile)
-# ...
+version = dgscons.version.version()
+version.incr()
 
-with open('.version', 'rb') as vfile:
-    version = pickle.load(vfile)
-
-#print "Version: " + str(version)
+print "Version: " + str(version)
 #print "Env: " + str(env.Dump())
 
 Export('env', 'version', 'variant')
 
 SConscript( ['dgd/SConscript', 
              'test/SConscript'] )
+
+atexit.register(dgscons.build_status.handle_build_atexit, version)
