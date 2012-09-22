@@ -23,6 +23,19 @@ env.Append(LIBPATH = ['#blib/lib', '$BOOSTDIR/lib'])
 
 env.VariantDir(variant, 'src')
 
+rcfile_in = os.path.join(variant,'dgdtest.rc.in')
+
+rcfile = env.Substfile(rcfile_in, 
+        SUBST_DICT = {
+        '@stable@': version.version['stable'],
+        '@major@': version.version['major'],
+        '@build@': version.version['build'],
+        '@compile@': version.version['compile'],
+        '@version_string@': str(version)
+})
+
+resfile = env.RES(rcfile)
+
 srclist = map( lambda fname: os.path.join(variant,fname), 
                ['dg_parser.cpp',
                 'dg_parser_sane.cpp',
@@ -47,8 +60,11 @@ test_src = { 'dg_wrapper_filter': ['dg_test_wrapper_filter.cpp'],
 
 dgdtest = env.SharedLibrary(
     target = os.path.join(variant,'dgdtest'), 
-    source = srclist,
+    source = srclist + [resfile],
     LIBS = boost_libs)
+
+env.Ignore(dgdtest, resfile)
+env.Depends(dgdtest, rcfile_in)
 
 env.Install('#blib/bin', dgdtest[0])
 env.Install('#blib/lib', dgdtest[1])

@@ -21,7 +21,7 @@ sys.path.append(dgscons_path)
 import dgscons.version
 import dgscons.build_status
 
-env = DefaultEnvironment(tools = ['mingw'])
+env = DefaultEnvironment(tools = ['mingw', 'textfile'])
 
 compile_mode = '-g'
 variant = 'Debug'
