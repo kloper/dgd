@@ -12,8 +12,9 @@
 
 import os 
 
-Import('env', 'version', 'variant')
+Import('env', 'version')
 
+variant = env.subst('$VARIANT')
 env.VariantDir(variant, 'src')
 
 env.Install( '#blib/include', 

@@ -12,15 +12,17 @@
 
 import os 
 
-Import('env', 'version', 'variant')
+Import('env', 'version')
 
 env = env.Clone()
 
 env.Append(LDFLAGS = ['-mthreads', '-mconsole'])
-env.Append(CXXFLAGS = ['-mthreads', '-DBOOST_TEST_DYN_LINK', '-isystem', '$BOOSTINCDIR'])
+env.Append(CXXFLAGS = ['-mthreads', '-DBOOST_TEST_DYN_LINK', 
+                       '-isystem', '$BOOSTINCDIR'])
 env.Append(CPPPATH = ['#blib/include'])
-env.Append(LIBPATH = ['#blib/lib', '$BOOSTDIR/lib'])
+env.Append(LIBPATH = ['#blib/lib', '$BOOSTLIBDIR'])
 
+variant = env.subst('$VARIANT')
 env.VariantDir(variant, 'src')
 
 rcfile_in = os.path.join(variant,'dgdtest.rc.in')
@@ -61,10 +63,12 @@ test_src = { 'dg_wrapper_filter': ['dg_test_wrapper_filter.cpp'],
 dgdtest = env.SharedLibrary(
     target = os.path.join(variant,'dgdtest'), 
     source = srclist + [resfile],
-    LIBS = boost_libs)
+    LIBS = boost_libs
+)
 
 env.Ignore(dgdtest, resfile)
 env.Depends(dgdtest, rcfile_in)
+env.Requires(dgdtest, resfile)
 
 env.Install('#blib/bin', dgdtest[0])
 env.Install('#blib/lib', dgdtest[1])
@@ -75,8 +79,3 @@ for test, srclist in test_src.iteritems():
                                      srclist ),
                        LIBS = (boost_libs + ['dgdtest']) )
     env.Install('#blib/bin', prog)
-
-
-
-
-
