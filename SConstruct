@@ -14,16 +14,18 @@ import os
 import sys
 import atexit
 
-dgscons_path=os.path.join('.', 'dgscons')
+dgscons_path=os.path.join('..', 'dgscons')
 sys.path.append(dgscons_path)
 
 import dgscons
 import dgscons.version
 import dgscons.build_status
 
-boost = Tool('boost', [ os.path.join('.', 'dgscons') ])
+dgscons_tools_path = os.path.join(dgscons_path, 'tools')
+boost = Tool('boost', [ dgscons_tools_path ])
+hardlink = Tool('hardlink', [ dgscons_tools_path ])
 
-env = dgscons.setup_environment(tools = ['textfile', boost])
+env = dgscons.setup_environment(tools = ['textfile', boost, hardlink])
 
 version = dgscons.version.version()
 version.incr()

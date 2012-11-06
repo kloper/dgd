@@ -13,7 +13,7 @@ case $1 in
 (consming|consmingw)
 /c/perl64/bin/perl -I cons ./cons/cons.pl $2 -- --toolset=mingw,cygwin,boost -v3 --cygwin-root-dir=c:/cygwin --mingw-root-dir=c:/personal/mingw --boost-root-dir=c:/personal/boost-1.47 $3 $4 $5 $6;;
 (ming|mingw|*)
-/c/python-2.7.3/python.exe $BLDME_DIRNAME/scons-2.2.0/script/scons --compiler=mingw mingwbin=d:/s/mingw/bin boostinc=d:/s/boost-1.47/include/boost-1_47 boostlib=d:/s/boost-1.47/lib boostlibsuf="-mgw45-mt-d-1_47" $2 $3 $4 $5 $6 $7 $8 $9;;
+/c/python-2.7.3/python.exe $BLDME_DIRNAME/scons-2.2.0/script/scons --compiler=mingw mingwbin=d:/s/mingw-4.6/bin boostinc=d:/s/boost-1.47/include/boost-1_47 boostlib=d:/s/boost-1.47/lib boostlibsuf="-mgw45-mt-d-1_47" $2 $3 $4 $5 $6 $7 $8 $9;;
 esac
 
 # 
