@@ -222,24 +222,38 @@ class controller {
       std::string m_last_error;      
 };
 
-template <typename Ch>
-bool controller<Ch>::m_enabled = false;
+#if defined(DGD_DLL)
+#define DGD_EXPORT __declspec(dllexport)
+#else
+#define DGD_EXPORT
+#endif
 
+#if !defined(DGD_DYN_LINK) || defined(DGD_DLL)
 template <typename Ch>
-std::string controller<Ch>::m_log_file_name;
-
-template <typename Ch>
-typename controller<Ch>::wrapper_config controller<Ch>::m_wrapper_config;
-
-template <typename Ch>
-unsigned int controller<Ch>::m_journal_size;
-
-template <typename Ch>
+DGD_EXPORT
 typename controller<Ch>::thread_local_ptr_type 
 controller<Ch>::m_controller;
 
 template <typename Ch>
+DGD_EXPORT
+bool controller<Ch>::m_enabled = false;
+
+template <typename Ch>
+DGD_EXPORT
+std::string controller<Ch>::m_log_file_name;
+
+template <typename Ch>
+DGD_EXPORT
+typename controller<Ch>::wrapper_config controller<Ch>::m_wrapper_config;
+
+template <typename Ch>
+DGD_EXPORT
+unsigned int controller<Ch>::m_journal_size;
+
+template <typename Ch>
+DGD_EXPORT
 unsigned int controller<Ch>::m_filter;
+#endif
 
 }; // end of namespace dgd
 
