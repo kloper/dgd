@@ -17,7 +17,7 @@ Import('env', 'version')
 env = env.Clone()
 
 env.Append(LDFLAGS = ['-mthreads', '-mconsole'])
-env.Append(CXXFLAGS = ['-mthreads', '-DBOOST_TEST_DYN_LINK', '-isystem', '$BOOSTINCDIR'])
+env.Append(CXXFLAGS = ['-mthreads', '-isystem', '$BOOSTINCDIR'])
 env.Append(CPPPATH = ['#blib/include'])
 env.Append(LIBPATH = ['#blib/lib', '$BOOSTLIBDIR'])
 
@@ -40,3 +40,43 @@ for sample, srclist in sample_src.iteritems():
                                      srclist ),
                        LIBS = boost_libs )
     env.Install('#blib/bin', prog)
+
+humpty_src = [ 'humpty.cpp' ]
+humpty = env.SharedLibrary( 
+    target = os.path.join(variant, 'humpty'), 
+    source  = map( lambda fname: os.path.join(variant,fname), humpty_src ),
+    LIBS = boost_libs + ['dgd'],
+    CPPDEFINES = { 'DGD_DYN_LINK': None, 
+                   'HUMPTY_DLL': None } )
+env.Install('#blib/bin', humpty[0])
+env.Install('#blib/lib', humpty[1])
+
+dumpty_src = [ 'dumpty.cpp' ]
+dumpty = env.SharedLibrary( 
+    target = os.path.join(variant, 'dumpty'), 
+    source  = map( lambda fname: os.path.join(variant,fname), dumpty_src ),
+    LIBS = boost_libs + ['dgd'],
+    CPPDEFINES = { 'DGD_DYN_LINK': None, 
+                   'DUMPTY_DLL': None } )
+env.Install('#blib/bin', dumpty[0])
+env.Install('#blib/lib', dumpty[1])
+
+dgd_src = [ 'dgd_main.cpp' ]
+dgd = env.SharedLibrary( 
+    target = os.path.join(variant, 'dgd'), 
+    source  = map( lambda fname: os.path.join(variant,fname), dgd_src ),
+    CPPDEFINES = { 'DGD_DLL': None },
+    LIBS = boost_libs )
+env.Install('#blib/bin', dgd[0])
+env.Install('#blib/lib', dgd[1])
+
+main_exe_src = [ 'main_exec.cpp' ]
+main_exe = env.Program( 
+    target = os.path.join(variant, 'main_exe'), 
+    source  = map( lambda fname: os.path.join(variant,fname), main_exe_src ),
+    CPPDEFINES = { 'DGD_DYN_LINK': None },
+    LIBS = boost_libs + ['humpty', 'dumpty', 'dgd'])
+env.Install('#blib/bin', main_exe)
+
+
+

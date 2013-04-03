@@ -17,8 +17,10 @@ Import('env', 'version')
 env = env.Clone()
 
 env.Append(LDFLAGS = ['-mthreads', '-mconsole'])
-env.Append(CXXFLAGS = ['-mthreads', '-DBOOST_TEST_DYN_LINK', 
-                       '-isystem', '$BOOSTINCDIR'])
+env.Append(CXXFLAGS = ['-mthreads', '-isystem', '$BOOSTINCDIR'])
+env.Append(CPPDEFINES = {
+    'BOOST_TEST_DYN_LINK': None
+    })
 env.Append(CPPPATH = ['#blib/include'])
 env.Append(LIBPATH = ['#blib/lib', '$BOOSTLIBDIR'])
 
